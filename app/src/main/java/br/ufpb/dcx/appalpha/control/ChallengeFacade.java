@@ -78,7 +78,7 @@ public class ChallengeFacade {
         this.currentChallenge = currentChallenge;
     }
 
-    public void increaseErro(){
+    public void increaseError(){
         this.erroCount++;
     }
 
@@ -169,7 +169,7 @@ public class ChallengeFacade {
         if(checkAttempExists(letter.charAt(0))) {
             return ATTEMPT_EXISTS;
         } else if (checkAttempt(letter) == ATTEMPT_REJECTED){
-            increaseErro();
+            increaseError();
             return ATTEMPT_REJECTED;
         }else{
             return ATTEMPT_ACEPTED;
