@@ -25,8 +25,8 @@ public class ThemeSqlService {
     private ChallengeSqlService challengeSqlService;
     private UsersSqlService usersSqlService;
 
-    public static ThemeSqlService getInstance(Context context){
-        if(instance == null){
+    public static ThemeSqlService getInstance(Context context) {
+        if (instance == null) {
             instance = new ThemeSqlService(context);
         }
         return instance;
@@ -40,7 +40,7 @@ public class ThemeSqlService {
         this.usersSqlService = UsersSqlService.getInstance(context);
     }
 
-    public Long insert(Theme theme, @Nullable List<Challenge> relatedChallenges){
+    public Long insert(Theme theme, @Nullable List<Challenge> relatedChallenges) {
         ContentValues cv = new ContentValues();
         Long id = -1l;
         try {
@@ -53,10 +53,10 @@ public class ThemeSqlService {
             id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
             Log.i(TAG, theme.getName() + " added in db!");
 
-            if(relatedChallenges != null){
+            if (relatedChallenges != null) {
                 insertThemeRelatedChallenges(id, relatedChallenges);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         } finally {
             cv.clear();
@@ -65,10 +65,10 @@ public class ThemeSqlService {
         return id;
     }
 
-    private void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges){
+    private void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges) {
         ContentValues cv = new ContentValues();
 
-        for(Challenge c : relatedChallenges){
+        for (Challenge c : relatedChallenges) {
             try {
                 cv.put("challenge_id", challengeSqlService.insert(c));
                 cv.put("theme_id", theme_id);
@@ -76,34 +76,22 @@ public class ThemeSqlService {
 
                 Log.i(TAG, c.getWord() + " added relationship by theme id " + theme_id + ".");
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
             cv.clear();
         }
     }
 
-    public void update(Theme theme){
-
-    }
-
-    public void delete(Theme theme){
-
-    }
-
-    public void delete(Long id){
-
-    }
-
-    public Theme get(Long id){
+    public Theme get(Long id) {
         String name, soundUrl, videoUrl, imageUrl;
         name = soundUrl = videoUrl = imageUrl = "";
 
         String selectQuery = "SELECT name, soundUrl, videoUrl, imageUrl FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
 
-        Cursor cursor = readableDb.rawQuery(selectQuery, new String[] { Long.toString(id) });
+        Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             name = cursor.getString(0);
             soundUrl = cursor.getString(1);
             videoUrl = cursor.getString(2);
@@ -115,7 +103,7 @@ public class ThemeSqlService {
         return new Theme(name, soundUrl, videoUrl, imageUrl);
     }
 
-    public List<Theme> getAll(){
+    public List<Theme> getAll() {
         String name, soundUrl, videoUrl, imageUrl;
         Long id, user_creator;
         name = soundUrl = videoUrl = imageUrl = "";
@@ -126,7 +114,7 @@ public class ThemeSqlService {
 
         Cursor cursor = readableDb.rawQuery(selectQuery, null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 id = cursor.getLong(0);
                 name = cursor.getString(1);

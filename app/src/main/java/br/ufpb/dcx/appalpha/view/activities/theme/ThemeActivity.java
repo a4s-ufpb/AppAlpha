@@ -64,33 +64,12 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
         super.onResume();
         addDefaultThemes();
         fillRecycleView(themes);
-        //getAllChallengesFromService();
         ScreenUtil.getInstance().unlockScreenTouch(this);
         activity = this;
     }
 
     public void addDefaultThemes(){
         this.themes = this.themeSqlService.getAll();
-    }
-
-    public void getAllChallengesFromService(){
-        Call call = new RetrofitInitializer().contextService().findAll();
-        call.enqueue(new Callback<List<Theme>>() {
-            @Override
-            public void onResponse(Call<List<Theme>> call, Response<List<Theme>> response) {
-                List<Theme> reponseBody = response.body();
-                Log.i(TAG, ""+reponseBody.size());
-                for(Theme t : reponseBody){
-                    themes.add(t);
-                    fillRecycleView(themes);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Theme>> call, Throwable t) {
-                Log.e(TAG, "Erro ao recuperar temas: "+t.getMessage());
-            }
-        });
     }
 
     public static void OnClickListener(OnClickListener hook){
@@ -143,9 +122,6 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void botaoEscolha(ImageView img_button) {
-
-
-
 
     }
 

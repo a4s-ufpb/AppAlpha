@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInitializer {
-    private String BASE_URL = "https://educapi.herokuapp.com/";
+    private String BASE_URL = "https://educapi-a4sufpb.herokuapp.com/";
 
     private Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
 
