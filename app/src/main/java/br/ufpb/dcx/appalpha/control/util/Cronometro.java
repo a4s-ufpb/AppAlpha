@@ -53,8 +53,18 @@ public class Cronometro {
     }
 
     private void darDicaSonora() {
-        SomUtil somUtil = SomUtil.getInstance();
-        somUtil.playSound(context, Integer.parseInt(ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl()));
+        String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
+        if (soundUrl != null && !soundUrl.equals("")) {
+            if (soundUrl.startsWith("http")) {
+                // TODO obter som da URL, se for URL
+            } else if (TextUtil.isAllInteger(soundUrl)) {
+                SomUtil.getInstance().playSound(context, Integer.parseInt(soundUrl));
+            } else {
+                // TODO tratar caso de url inválida
+            }
+        } else {
+            // TODO falar nome do tema usando "voz do google"
+        }
     }
 
     /*
@@ -77,7 +87,4 @@ public class Cronometro {
         return Double.parseDouble(tempo_form);
 
     }
-
-
-
 }

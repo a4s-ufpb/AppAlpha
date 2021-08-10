@@ -24,10 +24,11 @@ public class ChallengeFacade {
     private String underscore;
 
 
-    private ChallengeFacade(){}
+    private ChallengeFacade() {
+    }
 
-    public static ChallengeFacade getInstance(){
-        if(instance == null){
+    public static ChallengeFacade getInstance() {
+        if (instance == null) {
             instance = new ChallengeFacade();
         }
 
@@ -59,8 +60,8 @@ public class ChallengeFacade {
         return currentChallenge;
     }
 
-    public void nextChallenge(){
-        try{
+    public void nextChallenge() {
+        try {
             Log.i(TAG, "TRY");
             Log.i(TAG, this.getCurrentChallenge().getWord());
             this.sumError += this.erroCount;
@@ -68,7 +69,7 @@ public class ChallengeFacade {
             this.progressCount++;
             this.currentChallenge = challenges.get(challenges.indexOf(currentChallenge) + 1);
             setUnderscore();
-        }catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
             Log.i(TAG, "CATCH");
         }
@@ -78,7 +79,7 @@ public class ChallengeFacade {
         this.currentChallenge = currentChallenge;
     }
 
-    public void increaseError(){
+    public void increaseError() {
         this.erroCount++;
     }
 
@@ -95,6 +96,7 @@ public class ChallengeFacade {
 
     /**
      * Verifica se o chute do usuário foi certo ou errado
+     *
      * @param letter chute do usuário
      * @return um int indicando se houve acerto ou erro
      */
@@ -102,9 +104,10 @@ public class ChallengeFacade {
         int resultado;
 
         String under = updateWordByAttemp(letter.charAt(0));
-
+        Log.i(TAG, "letter = " + letter + " - under = " + under);
+        Log.i(TAG, "underscore.equalsIgnoreCase(under) = " + underscore.equalsIgnoreCase(under));
         // Se o underscore atual for diferente do novo, significa que o usuário acertou
-        if (!underscore.equals(under)) {
+        if (!underscore.equalsIgnoreCase(under)) {
             underscore = under;
             resultado = ATTEMPT_ACEPTED;
 
@@ -117,18 +120,20 @@ public class ChallengeFacade {
 
     /**
      * Verifica se o chute se encontra na palavra. Caso sim, a adiciona no underscore
+     *
      * @param letter letra que o usuário chutou
      * @return o underscore modificado
      */
     public String updateWordByAttemp(char letter) {
         char[] vetor = underscore.toCharArray();
 
-        Log.i(TAG, ""+letter);
-        Log.i(TAG, ""+this.underscore.length());
-        Log.i(TAG, ""+ new String(vetor));
+        Log.i(TAG, "" + letter);
+        Log.i(TAG, "" + this.underscore.length());
+        Log.i(TAG, "" + new String(vetor));
 
         for (int i = 0; i < this.currentChallenge.getWord().length(); i++) {
-            if (letter == this.currentChallenge.getWord().charAt(i)) {
+            if (Character.toUpperCase(letter) == Character.toUpperCase(
+                    TextUtil.normalize(this.currentChallenge.getWord()).charAt(i))) {
                 vetor[i] = this.currentChallenge.getWord().charAt(i);
             }
         }
@@ -138,40 +143,44 @@ public class ChallengeFacade {
 
     /**
      * Verifica se a letra já foi chutada antes
+     *
      * @param letter letra que o usuário chutou
      * @return boolean indicando se já foi chutada antes
      */
     private boolean checkAttempExists(char letter) {
         for (int i = 0; i < underscore.length(); i++) {
-            if (letter == underscore.charAt(i)) {
+            if (Character.toUpperCase(letter) == Character.toUpperCase(underscore.charAt(i))) {
+                Log.i(TAG, "checkAttempExists true");
                 return true;
             }
         }
-
+        Log.i(TAG, "checkAttempExists false");
         return false;
     }
 
     /**
      * Verifica se o usuário acertou a palavra, se o sublinhado estiver por completo igual a palavra (sem traços) é porque a palavra foi completa.
+     *
      * @return um boolean indicando se acertou ou não
      */
     public boolean checkWordAccepted() {
-        return this.currentChallenge.getWord().equals(underscore);
+        return this.currentChallenge.getWord().equalsIgnoreCase(underscore);
     }
 
     /**
      * Verifica se o chute do usuário foi vazio, se ele já chutou aquela letra ou se o chute foi errado
+     *
      * @param letter letra chutada pelo usuário
      * @return um inteiro indicando se o chute foi vazio, já existente ou errado
      */
     public int getAttempResult(String letter) {
 
-        if(checkAttempExists(letter.charAt(0))) {
+        if (checkAttempExists(letter.charAt(0))) {
             return ATTEMPT_EXISTS;
-        } else if (checkAttempt(letter) == ATTEMPT_REJECTED){
+        } else if (checkAttempt(letter) == ATTEMPT_REJECTED) {
             increaseError();
             return ATTEMPT_REJECTED;
-        }else{
+        } else {
             return ATTEMPT_ACEPTED;
         }
 
@@ -197,7 +206,7 @@ public class ChallengeFacade {
         this.time = time;
     }
 
-    public void increaseTime(double time){
+    public void increaseTime(double time) {
         this.time += time;
     }
 

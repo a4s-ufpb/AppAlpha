@@ -17,6 +17,7 @@ import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.SomUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
 import br.ufpb.dcx.appalpha.control.log.LogManagerExtStor;
+import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
 
 public class ForcaActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class ForcaActivity extends AppCompatActivity {
     private LogManagerExtStor logManagerExt;
     private ImageView imgPalavra;
 
-    public void liberandoMemoria() {
+    public void memoryFree() {
         forcaController = null;
         cronometro = null;
         imgPalavra.setImageDrawable(null);
@@ -39,7 +40,7 @@ public class ForcaActivity extends AppCompatActivity {
 
         // Setando o underscore no TextView da tela
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(dandoEspacos(ChallengeFacade.getInstance().getUnderscore()));
+        txtUnderscore.setText(setSpacesInWord(ChallengeFacade.getInstance().getUnderscore()));
 
         // Setando o ImageView da forca no objeto para modificação ao longo do jogo
         ImageView img_forca = findViewById(R.id.img_forca);
@@ -62,7 +63,7 @@ public class ForcaActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         SomUtil.getInstance().stopSound();
-        liberandoMemoria();
+        memoryFree();
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ForcaActivity extends AppCompatActivity {
      * @param letraClicada a letra que o usuário chutou
      * @param btnClicado botão correspondente a essa letra
      */
-    public void feedbackColorButtonLeter(String letraClicada, Button btnClicado) {
+    public void feedbackColorButtonLetter(String letraClicada, Button btnClicado) {
         int resultado =  ChallengeFacade.getInstance().getAttempResult(letraClicada);
 
         if (resultado == ChallengeFacade.ATTEMPT_ACEPTED) {
@@ -95,16 +96,16 @@ public class ForcaActivity extends AppCompatActivity {
      * @param letraClicada letra que o usuário chutou
      * @param btnClicado botão correspondente a letra
      */
-    public void atualizandoInformacoes(String letraClicada, Button btnClicado) {
+    public void updateData(String letraClicada, Button btnClicado) {
 
         // Mudando cor do botão
-        feedbackColorButtonLeter(letraClicada, btnClicado);
+        feedbackColorButtonLetter(letraClicada, btnClicado);
 
         // Atualiza a imagem da forca de acordo com a quantidade de erros
-        setandoAForca();
+        initForca();
 
         // Setando o text view com o novo underscore
-        setandoTxtUnderscore(ChallengeFacade.getInstance().getUnderscore());
+        setUnderscoreInTextview(ChallengeFacade.getInstance().getUnderscore());
 
 
         verifyChallengeItsOver();
@@ -113,7 +114,7 @@ public class ForcaActivity extends AppCompatActivity {
     /**
      * Atualiza a imagem da forca
      */
-    private void setandoAForca() {
+    private void initForca() {
         forcaController.mudaForca(ChallengeFacade.getInstance().getErroCount());
     }
 
@@ -136,9 +137,9 @@ public class ForcaActivity extends AppCompatActivity {
      *
      * @param underscore underscore da palavra
      */
-    private void setandoTxtUnderscore(String underscore) {
+    private void setUnderscoreInTextview(String underscore) {
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(dandoEspacos(underscore));
+        txtUnderscore.setText(setSpacesInWord(underscore));
     }
 
     /**
@@ -146,7 +147,7 @@ public class ForcaActivity extends AppCompatActivity {
      * @param underscore underscore da palavra a ser acertada
      * @return o underscore com as letras espaçadas
      */
-    private String dandoEspacos(String underscore) {
+    private String setSpacesInWord(String underscore) {
         StringBuilder novaString = new StringBuilder();
 
         for(int i = 0; i < underscore.length(); i++) {
@@ -162,8 +163,19 @@ public class ForcaActivity extends AppCompatActivity {
      *
      * @param v view
      */
-    public void escutarPalavra(View v) {
-        SomUtil.getInstance().playSound(getApplicationContext(), Integer.parseInt(ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl()));
+    public void playWordSound(View v) {
+        String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
+        if (soundUrl != null && !soundUrl.equals("")) {
+            if (soundUrl.startsWith("http")) {
+                // TODO obter som da URL, se for URL
+            } else if (TextUtil.isAllInteger(soundUrl)) {
+                SomUtil.getInstance().playSound(getApplicationContext(), Integer.parseInt(soundUrl));
+            } else {
+                // TODO tratar caso de url inválida
+            }
+        } else {
+            // TODO falar nome do tema usando "voz do google"
+        }
     }
 
     /***
@@ -172,7 +184,7 @@ public class ForcaActivity extends AppCompatActivity {
      */
     public void letterClick(View view){
         Button btClick = (Button) view;
-        atualizandoInformacoes(btClick.getText().toString().toLowerCase(), btClick);
+        updateData(btClick.getText().toString().toLowerCase(), btClick);
         Log.i("Botão clicado:", btClick.getText().toString());
     }
 

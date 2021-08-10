@@ -1,5 +1,7 @@
 package br.ufpb.dcx.appalpha.control.util;
 
+import java.text.Normalizer;
+
 public class TextUtil {
     private static TextUtil instance;
 
@@ -22,5 +24,18 @@ public class TextUtil {
         }
 
         return newS.toString();
+    }
+
+    public static boolean isAllInteger(String text) {
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch(NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static String normalize(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 }

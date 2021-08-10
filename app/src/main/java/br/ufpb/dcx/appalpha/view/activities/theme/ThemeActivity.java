@@ -24,6 +24,7 @@ import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
 import br.ufpb.dcx.appalpha.control.util.SomUtil;
 import br.ufpb.dcx.appalpha.control.api.RetrofitInitializer;
+import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.AddThemeActivity;
 import br.ufpb.dcx.appalpha.view.activities.ForcaActivity;
@@ -117,8 +118,20 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private static void playThemeSong(Theme selectedTheme){
-        SomUtil.getInstance().playSound(ThemeActivity.activity, Integer.parseInt(selectedTheme.getSoundUrl()));
+    private static void playThemeSong(Theme selectedTheme) {
+        String soundUrl = selectedTheme.getSoundUrl();
+        if (soundUrl != null && !soundUrl.equals("")) {
+            if (soundUrl.startsWith("http")) {
+                // TODO obter som da URL, se for URL
+            } else if (TextUtil.isAllInteger(soundUrl)) { // caso seja um tema interno
+                SomUtil.getInstance().playSound(ThemeActivity.activity, Integer.parseInt(soundUrl));
+            } else {
+                // TODO tratar caso de url inválida
+            }
+        } else {
+            // TODO falar nome do tema usando "voz do google"
+        }
+
     }
 
     public void botaoEscolha(ImageView img_button) {

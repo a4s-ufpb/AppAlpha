@@ -55,7 +55,8 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                     public void onResponse(Call<Theme> call, Response<Theme> response) {
                         if(response.body() != null){
                             Theme theme = response.body();
-                            themeSqlService.insert(theme, null);
+                            Log.i(TAG, "Theme challenges:" + theme.getChallenges().size());
+                            themeSqlService.insert(theme, theme.getChallenges());
                             Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
                             Log.i(TAG, "Theme de id " + id + " recuperado com sucesso!");
                             finish();
@@ -71,9 +72,6 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                         Log.e(TAG, "Erro ao recuperar tema: "+t.getMessage());
                     }
                 });
-
-
-
                 break;
 
             case(R.id.back_btn):
