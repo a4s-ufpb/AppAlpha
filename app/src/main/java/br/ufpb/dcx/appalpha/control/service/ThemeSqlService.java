@@ -48,6 +48,7 @@ public class ThemeSqlService {
             cv.put("soundUrl", theme.getSoundUrl());
             cv.put("videoUrl", theme.getVideoUrl());
             cv.put("imageUrl", theme.getImageUrl());
+            cv.put("apiId", theme.getId());
             cv.put("user_creator", theme.getCreator() != null ? theme.getCreator().getId() : null);
 
             id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
@@ -106,7 +107,6 @@ public class ThemeSqlService {
     public List<Theme> getAll() {
         String name, soundUrl, videoUrl, imageUrl;
         Long id, user_creator;
-        name = soundUrl = videoUrl = imageUrl = "";
 
         List<Theme> themes = new ArrayList<>();
 
@@ -133,4 +133,19 @@ public class ThemeSqlService {
 
         return themes;
     }
+
+    public boolean existsByApiId(Long id) {
+        String selectQuery = "SELECT exists(SELECT id FROM " + DbHelper.THEMES_TABLE + " WHERE apiId = ? LIMIT 1)";
+
+        Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});
+
+        if (cursor.moveToFirst()) {
+            Integer value = cursor.getInt(0);
+            cursor.close();
+            return value == 1 ? true : false;
+        } else {
+            return false;
+        }
+    }
+
 }
