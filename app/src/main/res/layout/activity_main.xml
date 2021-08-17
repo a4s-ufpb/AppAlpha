@@ -34,7 +34,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline55"
-        app:srcCompat="@drawable/botaoconfig_cropped" />
+        app:srcCompat="@drawable/botaoconfig" />
 
     <ImageButton
         android:id="@+id/btnPlay"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline56"
         app:layout_constraintStart_toStartOf="@+id/guideline57"
         app:layout_constraintTop_toTopOf="@+id/guideline53"
-        app:srcCompat="@drawable/botaoplay" />
+        app:srcCompat="@drawable/btn_play" />
 
     <ImageButton
         android:id="@+id/btnRecords"
@@ -63,7 +63,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline56"
         app:layout_constraintTop_toTopOf="@+id/guideline55"
-        app:srcCompat="@drawable/trophy_white" />
+        app:srcCompat="@drawable/botaotrofeu" />
 
     <ImageButton
         android:id="@+id/btnInfo"
@@ -80,7 +80,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/botaoinfo_cropped" />
+        app:srcCompat="@drawable/btn_ajuda" />
 
     <ImageView
         android:id="@+id/btnOut"
@@ -95,7 +95,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/close_btn" />
+        app:srcCompat="@drawable/botao_exit" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline53"
@@ -144,6 +144,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1" />
+        app:layout_constraintGuide_percent="0.13" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
