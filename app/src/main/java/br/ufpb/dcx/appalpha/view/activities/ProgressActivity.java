@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.config.ButtonDelay;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
 public class ProgressActivity extends AppCompatActivity {
@@ -45,12 +45,12 @@ public class ProgressActivity extends AppCompatActivity {
             if (soundUrl.startsWith("http")) {
                 // TODO obter som da URL, se for URL
             } else if (TextUtil.isAllInteger(soundUrl)) { // Para desafios internos do appalpha
-                SomUtil.getInstance().playSound(getApplicationContext(), Integer.parseInt(soundUrl));
+                AudioUtil.getInstance(getApplicationContext()).playSound(Integer.parseInt(soundUrl));
             } else {
-                // TODO tratar quando url não é válida
+                AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
             }
         } else {
-            // TODO falar nome do tema usando "voz do google"
+            AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
         }
 
         Handler handler = new Handler();
@@ -59,7 +59,7 @@ public class ProgressActivity extends AppCompatActivity {
             public void run() {
                 readLetterByLetter();
             }
-        }, SomUtil.getInstance().getDuracao());
+        }, AudioUtil.getInstance(getApplicationContext()).getDuration());
     }
 
     private void readLetterByLetter() {
@@ -109,7 +109,7 @@ public class ProgressActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         //leitor.interrupt();
-        SomUtil.getInstance().stopSound();
+        AudioUtil.getInstance(getApplicationContext()).stopSound();
 
     }
 
@@ -230,7 +230,7 @@ public class ProgressActivity extends AppCompatActivity {
 
         }
 
-        SomUtil.getInstance().playSound(getApplicationContext(), idSom);
+        AudioUtil.getInstance(getApplicationContext()).playSound(idSom);
     }
 
     /**

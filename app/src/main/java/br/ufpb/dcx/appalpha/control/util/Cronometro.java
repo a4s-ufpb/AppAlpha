@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Chronometer;
 
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
 
 /*
 Classe que implementa o cronômetro para a contagem de pontos
@@ -58,12 +57,12 @@ public class Cronometro {
             if (soundUrl.startsWith("http")) {
                 // TODO obter som da URL, se for URL
             } else if (TextUtil.isAllInteger(soundUrl)) {
-                SomUtil.getInstance().playSound(context, Integer.parseInt(soundUrl));
+                AudioUtil.getInstance(context).playSound(Integer.parseInt(soundUrl));
             } else {
-                // TODO tratar caso de url inválida
+                AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
             }
         } else {
-            // TODO falar nome do tema usando "voz do google"
+            AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
         }
     }
 

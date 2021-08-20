@@ -22,15 +22,11 @@ import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
-import br.ufpb.dcx.appalpha.control.api.RetrofitInitializer;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.AddThemeActivity;
 import br.ufpb.dcx.appalpha.view.activities.ForcaActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class ThemeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -53,6 +49,7 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
         this.themeSqlService = ThemeSqlService.getInstance(getApplicationContext());
         fabAddTheme = findViewById(R.id.fabAddTheme);
         fabAddTheme.setOnClickListener(this);
+        AudioUtil.getInstance(getApplicationContext());
     }
 
     public void fillRecycleView(List<Theme> themes){
@@ -114,24 +111,24 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
                 ThemeActivity.activity.startActivity(intent);
 
             }
-        }, SomUtil.getInstance().getDuracao());
+        }, AudioUtil.getInstance().getDuration());
 
     }
 
     private static void playThemeSong(Theme selectedTheme) {
+        Log.i(TAG, selectedTheme.toString());
         String soundUrl = selectedTheme.getSoundUrl();
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
                 // TODO obter som da URL, se for URL
             } else if (TextUtil.isAllInteger(soundUrl)) { // caso seja um tema interno
-                SomUtil.getInstance().playSound(ThemeActivity.activity, Integer.parseInt(soundUrl));
+                AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
             } else {
-                // TODO tratar caso de url inválida
+                AudioUtil.getInstance().speakWord(selectedTheme.getName());
             }
-        } else {
-            // TODO falar nome do tema usando "voz do google"
+        } else { // Nesse caso, pode falar usando sintetização de voz
+            AudioUtil.getInstance().speakWord(selectedTheme.getName());
         }
-
     }
 
     public void botaoEscolha(ImageView img_button) {

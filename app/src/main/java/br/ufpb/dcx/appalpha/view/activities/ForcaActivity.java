@@ -14,13 +14,15 @@ import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.ForcaController;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
 import br.ufpb.dcx.appalpha.control.log.LogManagerExtStor;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
+import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 
 
 public class ForcaActivity extends AppCompatActivity {
+    private static final String TAG = "ForcaActivity";
     final int QTD_MAX_ERROS = 6;
     ForcaController forcaController;
     Cronometro cronometro;
@@ -62,7 +64,7 @@ public class ForcaActivity extends AppCompatActivity {
 
     protected void onDestroy() {
         super.onDestroy();
-        SomUtil.getInstance().stopSound();
+        AudioUtil.getInstance().stopSound();
         memoryFree();
     }
 
@@ -169,12 +171,12 @@ public class ForcaActivity extends AppCompatActivity {
             if (soundUrl.startsWith("http")) {
                 // TODO obter som da URL, se for URL
             } else if (TextUtil.isAllInteger(soundUrl)) {
-                SomUtil.getInstance().playSound(getApplicationContext(), Integer.parseInt(soundUrl));
+                AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
             } else {
-                // TODO tratar caso de url inválida
+                AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
             }
         } else {
-            // TODO falar nome do tema usando "voz do google"
+            AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
         }
     }
 
