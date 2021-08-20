@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,22 +20,26 @@ import java.util.List;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
-import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
+import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.AddThemeActivity;
 import br.ufpb.dcx.appalpha.view.activities.ForcaActivity;
+import br.ufpb.dcx.appalpha.view.activities.ViewAnimation;
 
 
-public class ThemeActivity extends AppCompatActivity implements View.OnClickListener {
+public class ThemeActivity extends AppCompatActivity {
     private static final String TAG = "ThemeActivity";
     private GridLayoutManager layManager;
     private RecyclerView recyclerView;
     private List<Theme> themes = new ArrayList<>();
     protected static Activity activity;
     private ThemeSqlService themeSqlService;
-    private FloatingActionButton fabAddTheme;
+    private FloatingActionButton fabMore;
+    private FloatingActionButton fabDel;
+    private FloatingActionButton fabAdd;
+    boolean isRotate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +50,31 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
         recyclerView = findViewById(R.id.rcThemes);
         layManager = new GridLayoutManager(getApplicationContext(), 2);
         this.themeSqlService = ThemeSqlService.getInstance(getApplicationContext());
-        fabAddTheme = findViewById(R.id.fabAddTheme);
-        fabAddTheme.setOnClickListener(this);
+        fabMore = findViewById(R.id.fabMore);
+        fabDel = findViewById(R.id.fabDel);
+        fabAdd = findViewById(R.id.fabAdd);
         AudioUtil.getInstance(getApplicationContext());
+
+        ViewAnimation.init(fabDel);
+        ViewAnimation.init(fabAdd);
+
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddThemeActivity.class);
+            this.startActivity(intent);
+        });
+
+        fabDel.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "mic", Toast.LENGTH_SHORT).show());
+
+        this.fabMore.setOnClickListener(view -> {
+            this.isRotate = ViewAnimation.rotateFab(view, !this.isRotate);
+            if(isRotate){
+                ViewAnimation.showIn(fabAdd);
+                ViewAnimation.showIn(fabDel);
+            }else{
+                ViewAnimation.showOut(fabAdd);
+                ViewAnimation.showOut(fabDel);
+            }
+        });
     }
 
     public void fillRecycleView(List<Theme> themes){
@@ -78,16 +103,6 @@ public class ThemeActivity extends AppCompatActivity implements View.OnClickList
             ScreenUtil.getInstance().lockScreenTouch(ThemeActivity.activity);
         }else{
             Toast.makeText(ThemeActivity.activity, "O tema selecionado não possui desafios, tente outro tema.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case (R.id.fabAddTheme):
-                Intent intent = new Intent(this, AddThemeActivity.class);
-                this.startActivity(intent);
-                break;
         }
     }
 
