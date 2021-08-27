@@ -2,7 +2,9 @@ package br.ufpb.dcx.appalpha.control;
 
 import android.util.Log;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
@@ -22,6 +24,7 @@ public class ChallengeFacade {
     private double time;
     private int sumError;
     private String underscore;
+    private Set<String> triedLetters = new HashSet<>();
 
 
     private ChallengeFacade() {
@@ -68,6 +71,7 @@ public class ChallengeFacade {
             this.erroCount = 0;
             this.progressCount++;
             this.currentChallenge = challenges.get(challenges.indexOf(currentChallenge) + 1);
+            this.triedLetters.clear();
             setUnderscore();
         } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
@@ -147,14 +151,14 @@ public class ChallengeFacade {
      * @param letter letra que o usuário chutou
      * @return boolean indicando se já foi chutada antes
      */
-    private boolean checkAttempExists(char letter) {
-        for (int i = 0; i < underscore.length(); i++) {
-            if (Character.toUpperCase(letter) == Character.toUpperCase(underscore.charAt(i))) {
-                Log.i(TAG, "checkAttempExists true");
+    private boolean checkAttemptExists(char letter) {
+        for (String let : this.triedLetters) {
+            if (let.equals(String.valueOf(letter))) {
+                this.triedLetters.add(String.valueOf(letter));
                 return true;
             }
         }
-        Log.i(TAG, "checkAttempExists false");
+        this.triedLetters.add(String.valueOf(letter));
         return false;
     }
 
@@ -175,7 +179,7 @@ public class ChallengeFacade {
      */
     public int getAttempResult(String letter) {
 
-        if (checkAttempExists(letter.charAt(0))) {
+        if (checkAttemptExists(letter.charAt(0))) {
             return ATTEMPT_EXISTS;
         } else if (checkAttempt(letter) == ATTEMPT_REJECTED) {
             increaseError();
