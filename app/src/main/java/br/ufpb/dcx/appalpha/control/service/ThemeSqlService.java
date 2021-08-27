@@ -107,10 +107,11 @@ public class ThemeSqlService {
     public List<Theme> getAll() {
         String name, soundUrl, videoUrl, imageUrl;
         Long id, user_creator;
+        String apiId;
 
         List<Theme> themes = new ArrayList<>();
 
-        String selectQuery = "SELECT id, name, user_creator, soundUrl, videoUrl, imageUrl FROM " + DbHelper.THEMES_TABLE;
+        String selectQuery = "SELECT id, name, user_creator, soundUrl, videoUrl, imageUrl, apiId FROM " + DbHelper.THEMES_TABLE;
 
         Cursor cursor = readableDb.rawQuery(selectQuery, null);
 
@@ -122,9 +123,11 @@ public class ThemeSqlService {
                 soundUrl = cursor.getString(3);
                 videoUrl = cursor.getString(4);
                 imageUrl = cursor.getString(5);
+                apiId = cursor.getString(6);
                 List<Challenge> relatedChallenges = challengeSqlService.getRelatedChallenges(id);
                 User creator = usersSqlService.get(user_creator);
-                Theme t = new Theme(id, name, creator, imageUrl, soundUrl, videoUrl, relatedChallenges);
+                Theme t = new Theme(id, name, creator, imageUrl, soundUrl, videoUrl, relatedChallenges,
+                        apiId != null ? Long.parseLong(apiId) : null);
                 themes.add(t);
             } while (cursor.moveToNext());
         }
@@ -145,6 +148,18 @@ public class ThemeSqlService {
             return value == 1 ? true : false;
         } else {
             return false;
+        }
+    }
+
+    public void deleteById(Long id) {
+        String deleteQuery = "DELETE FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
+
+        Cursor cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
+
+        if (cursor.moveToFirst()) {
+            Integer value = cursor.getInt(0);
+            Log.i(TAG, value + "");
+            cursor.close();
         }
     }
 

@@ -1,11 +1,11 @@
 package br.ufpb.dcx.appalpha.view.activities.theme;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +40,7 @@ public class ThemeActivity extends AppCompatActivity {
     private FloatingActionButton fabDel;
     private FloatingActionButton fabAdd;
     boolean isRotate = false;
+    private boolean isDeleteMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,10 @@ public class ThemeActivity extends AppCompatActivity {
             this.startActivity(intent);
         });
 
-        fabDel.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "mic", Toast.LENGTH_SHORT).show());
+        fabDel.setOnClickListener(v -> {
+            this.isDeleteMode = !this.isDeleteMode;
+            this.fillRecycleView(this.themes);
+        });
 
         this.fabMore.setOnClickListener(view -> {
             this.isRotate = ViewAnimation.rotateFab(view, !this.isRotate);
@@ -77,26 +81,29 @@ public class ThemeActivity extends AppCompatActivity {
         });
     }
 
+    public void updateRecycleView() {
+        getAllThemes();
+        fillRecycleView(themes);
+    }
+
     public void fillRecycleView(List<Theme> themes){
         recyclerView.setLayoutManager(layManager);
-        recyclerView.setAdapter(new ThemeAdapter(themes, getApplicationContext()));
+        recyclerView.setAdapter(new ThemeAdapter(themes, getApplicationContext(), this.isDeleteMode));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        addDefaultThemes();
-        fillRecycleView(themes);
+        this.updateRecycleView();
         ScreenUtil.getInstance().unlockScreenTouch(this);
         activity = this;
     }
 
-    public void addDefaultThemes(){
+    public void getAllThemes(){
         this.themes = this.themeSqlService.getAll();
     }
 
-    public static void OnClickListener(OnClickListener hook){
-        Theme selectedTheme = hook.onItemClicked();
+    public static void clickInGoToSelectedTheme(Theme selectedTheme){
         Log.i(TAG, "Theme " + selectedTheme.getName() + " Clicked!");
         if(selectedTheme.getChallenges() != null && selectedTheme.getChallenges().size() > 0) {
             ThemeActivity.goToSelectedChallenge(selectedTheme);
@@ -104,10 +111,6 @@ public class ThemeActivity extends AppCompatActivity {
         }else{
             Toast.makeText(ThemeActivity.activity, "O tema selecionado não possui desafios, tente outro tema.", Toast.LENGTH_LONG).show();
         }
-    }
-
-    interface OnClickListener{
-        Theme onItemClicked();
     }
 
     private static void setChallengesInFacade(Theme selectedTheme){
@@ -120,13 +123,8 @@ public class ThemeActivity extends AppCompatActivity {
 
         Intent intent = new Intent(ThemeActivity.activity, ForcaActivity.class);
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() { //Wait the song end to start new activity
-            @Override
-            public void run() {
-                ThemeActivity.activity.startActivity(intent);
-
-            }
-        }, AudioUtil.getInstance().getDuration());
+        //Wait the song end to start new activity
+        handler.postDelayed(() -> ThemeActivity.activity.startActivity(intent), AudioUtil.getInstance().getDuration());
 
     }
 
@@ -144,10 +142,6 @@ public class ThemeActivity extends AppCompatActivity {
         } else { // Nesse caso, pode falar usando sintetização de voz
             AudioUtil.getInstance().speakWord(selectedTheme.getName());
         }
-    }
-
-    public void botaoEscolha(ImageView img_button) {
-
     }
 
 }
