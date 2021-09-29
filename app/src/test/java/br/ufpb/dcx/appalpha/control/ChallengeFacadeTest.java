@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import br.ufpb.dcx.appalpha.R;
@@ -35,6 +34,22 @@ public class ChallengeFacadeTest {
         String letter = "a";
         int result = challengeFacade.checkAttempt(letter);
         assertEquals(ChallengeFacade.ATTEMPT_REJECTED, result);
+    }
+
+    @Test
+    public void shouldReturnUnderscoreWithRightAttempt() {
+        char letter = 'r';
+        String underscoreExpected = "_____r";
+        String underscoreReturned = challengeFacade.updateWordByAttempt(letter);
+        assertEquals(underscoreExpected, underscoreReturned);
+    }
+
+    @Test
+    public void shouldReturnUnderscoreWithoutWrongAttempt() {
+        char letter = 'z';
+        String underscoreExpected = "______";
+        String underscoreReturned = challengeFacade.updateWordByAttempt(letter);
+        assertEquals(underscoreExpected, underscoreReturned);
     }
 
 }

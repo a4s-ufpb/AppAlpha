@@ -101,7 +101,7 @@ public class ChallengeFacade {
      */
     public int checkAttempt(String letter) {
 
-        String newUnderscoreAfterAttempt = updateWordByAttemp(letter.charAt(0));
+        String newUnderscoreAfterAttempt = updateWordByAttempt(letter.charAt(0));
 
         if (currentUnderscore.equalsIgnoreCase(newUnderscoreAfterAttempt)) {
             return ATTEMPT_REJECTED;
@@ -119,17 +119,20 @@ public class ChallengeFacade {
      * @param letter letra que o usuário chutou
      * @return o underscore modificado
      */
-    public String updateWordByAttemp(char letter) {
-        char[] vetor = currentUnderscore.toCharArray();
+    public String updateWordByAttempt(char letter) {
+        StringBuilder newUnderscore = new StringBuilder(currentUnderscore);
+        String currentChallengeWord = this.currentChallenge.getWord();
 
-        for (int i = 0; i < this.currentChallenge.getWord().length(); i++) {
-            if (Character.toUpperCase(letter) == Character.toUpperCase(
-                    TextUtil.normalize(this.currentChallenge.getWord()).charAt(i))) {
-                vetor[i] = this.currentChallenge.getWord().charAt(i);
+        for (int indexInWord = 0; indexInWord < currentChallengeWord.length(); indexInWord++) {
+            char upperCasedLetterAttempt = Character.toUpperCase(letter);
+            char upperCasedCurrentChallengeWordLetter = Character.toUpperCase(currentChallengeWord.charAt(indexInWord));
+
+            if (upperCasedLetterAttempt == upperCasedCurrentChallengeWordLetter) {
+                newUnderscore.setCharAt(indexInWord, Character.toLowerCase(upperCasedCurrentChallengeWordLetter));
             }
         }
 
-        return new String(vetor);
+        return newUnderscore.toString();
     }
 
     /**
