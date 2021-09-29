@@ -9,10 +9,9 @@ import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
 public class ChallengeFacade {
-    private final String TAG = "ChallengeFacade";
     public static final int ATTEMPT_ACEPTED = 0;
-    public static int ATTEMPT_REJECTED = 1;
-    public static int ATTEMPT_EXISTS = 2;
+    public static final int ATTEMPT_REJECTED = 1;
+    public static final int ATTEMPT_EXISTS = 2;
     private static ChallengeFacade instance;
     private List<Challenge> challenges;
     private Challenge currentChallenge;
@@ -141,7 +140,7 @@ public class ChallengeFacade {
      * @param letter letra que o usuário chutou
      * @return boolean indicando se já foi chutada antes
      */
-    private boolean checkAttemptExists(char letter) {
+    public boolean checkAttemptExists(char letter) {
         for (String let : this.triedLetters) {
             if (let.equals(String.valueOf(letter))) {
                 this.triedLetters.add(String.valueOf(letter));

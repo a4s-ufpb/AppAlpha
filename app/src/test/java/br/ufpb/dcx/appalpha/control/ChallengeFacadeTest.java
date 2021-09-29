@@ -52,4 +52,43 @@ public class ChallengeFacadeTest {
         assertEquals(underscoreExpected, underscoreReturned);
     }
 
+    @Test
+    public void shouldReturnThatAttemptExists() {
+        String letter = "o";
+        challengeFacade.getAttempResult(letter);
+        assertTrue(challengeFacade.checkAttemptExists(letter.charAt(0)));
+
+    }
+
+    @Test
+    public void shouldReturnThatAttemptDoesNotExists() {
+        String letter = "o";
+        challengeFacade.getAttempResult(letter);
+        assertFalse(challengeFacade.checkAttemptExists('b'));
+
+    }
+
+    @Test
+    public void shouldReturnThatAttemptIsAccepted() {
+        String letter = "o";
+        int result = challengeFacade.getAttempResult(letter);
+        assertEquals(ChallengeFacade.ATTEMPT_ACEPTED, result);
+    }
+
+    @Test
+    public void shouldReturnThatAttemptIsRejected() {
+        String letter = "z";
+        int result = challengeFacade.getAttempResult(letter);
+        assertEquals(ChallengeFacade.ATTEMPT_REJECTED, result);
+
+    }
+
+    @Test
+    public void shouldReturnThatAttemptAlreadyExists() {
+        String letter = "o";
+        challengeFacade.getAttempResult(letter);
+        int result = challengeFacade.getAttempResult(letter);
+        assertEquals(ChallengeFacade.ATTEMPT_EXISTS, result);
+
+    }
 }
