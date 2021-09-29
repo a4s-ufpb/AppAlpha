@@ -1,7 +1,5 @@
 package br.ufpb.dcx.appalpha.control;
 
-import android.util.Log;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +21,7 @@ public class ChallengeFacade {
     private int progressCount;
     private double time;
     private int sumError;
-    private String underscore;
+    private String currentUnderscore;
     private Set<String> triedLetters = new HashSet<>();
 
 
@@ -50,7 +48,7 @@ public class ChallengeFacade {
         this.progressCount = 0;
         this.time = 0.0;
         this.sumError = 0;
-        this.underscore = "";
+        this.currentUnderscore = "";
         setUnderscore();
 
     }
@@ -65,8 +63,6 @@ public class ChallengeFacade {
 
     public void nextChallenge() {
         try {
-            Log.i(TAG, "TRY");
-            Log.i(TAG, this.getCurrentChallenge().getWord());
             this.sumError += this.erroCount;
             this.erroCount = 0;
             this.progressCount++;
@@ -75,7 +71,6 @@ public class ChallengeFacade {
             setUnderscore();
         } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
-            Log.i(TAG, "CATCH");
         }
     }
 
@@ -91,11 +86,11 @@ public class ChallengeFacade {
      * Deixa a palavra em underscore
      */
     public void setUnderscore() {
-        this.underscore = TextUtil.getInstance().getUnderscoreOfThis(this.currentChallenge.getWord());
+        this.currentUnderscore = TextUtil.getInstance().getUnderscoreOfThis(this.currentChallenge.getWord());
     }
 
-    public void setUnderscore(String underscore) {
-        this.underscore = underscore;
+    public void setCurrentUnderscore(String currentUnderscore) {
+        this.currentUnderscore = currentUnderscore;
     }
 
     /**
@@ -105,21 +100,17 @@ public class ChallengeFacade {
      * @return um int indicando se houve acerto ou erro
      */
     public int checkAttempt(String letter) {
-        int resultado;
 
-        String under = updateWordByAttemp(letter.charAt(0));
-        Log.i(TAG, "letter = " + letter + " - under = " + under);
-        Log.i(TAG, "underscore.equalsIgnoreCase(under) = " + underscore.equalsIgnoreCase(under));
-        // Se o underscore atual for diferente do novo, significa que o usuário acertou
-        if (!underscore.equalsIgnoreCase(under)) {
-            underscore = under;
-            resultado = ATTEMPT_ACEPTED;
+        String newUnderscoreAfterAttempt = updateWordByAttemp(letter.charAt(0));
+
+        if (currentUnderscore.equalsIgnoreCase(newUnderscoreAfterAttempt)) {
+            return ATTEMPT_REJECTED;
 
         } else {
-            resultado = ATTEMPT_REJECTED;
+            currentUnderscore = newUnderscoreAfterAttempt;
+            return ATTEMPT_ACEPTED;
         }
 
-        return resultado;
     }
 
     /**
@@ -129,11 +120,7 @@ public class ChallengeFacade {
      * @return o underscore modificado
      */
     public String updateWordByAttemp(char letter) {
-        char[] vetor = underscore.toCharArray();
-
-        Log.i(TAG, "" + letter);
-        Log.i(TAG, "" + this.underscore.length());
-        Log.i(TAG, "" + new String(vetor));
+        char[] vetor = currentUnderscore.toCharArray();
 
         for (int i = 0; i < this.currentChallenge.getWord().length(); i++) {
             if (Character.toUpperCase(letter) == Character.toUpperCase(
@@ -168,7 +155,7 @@ public class ChallengeFacade {
      * @return um boolean indicando se acertou ou não
      */
     public boolean checkWordAccepted() {
-        return this.currentChallenge.getWord().equalsIgnoreCase(underscore);
+        return this.currentChallenge.getWord().equalsIgnoreCase(currentUnderscore);
     }
 
     /**
@@ -190,8 +177,8 @@ public class ChallengeFacade {
 
     }
 
-    public String getUnderscore() {
-        return underscore;
+    public String getCurrentUnderscore() {
+        return currentUnderscore;
     }
 
     public int getProgressCount() {

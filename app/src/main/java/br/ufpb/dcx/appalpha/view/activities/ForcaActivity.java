@@ -18,7 +18,6 @@ import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
 import br.ufpb.dcx.appalpha.control.log.LogManagerExtStor;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
-import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 
 
 public class ForcaActivity extends AppCompatActivity {
@@ -42,7 +41,7 @@ public class ForcaActivity extends AppCompatActivity {
 
         // Setando o underscore no TextView da tela
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(setSpacesInWord(ChallengeFacade.getInstance().getUnderscore()));
+        txtUnderscore.setText(setSpacesInWord(ChallengeFacade.getInstance().getCurrentUnderscore()));
 
         // Setando o ImageView da forca no objeto para modificação ao longo do jogo
         ImageView img_forca = findViewById(R.id.img_forca);
@@ -107,7 +106,7 @@ public class ForcaActivity extends AppCompatActivity {
         initForca();
 
         // Setando o text view com o novo underscore
-        setUnderscoreInTextview(ChallengeFacade.getInstance().getUnderscore());
+        setUnderscoreInTextview(ChallengeFacade.getInstance().getCurrentUnderscore());
 
 
         verifyChallengeItsOver();

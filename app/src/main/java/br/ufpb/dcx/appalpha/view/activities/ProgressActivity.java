@@ -257,7 +257,7 @@ public class ProgressActivity extends AppCompatActivity {
      * na próxima vez que ele gerar o underscore novo ele tenha o mais atualizado
      */
     public void updateUnderscore(String underscore) {
-        ChallengeFacade.getInstance().setUnderscore(underscore);
+        ChallengeFacade.getInstance().setCurrentUnderscore(underscore);
     }
 
     /**
@@ -272,7 +272,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     public String updateUnderscore(char letra) {
-        char[] vetor = ChallengeFacade.getInstance().getUnderscore().toCharArray();
+        char[] vetor = ChallengeFacade.getInstance().getCurrentUnderscore().toCharArray();
 
         for (int i = 0; i < ChallengeFacade.getInstance().getCurrentChallenge().getWord().length(); i++) {
             if (Character.toUpperCase(
@@ -280,7 +280,7 @@ public class ProgressActivity extends AppCompatActivity {
                             .charAt(i)) == Character.toUpperCase(letra)) {
 
                 if (Character.toUpperCase(
-                        TextUtil.normalize(ChallengeFacade.getInstance().getUnderscore())
+                        TextUtil.normalize(ChallengeFacade.getInstance().getCurrentUnderscore())
                                 .charAt(i)) == Character.toUpperCase(letra)) {
                     continue;
                 }
