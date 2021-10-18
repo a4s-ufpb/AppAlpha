@@ -179,6 +179,21 @@ public class ChallengeFacade {
 
     }
 
+    /**
+     * Dá um espaço entre as letras para o usuário poder ver quantas letras a palavra tem
+     * @return o underscore com as letras espaçadas
+     */
+    public String getUnderscoreWithSpaces() {
+        StringBuilder novaString = new StringBuilder();
+
+        for(int i = 0; i < getCurrentUnderscore().length(); i++) {
+            novaString.append(getCurrentUnderscore().charAt(i)) ;
+            novaString.append(" ");
+        }
+
+        return novaString.toString();
+    }
+
     public String getCurrentUnderscore() {
         return currentUnderscore;
     }

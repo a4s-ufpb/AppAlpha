@@ -10,11 +10,11 @@ import org.json.JSONObject;
 
 public class AppConfig extends JsonManager {
     private static AppConfig instance;
-    public final static String CASUAL = "casual";
-    public final static String CURSIVA = "cursiva";
-    public final static String BASTAO = "bastão";
-    public final static String UPPER = "maiúsculas";
-    public final static String LOWER = "minúsculas";
+    public static final String CASUAL = "casual";
+    public static final String CURSIVA = "cursiva";
+    public static final String BASTAO = "bastão";
+    public static final String UPPER = "maiúsculas";
+    public static final String LOWER = "minúsculas";
     private String currentLetterType;
     private String currentLetterCase;
     private JSONObject jsonObjConfig;

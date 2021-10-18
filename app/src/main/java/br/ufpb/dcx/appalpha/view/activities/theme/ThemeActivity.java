@@ -23,6 +23,7 @@ import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
+import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.AddThemeActivity;
 import br.ufpb.dcx.appalpha.view.activities.ForcaActivity;
@@ -115,6 +116,7 @@ public class ThemeActivity extends AppCompatActivity {
 
     private static void setChallengesInFacade(Theme selectedTheme){
         ChallengeFacade.getInstance().init(selectedTheme.getChallenges(), selectedTheme);
+        ServiceLocator.setChallengeFacade(ChallengeFacade.getInstance());
     }
 
     private static void goToSelectedChallenge(Theme selectedTheme){

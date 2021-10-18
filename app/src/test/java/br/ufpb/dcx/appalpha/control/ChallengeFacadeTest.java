@@ -91,4 +91,11 @@ public class ChallengeFacadeTest {
         assertEquals(ChallengeFacade.ATTEMPT_EXISTS, result);
 
     }
+
+    @Test
+    public void shouldReturnUnderscoreWithSpaces() {
+        String underscoreWithSpacesExpected = "_ _ _ _ _ _ ";
+        String actualUnderscoreWithSpaces = challengeFacade.getUnderscoreWithSpaces();
+        assertEquals(underscoreWithSpacesExpected, actualUnderscoreWithSpaces);
+    }
 }

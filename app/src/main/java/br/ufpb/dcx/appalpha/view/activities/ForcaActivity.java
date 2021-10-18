@@ -18,6 +18,7 @@ import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
 import br.ufpb.dcx.appalpha.control.log.LogManagerExtStor;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
+import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 
 
 public class ForcaActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class ForcaActivity extends AppCompatActivity {
     Cronometro cronometro;
     private LogManagerExtStor logManagerExt;
     private ImageView imgPalavra;
+    ChallengeFacade challengeFacade;
 
     public void memoryFree() {
         forcaController = null;
@@ -39,9 +41,12 @@ public class ForcaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forca);
 
+        challengeFacade = ServiceLocator.getChallengeFacade();
+
         // Setando o underscore no TextView da tela
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(setSpacesInWord(ChallengeFacade.getInstance().getCurrentUnderscore()));
+        txtUnderscore.setText(challengeFacade.getUnderscoreWithSpaces());
+        //txtUnderscore.setText(setSpacesInWord(ChallengeFacade.getInstance().getCurrentUnderscore()));
 
         // Setando o ImageView da forca no objeto para modificação ao longo do jogo
         ImageView img_forca = findViewById(R.id.img_forca);
@@ -50,7 +55,8 @@ public class ForcaActivity extends AppCompatActivity {
         // Setando imagem da palavra
 
         imgPalavra = findViewById(R.id.img_palavra);
-        ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), imgPalavra, getApplicationContext());
+        ImageLoadUtil.getInstance().loadImage(challengeFacade.getCurrentChallenge().getImageUrl(), imgPalavra, getApplicationContext());
+        //ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), imgPalavra, getApplicationContext());
 
         // Iniciando cronômetro
         cronometro = new Cronometro(findViewById(R.id.cronometro), getApplicationContext());
@@ -79,7 +85,8 @@ public class ForcaActivity extends AppCompatActivity {
      * @param btnClicado botão correspondente a essa letra
      */
     public void feedbackColorButtonLetter(String letraClicada, Button btnClicado) {
-        int resultado =  ChallengeFacade.getInstance().getAttempResult(letraClicada);
+        int resultado = challengeFacade.getAttempResult(letraClicada);
+        //int resultado =  ChallengeFacade.getInstance().getAttempResult(letraClicada);
 
         if (resultado == ChallengeFacade.ATTEMPT_ACEPTED) {
             btnClicado.setBackgroundResource(R.drawable.greem_rounded_backgroud);
@@ -87,8 +94,11 @@ public class ForcaActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Você já chutou essa letra!", Toast.LENGTH_SHORT).show();
         } else { // ATTEMP_REJECTED
             btnClicado.setBackgroundResource(R.drawable.red_rounded_backgroud);
-            Log.i("Json-Log", ChallengeFacade.getInstance().getCurrentChallenge().getWord() + " - " + letraClicada);
-            this.logManagerExt.addNewErro(ChallengeFacade.getInstance().getCurrentChallenge().getWord(), letraClicada); //Adicionando caso de erro ao arquivo JSON
+
+            Log.i("Json-Log", challengeFacade.getCurrentChallenge().getWord() + " - " + letraClicada);
+            this.logManagerExt.addNewErro(challengeFacade.getCurrentChallenge().getWord(), letraClicada); //Adicionando caso de erro ao arquivo JSON
+            /*Log.i("Json-Log", ChallengeFacade.getInstance().getCurrentChallenge().getWord() + " - " + letraClicada);
+            this.logManagerExt.addNewErro(ChallengeFacade.getInstance().getCurrentChallenge().getWord(), letraClicada); //Adicionando caso de erro ao arquivo JSON*/
         }
     }
 
@@ -106,7 +116,8 @@ public class ForcaActivity extends AppCompatActivity {
         initForca();
 
         // Setando o text view com o novo underscore
-        setUnderscoreInTextview(ChallengeFacade.getInstance().getCurrentUnderscore());
+        setUnderscoreInTextview(challengeFacade.getCurrentUnderscore());
+        //setUnderscoreInTextview(ChallengeFacade.getInstance().getCurrentUnderscore());
 
 
         verifyChallengeItsOver();
@@ -116,7 +127,8 @@ public class ForcaActivity extends AppCompatActivity {
      * Atualiza a imagem da forca
      */
     private void initForca() {
-        forcaController.mudaForca(ChallengeFacade.getInstance().getErroCount());
+        forcaController.mudaForca(challengeFacade.getErroCount());
+        //forcaController.mudaForca(ChallengeFacade.getInstance().getErroCount());
     }
 
     /**
@@ -140,7 +152,8 @@ public class ForcaActivity extends AppCompatActivity {
      */
     private void setUnderscoreInTextview(String underscore) {
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(setSpacesInWord(underscore));
+        txtUnderscore.setText(challengeFacade.getUnderscoreWithSpaces());
+        //txtUnderscore.setText(setSpacesInWord(underscore));
     }
 
     /**
@@ -165,17 +178,20 @@ public class ForcaActivity extends AppCompatActivity {
      * @param v view
      */
     public void playWordSound(View v) {
-        String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
+        String soundUrl = challengeFacade.getCurrentChallenge().getSoundUrl();
+        //String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
                 // TODO obter som da URL, se for URL
             } else if (TextUtil.isAllInteger(soundUrl)) {
                 AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
             } else {
-                AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
+                AudioUtil.getInstance().speakWord(challengeFacade.getCurrentChallenge().getWord());
+                //AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
             }
         } else {
-            AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
+            AudioUtil.getInstance().speakWord(challengeFacade.getCurrentChallenge().getWord());
+            //AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
         }
     }
 
