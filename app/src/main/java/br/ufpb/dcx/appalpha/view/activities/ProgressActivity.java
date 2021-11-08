@@ -237,7 +237,7 @@ public class ProgressActivity extends AppCompatActivity {
      * Seta o textView com o underscore da palavra
      */
     public void setUnderscore() {
-        ChallengeFacade.getInstance().setUnderscore();
+        ChallengeFacade.getInstance().setUnderlinedWord();
     }
 
     /**
@@ -257,7 +257,7 @@ public class ProgressActivity extends AppCompatActivity {
      * na próxima vez que ele gerar o underscore novo ele tenha o mais atualizado
      */
     public void updateUnderscore(String underscore) {
-        ChallengeFacade.getInstance().setCurrentUnderscore(underscore);
+        ChallengeFacade.getInstance().setCurrentUnderlinedWord(underscore);
     }
 
     /**
@@ -272,7 +272,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     public String updateUnderscore(char letra) {
-        char[] vetor = ChallengeFacade.getInstance().getCurrentUnderscore().toCharArray();
+        char[] vetor = ChallengeFacade.getInstance().getCurrentUnderlinedWord().toCharArray();
 
         for (int i = 0; i < ChallengeFacade.getInstance().getCurrentChallenge().getWord().length(); i++) {
             if (Character.toUpperCase(
@@ -280,7 +280,7 @@ public class ProgressActivity extends AppCompatActivity {
                             .charAt(i)) == Character.toUpperCase(letra)) {
 
                 if (Character.toUpperCase(
-                        TextUtil.normalize(ChallengeFacade.getInstance().getCurrentUnderscore())
+                        TextUtil.normalize(ChallengeFacade.getInstance().getCurrentUnderlinedWord())
                                 .charAt(i)) == Character.toUpperCase(letra)) {
                     continue;
                 }

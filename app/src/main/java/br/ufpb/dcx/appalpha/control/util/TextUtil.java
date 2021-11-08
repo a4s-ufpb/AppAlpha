@@ -15,7 +15,7 @@ public class TextUtil {
         return instance;
     }
 
-    public String getUnderscoreOfThis(String word) {
+    public String getUnderlineOfThis(String word) {
         StringBuilder s = new StringBuilder(word);
         StringBuilder newS = new StringBuilder("");
 

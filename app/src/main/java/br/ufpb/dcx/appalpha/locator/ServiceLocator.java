@@ -4,17 +4,27 @@ import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 
 public class ServiceLocator {
     private static ServiceLocator soleInstance;
-    private static ChallengeFacade challengeFacade;
+    private ChallengeFacade challengeFacade;
+
+    private ServiceLocator() {}
+
+    public static ServiceLocator getInstance() {
+        if (soleInstance == null) {
+            soleInstance = new ServiceLocator();
+        }
+
+        return soleInstance;
+    }
 
     public static void load(ServiceLocator arg) {
         soleInstance = arg;
     }
 
-    public static void setChallengeFacade(ChallengeFacade challengeFacade) {
-        challengeFacade = challengeFacade;
+    public void setChallengeFacade(ChallengeFacade challengeFacade) {
+        this.challengeFacade = challengeFacade;
     }
 
-    public static ChallengeFacade getChallengeFacade() {
+    public ChallengeFacade getChallengeFacade() {
         return challengeFacade;
     }
 }

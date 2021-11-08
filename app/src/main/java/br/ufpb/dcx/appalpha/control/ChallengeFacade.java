@@ -20,7 +20,7 @@ public class ChallengeFacade {
     private int progressCount;
     private double time;
     private int sumError;
-    private String currentUnderscore;
+    private String currentUnderlinedWord;
     private Set<String> triedLetters = new HashSet<>();
 
 
@@ -47,8 +47,8 @@ public class ChallengeFacade {
         this.progressCount = 0;
         this.time = 0.0;
         this.sumError = 0;
-        this.currentUnderscore = "";
-        setUnderscore();
+        this.currentUnderlinedWord = "";
+        setUnderlinedWord();
 
     }
 
@@ -67,7 +67,7 @@ public class ChallengeFacade {
             this.progressCount++;
             this.currentChallenge = challenges.get(challenges.indexOf(currentChallenge) + 1);
             this.triedLetters.clear();
-            setUnderscore();
+            setUnderlinedWord();
         } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
         }
@@ -82,14 +82,14 @@ public class ChallengeFacade {
     }
 
     /**
-     * Deixa a palavra em underscore
+     * Deixa a palavra em underline
      */
-    public void setUnderscore() {
-        this.currentUnderscore = TextUtil.getInstance().getUnderscoreOfThis(this.currentChallenge.getWord());
+    public void setUnderlinedWord() {
+        this.currentUnderlinedWord = TextUtil.getInstance().getUnderlineOfThis(this.currentChallenge.getWord());
     }
 
-    public void setCurrentUnderscore(String currentUnderscore) {
-        this.currentUnderscore = currentUnderscore;
+    public void setCurrentUnderlinedWord(String currentUnderlinedWord) {
+        this.currentUnderlinedWord = currentUnderlinedWord;
     }
 
     /**
@@ -102,11 +102,11 @@ public class ChallengeFacade {
 
         String newUnderscoreAfterAttempt = updateWordByAttempt(letter.charAt(0));
 
-        if (currentUnderscore.equalsIgnoreCase(newUnderscoreAfterAttempt)) {
+        if (currentUnderlinedWord.equalsIgnoreCase(newUnderscoreAfterAttempt)) {
             return ATTEMPT_REJECTED;
 
         } else {
-            currentUnderscore = newUnderscoreAfterAttempt;
+            currentUnderlinedWord = newUnderscoreAfterAttempt;
             return ATTEMPT_ACEPTED;
         }
 
@@ -119,7 +119,7 @@ public class ChallengeFacade {
      * @return o underscore modificado
      */
     public String updateWordByAttempt(char letter) {
-        StringBuilder newUnderscore = new StringBuilder(currentUnderscore);
+        StringBuilder newUnderscore = new StringBuilder(currentUnderlinedWord);
         String currentChallengeWord = this.currentChallenge.getWord();
 
         for (int indexInWord = 0; indexInWord < currentChallengeWord.length(); indexInWord++) {
@@ -157,7 +157,7 @@ public class ChallengeFacade {
      * @return um boolean indicando se acertou ou não
      */
     public boolean checkWordAccepted() {
-        return this.currentChallenge.getWord().equalsIgnoreCase(currentUnderscore);
+        return this.currentChallenge.getWord().equalsIgnoreCase(currentUnderlinedWord);
     }
 
     /**
@@ -183,19 +183,19 @@ public class ChallengeFacade {
      * Dá um espaço entre as letras para o usuário poder ver quantas letras a palavra tem
      * @return o underscore com as letras espaçadas
      */
-    public String getUnderscoreWithSpaces() {
+    public String getUnderlinedWordWithSpaces() {
         StringBuilder novaString = new StringBuilder();
 
-        for(int i = 0; i < getCurrentUnderscore().length(); i++) {
-            novaString.append(getCurrentUnderscore().charAt(i)) ;
+        for(int i = 0; i < getCurrentUnderlinedWord().length(); i++) {
+            novaString.append(getCurrentUnderlinedWord().charAt(i)) ;
             novaString.append(" ");
         }
 
         return novaString.toString();
     }
 
-    public String getCurrentUnderscore() {
-        return currentUnderscore;
+    public String getCurrentUnderlinedWord() {
+        return currentUnderlinedWord;
     }
 
     public int getProgressCount() {

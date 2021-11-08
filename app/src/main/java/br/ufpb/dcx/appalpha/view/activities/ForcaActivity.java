@@ -41,11 +41,11 @@ public class ForcaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forca);
 
-        challengeFacade = ServiceLocator.getChallengeFacade();
+        challengeFacade = ServiceLocator.getInstance().getChallengeFacade();
 
         // Setando o underscore no TextView da tela
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(challengeFacade.getUnderscoreWithSpaces());
+        txtUnderscore.setText(challengeFacade.getUnderlinedWordWithSpaces());
         //txtUnderscore.setText(setSpacesInWord(ChallengeFacade.getInstance().getCurrentUnderscore()));
 
         // Setando o ImageView da forca no objeto para modificação ao longo do jogo
@@ -116,7 +116,7 @@ public class ForcaActivity extends AppCompatActivity {
         initForca();
 
         // Setando o text view com o novo underscore
-        setUnderscoreInTextview(challengeFacade.getCurrentUnderscore());
+        setUnderscoreInTextview(challengeFacade.getCurrentUnderlinedWord());
         //setUnderscoreInTextview(ChallengeFacade.getInstance().getCurrentUnderscore());
 
 
@@ -152,7 +152,7 @@ public class ForcaActivity extends AppCompatActivity {
      */
     private void setUnderscoreInTextview(String underscore) {
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
-        txtUnderscore.setText(challengeFacade.getUnderscoreWithSpaces());
+        txtUnderscore.setText(challengeFacade.getUnderlinedWordWithSpaces());
         //txtUnderscore.setText(setSpacesInWord(underscore));
     }
 
