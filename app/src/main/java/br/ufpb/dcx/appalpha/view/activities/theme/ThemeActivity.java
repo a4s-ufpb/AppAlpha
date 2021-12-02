@@ -116,7 +116,6 @@ public class ThemeActivity extends AppCompatActivity {
 
     private static void setChallengesInFacade(Theme selectedTheme){
         ChallengeFacade.getInstance().init(selectedTheme.getChallenges(), selectedTheme);
-        ServiceLocator.getInstance().setChallengeFacade(ChallengeFacade.getInstance());
     }
 
     private static void goToSelectedChallenge(Theme selectedTheme){

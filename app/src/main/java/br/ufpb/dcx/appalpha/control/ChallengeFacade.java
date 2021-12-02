@@ -35,10 +35,6 @@ public class ChallengeFacade {
         return instance;
     }
 
-    public List<Challenge> getChallenges() {
-        return challenges;
-    }
-
     public void init(List<Challenge> challenges, Theme selectedTheme) {
         this.challenges = challenges;
         this.currentChallenge = challenges.get(0);
@@ -50,10 +46,6 @@ public class ChallengeFacade {
         this.currentUnderlinedWord = "";
         setUnderlinedWord();
 
-    }
-
-    public Theme getSelectedTheme() {
-        return selectedTheme;
     }
 
     public Challenge getCurrentChallenge() {
@@ -225,4 +217,8 @@ public class ChallengeFacade {
     public int getSumError() {
         return sumError;
     }
+
+    public List<Challenge> getChallenges() {
+        return challenges;
+    } 
 }

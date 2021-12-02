@@ -17,6 +17,7 @@ import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.config.ButtonDelay;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
+import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 
 public class ProgressActivity extends AppCompatActivity {
     private final String TAG = "ProgressActivity";
