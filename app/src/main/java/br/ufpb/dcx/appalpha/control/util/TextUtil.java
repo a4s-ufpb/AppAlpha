@@ -23,9 +23,9 @@ public class TextUtil {
 
         for (int i = 0; i < s.length(); i++) {
 
-            if(caractererDisponivel(word)) {
+            if(caractererIndisponivel(word.charAt(i))) {
                 // letra indisponivel no teclado
-                newS.append(word);
+                newS.append(String.valueOf(word.charAt(i)));
                 continue;
             }
 
@@ -36,14 +36,14 @@ public class TextUtil {
     }
 
     /**
-     * Caractereres disponivel no teclado para o jogador
+     * Caractereres indisponivel no teclado para o jogador
      * @param letra
      * @return Boolean, letra disponivel
      */
-    private Boolean caractererDisponivel(String letra)
+    private Boolean caractererIndisponivel(char letra)
     {
         Pattern p = Pattern.compile("[^a-z]", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(String.valueOf(tratarCaracte(letra.charAt(0))));
+        Matcher m = p.matcher(String.valueOf(tratarCaracte(letra)));
         return m.find();
     }
 
@@ -55,7 +55,7 @@ public class TextUtil {
             return false;
         }
     }
-    
+
     /**
      * Tratar caractere removendo acentos e minusculo, para uma simples comparacao
      * @param caractere

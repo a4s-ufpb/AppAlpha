@@ -231,7 +231,11 @@ public class ProgressActivity extends AppCompatActivity {
 
         }
 
-        AudioUtil.getInstance(getApplicationContext()).playSound(idSom);
+        if(idSom != 0) {
+            AudioUtil.getInstance(getApplicationContext()).playSound(idSom);
+        } else {
+            AudioUtil.getInstance(getApplicationContext()).speakWord(String.valueOf(letra));
+        }
     }
 
     /**

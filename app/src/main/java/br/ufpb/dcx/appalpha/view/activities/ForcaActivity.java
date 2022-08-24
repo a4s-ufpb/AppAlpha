@@ -72,7 +72,7 @@ public class ForcaActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        this.logManagerExt.saveLogInFile();
+        //this.logManagerExt.saveLogInFile();
     }
 
     /**
@@ -91,7 +91,7 @@ public class ForcaActivity extends AppCompatActivity {
             btnClicado.setBackgroundResource(R.drawable.red_rounded_backgroud);
 
             Log.i("Json-Log", ChallengeFacade.getInstance().getCurrentChallenge().getWord() + " - " + letraClicada);
-            this.logManagerExt.addNewErro(ChallengeFacade.getInstance().getCurrentChallenge().getWord(), letraClicada); //Adicionando caso de erro ao arquivo JSON
+            //this.logManagerExt.addNewErro(ChallengeFacade.getInstance().getCurrentChallenge().getWord(), letraClicada); //Adicionando caso de erro ao arquivo JSON
             Log.i("Json-Log", ChallengeFacade.getInstance().getCurrentChallenge().getWord() + " - " + letraClicada);
         }
     }
