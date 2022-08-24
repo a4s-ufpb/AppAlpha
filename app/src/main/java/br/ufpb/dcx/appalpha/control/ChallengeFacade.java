@@ -94,7 +94,7 @@ public class ChallengeFacade {
 
         String newUnderscoreAfterAttempt = updateWordByAttempt(letter.charAt(0));
 
-        if (currentUnderlinedWord.equalsIgnoreCase(newUnderscoreAfterAttempt)) {
+        if (currentUnderlinedWord.equals(newUnderscoreAfterAttempt)) {
             return ATTEMPT_REJECTED;
 
         } else {
@@ -115,11 +115,8 @@ public class ChallengeFacade {
         String currentChallengeWord = this.currentChallenge.getWord();
 
         for (int indexInWord = 0; indexInWord < currentChallengeWord.length(); indexInWord++) {
-            char upperCasedLetterAttempt = Character.toUpperCase(letter);
-            char upperCasedCurrentChallengeWordLetter = Character.toUpperCase(currentChallengeWord.charAt(indexInWord));
-
-            if (upperCasedLetterAttempt == upperCasedCurrentChallengeWordLetter) {
-                newUnderscore.setCharAt(indexInWord, Character.toLowerCase(upperCasedCurrentChallengeWordLetter));
+            if (TextUtil.getInstance().tratarCaracte(letter) == TextUtil.getInstance().tratarCaracte(currentChallengeWord.charAt(indexInWord))) {
+                newUnderscore.setCharAt(indexInWord, currentChallengeWord.charAt(indexInWord));
             }
         }
 
@@ -149,7 +146,7 @@ public class ChallengeFacade {
      * @return um boolean indicando se acertou ou não
      */
     public boolean checkWordAccepted() {
-        return this.currentChallenge.getWord().equalsIgnoreCase(currentUnderlinedWord);
+        return this.currentChallenge.getWord().equals(currentUnderlinedWord);
     }
 
     /**
