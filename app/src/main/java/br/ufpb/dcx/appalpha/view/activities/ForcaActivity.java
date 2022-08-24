@@ -67,6 +67,7 @@ public class ForcaActivity extends AppCompatActivity {
         super.onDestroy();
         AudioUtil.getInstance().stopSound();
         memoryFree();
+        ChallengeFacade.getInstance().limparTentativasDeLetras();
     }
 
     @Override

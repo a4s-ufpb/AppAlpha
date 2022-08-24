@@ -58,11 +58,16 @@ public class ChallengeFacade {
             this.erroCount = 0;
             this.progressCount++;
             this.currentChallenge = challenges.get(challenges.indexOf(currentChallenge) + 1);
-            this.triedLetters.clear();
+            limparTentativasDeLetras();
             setUnderlinedWord();
         } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
         }
+    }
+
+    public void limparTentativasDeLetras()
+    {
+        this.triedLetters.clear();
     }
 
     public void setCurrentChallenge(Challenge currentChallenge) {

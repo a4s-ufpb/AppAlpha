@@ -16,6 +16,7 @@ import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.config.ButtonDelay;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
+import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 
@@ -26,6 +27,7 @@ public class ProgressActivity extends AppCompatActivity {
     private int millis = 2500;
     private char[] letras;
     private Thread leitor;
+    private Boolean stopFalarLetra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class ProgressActivity extends AppCompatActivity {
                 try {
                     while (!isInterrupted()) {
                         for (final char letra : TextUtil.normalize(new String(letras)).toCharArray()) {
+
                             try {
                                 Thread.sleep(millis);
                             } catch (InterruptedException e) {
@@ -111,7 +114,7 @@ public class ProgressActivity extends AppCompatActivity {
         super.onDestroy();
         //leitor.interrupt();
         AudioUtil.getInstance(getApplicationContext()).stopSound();
-
+        hasChangedActivity = true;
     }
 
     /**
@@ -338,15 +341,17 @@ public class ProgressActivity extends AppCompatActivity {
         ImageView img_desafio = findViewById(R.id.img_desafio);
         String imgUrl = ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl();
 
-        if (imgUrl != null && !imgUrl.isEmpty()) {
-            if (imgUrl.startsWith("http")) {
-                Picasso.get().load(imgUrl).into(img_desafio);
-            } else {
-                img_desafio.setImageResource(Integer.parseInt(imgUrl));
-            }
-        } else {
-            // TODO tratar quando não tem imagem
-        }
+        ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), img_desafio, getApplicationContext());
+
+        //if (imgUrl != null && !imgUrl.isEmpty()) {
+        //    if (imgUrl.startsWith("http")) {
+        //        Picasso.get().load(imgUrl).into(img_desafio);
+        //    } else {
+        //        img_desafio.setImageResource(Integer.parseInt(imgUrl));
+        //    }
+        //} else {
+        //    // TODO tratar quando não tem imagem
+        //}
 
     }
 

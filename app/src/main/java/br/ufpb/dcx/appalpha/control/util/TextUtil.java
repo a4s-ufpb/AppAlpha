@@ -24,7 +24,7 @@ public class TextUtil {
         for (int i = 0; i < s.length(); i++) {
 
             if(caractererIndisponivel(word.charAt(i))) {
-                // letra indisponivel no teclado
+                // letra indisponivel no teclado, passar na palavra
                 newS.append(String.valueOf(word.charAt(i)));
                 continue;
             }

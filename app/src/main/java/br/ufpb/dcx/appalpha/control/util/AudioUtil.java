@@ -87,22 +87,29 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     public synchronized void speakWord(String world) {
         this.textToSpeak.speak(world, TextToSpeech.QUEUE_FLUSH, null);
+
+        this.duration = 3*1000;
     }
 
     public int getDuration() {
         return duration;
     }
 
-    public void stopSound() {
-        if (mediaPlayer != null) {
+    public void stopSoundPlayer(MediaPlayer player) {
+        if (player != null) {
             try {
-                mediaPlayer.stop();
-                mediaPlayer.release();
-                mediaPlayer = null;
+                player.stop();
+                player.release();
+                player = null;
             } catch (IllegalStateException e) {
                 Log.e("illegal state", "provavelmente o media player não foi iniciado");
             }
         }
+    }
+
+    public void stopSound() {
+        stopSoundPlayer(mediaPlayer);
+        stopSoundPlayer(mediaPlayerUrl);
     }
 
     @Override
