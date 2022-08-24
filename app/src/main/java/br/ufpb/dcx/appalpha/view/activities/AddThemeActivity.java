@@ -1,13 +1,13 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -48,31 +48,34 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()){
             case(R.id.btnImport):
                 Long id = Long.parseLong(tlIdTheme.getEditText().getText().toString());
+                if (!themeSqlService.existsByApiId(id)) {
+                    Call call = new RetrofitInitializer().contextService().find(id);
+                    call.enqueue(new Callback<Theme>() {
+                        @Override
+                        public void onResponse(Call<Theme> call, Response<Theme> response) {
+                            if(response.body() != null){
+                                Theme theme = response.body();
+                                Log.i(TAG, "Theme challenges:" + theme.getChallenges().size());
 
-                Call call = new RetrofitInitializer().contextService().find(id);
-                call.enqueue(new Callback<Theme>() {
-                    @Override
-                    public void onResponse(Call<Theme> call, Response<Theme> response) {
-                        if(response.body() != null){
-                            Theme theme = response.body();
-                            themeSqlService.insert(theme, null);
-                            Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
-                            Log.i(TAG, "Theme de id " + id + " recuperado com sucesso!");
-                            finish();
-
-                        }else{
-                            Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
-                            Log.i(TAG, "Erro ao recuperar theme com id " + id);
+                                themeSqlService.insert(theme, theme.getChallenges());
+                                Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
+                                Log.i(TAG, "Theme de id " + id + " recuperado com sucesso!");
+                                finish();
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
+                                Log.i(TAG, "Erro ao recuperar theme com id " + id);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Theme> call, Throwable t) {
-                        Log.e(TAG, "Erro ao recuperar tema: "+t.getMessage());
-                    }
-                });
-
-
+                        @Override
+                        public void onFailure(Call<Theme> call, Throwable t) {
+                            Log.e(TAG, "Erro ao recuperar tema: "+t.getMessage());
+                        }
+                    });
+                } else {
+                    Toast.makeText(getApplicationContext(), "Tema de ID " + id + " já está importado. Tente outro tema.", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Tema de id " + id + " já existe!");
+                }
 
                 break;
 

@@ -13,8 +13,9 @@ public class Theme {
     private String soundUrl;
     private String videoUrl;
     private List<Challenge>  challenges = new ArrayList<>();
+    private Long apiId;
 
-    public Theme(Long id, String name, User creator, String imageUrl, String soundUrl, String videoUrl, List<Challenge>  challenges) {
+    public Theme(Long id, String name, User creator, String imageUrl, String soundUrl, String videoUrl, List<Challenge>  challenges, Long apiId) {
         this.id = id;
         this.name = name;
         this.creator = creator;
@@ -22,6 +23,7 @@ public class Theme {
         this.soundUrl = soundUrl;
         this.videoUrl = videoUrl;
         this.challenges = challenges;
+        this.apiId = apiId;
     }
 
     public Theme(String name, String imageUrl, String soundUrl, String videoUrl) {
@@ -87,6 +89,14 @@ public class Theme {
         this.challenges = challenges;
     }
 
+    public Long getApiId() {
+        return apiId;
+    }
+
+    public void setApiId(Long apiId) {
+        this.apiId = apiId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,6 +114,7 @@ public class Theme {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", soundUrl='" + soundUrl + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
+                ", apiId='" + apiId + '\'' +
                 '}';
     }
 }

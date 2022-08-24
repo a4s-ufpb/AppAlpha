@@ -1,5 +1,7 @@
 package br.ufpb.dcx.appalpha.control.util;
 
+import java.text.Normalizer;
+
 public class TextUtil {
     private static TextUtil instance;
 
@@ -13,7 +15,7 @@ public class TextUtil {
         return instance;
     }
 
-    public String getUnderscoreOfThis(String word) {
+    public String getUnderlineOfThis(String word) {
         StringBuilder s = new StringBuilder(word);
         StringBuilder newS = new StringBuilder("");
 
@@ -22,5 +24,18 @@ public class TextUtil {
         }
 
         return newS.toString();
+    }
+
+    public static boolean isAllInteger(String text) {
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch(NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static String normalize(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 }

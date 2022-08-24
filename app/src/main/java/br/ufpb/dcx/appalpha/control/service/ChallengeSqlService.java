@@ -21,8 +21,8 @@ public class ChallengeSqlService {
     private SQLiteDatabase readableDb;
     private UsersSqlService usersSqlService;
 
-    public static ChallengeSqlService getInstance(Context context){
-        if(instance == null){
+    public static ChallengeSqlService getInstance(Context context) {
+        if (instance == null) {
             instance = new ChallengeSqlService(context);
         }
         return instance;
@@ -35,7 +35,7 @@ public class ChallengeSqlService {
         this.usersSqlService = UsersSqlService.getInstance(context);
     }
 
-    public Long insert(Challenge challenge){
+    public Long insert(Challenge challenge) {
         ContentValues cv = new ContentValues();
         Long id = -1L;
         try {
@@ -48,7 +48,7 @@ public class ChallengeSqlService {
             id = this.writableDb.insert(DbHelper.CHALLENGES_TABLE, null, cv);
             Log.i(TAG, challenge.getWord() + " added in db!");
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         } finally {
             cv.clear();
@@ -57,28 +57,12 @@ public class ChallengeSqlService {
         return id;
     }
 
-    public void update(Challenge challenge){
-
-    }
-
-    public void delete(Challenge challenge){
-
-    }
-
-    public void delete(Long id){
-
-    }
-
-    public Challenge get(Long id){
-        return null;
-    }
-
-    public List<Challenge> getRelatedChallenges(Long theme_id){
+    public List<Challenge> getRelatedChallenges(Long theme_id) {
         String word, soundUrl, videoUrl, imageUrl;
         Long id, user_creator;
         word = soundUrl = videoUrl = imageUrl = "";
 
-        Log.i(TAG, ""+theme_id);
+        Log.i(TAG, "" + theme_id);
 
         List<Challenge> challenges = new ArrayList<>();
 
@@ -91,7 +75,7 @@ public class ChallengeSqlService {
 
         Cursor cursor = readableDb.rawQuery(selectQuery, null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 id = cursor.getLong(0);
                 word = cursor.getString(1);
@@ -102,7 +86,7 @@ public class ChallengeSqlService {
 
                 User creator = usersSqlService.get(user_creator);
 
-                Challenge c = new Challenge(id,word, creator, soundUrl, videoUrl, imageUrl);
+                Challenge c = new Challenge(id, word, creator, soundUrl, videoUrl, imageUrl);
                 challenges.add(c);
             } while (cursor.moveToNext());
         }
