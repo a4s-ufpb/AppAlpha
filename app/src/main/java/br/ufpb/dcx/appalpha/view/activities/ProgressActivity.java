@@ -44,7 +44,7 @@ public class ProgressActivity extends AppCompatActivity {
 
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
-                // TODO obter som da URL, se for URL
+                AudioUtil.getInstance().playSoundURL(soundUrl);
             } else if (TextUtil.isAllInteger(soundUrl)) { // Para desafios internos do appalpha
                 AudioUtil.getInstance(getApplicationContext()).playSound(Integer.parseInt(soundUrl));
             } else {

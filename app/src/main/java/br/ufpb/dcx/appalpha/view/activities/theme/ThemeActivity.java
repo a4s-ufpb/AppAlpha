@@ -134,7 +134,7 @@ public class ThemeActivity extends AppCompatActivity {
         String soundUrl = selectedTheme.getSoundUrl();
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
-                // TODO obter som da URL, se for URL
+                AudioUtil.getInstance().playSoundURL(soundUrl);
             } else if (TextUtil.isAllInteger(soundUrl)) { // caso seja um tema interno
                 AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
             } else {
