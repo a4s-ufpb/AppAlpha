@@ -2,6 +2,7 @@ package br.ufpb.dcx.appalpha.view.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -44,6 +45,16 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         btnImport.setOnClickListener(this);
 
         abrirTeclado();
+
+        findViewById(R.id.theme_id_field).setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER) {
+                    onClick(findViewById(R.id.btnImport));
+                }
+                return false;
+            }
+        });
     }
 
     public void abrirTeclado()
