@@ -26,7 +26,7 @@ public class ThemesApiService {
         return instance;
     }
 
-    public Theme find(Long id) {
+    public Theme find(int id) {
         themeResult = null;
         Call call = new RetrofitInitializer().contextService().find(id);
         call.enqueue(new Callback<Theme>() {
