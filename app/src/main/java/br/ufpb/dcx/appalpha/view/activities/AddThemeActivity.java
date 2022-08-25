@@ -47,7 +47,12 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case(R.id.btnImport):
-                Long id = Long.parseLong(tlIdTheme.getEditText().getText().toString());
+                Long id = (tlIdTheme.getEditText().getText()==null||tlIdTheme.getEditText().getText().length()==0)?-1:Long.parseLong(tlIdTheme.getEditText().getText().toString());
+                if (id==-1)
+                {
+                    Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 if (!themeSqlService.existsByApiId(id)) {
                     Call call = new RetrofitInitializer().contextService().find(id);
                     call.enqueue(new Callback<Theme>() {

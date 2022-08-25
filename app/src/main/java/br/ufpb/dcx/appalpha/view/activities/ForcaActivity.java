@@ -2,7 +2,11 @@ package br.ufpb.dcx.appalpha.view.activities;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,7 +69,7 @@ public class ForcaActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AudioUtil.getInstance().stopSound();
+        //AudioUtil.getInstance().stopSound();
         memoryFree();
         ChallengeFacade.getInstance().limparTentativasDeLetras();
     }
@@ -76,12 +80,23 @@ public class ForcaActivity extends AppCompatActivity {
         //this.logManagerExt.saveLogInFile();
     }
 
+    private void feedbackTatil() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(80, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(80);
+        }
+    }
+
     /**
      * Muda a cor do botão clicado de acordo com o resultado do chute. A cor do botão mudará para verde caso acerte, caso não, mudará para vermelho.
      * @param letraClicada a letra que o usuário chutou
      * @param btnClicado botão correspondente a essa letra
      */
-    public void feedbackColorButtonLetter(String letraClicada, Button btnClicado) {
+    public void feedbackColorButtonLetter(String letraClicada, Button btnClicado)
+    {
+        feedbackTatil();
+
         int resultado = ChallengeFacade.getInstance().getAttempResult(letraClicada);
 
         if (resultado == ChallengeFacade.ATTEMPT_ACEPTED) {
@@ -157,7 +172,7 @@ public class ForcaActivity extends AppCompatActivity {
         String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
-                // TODO obter som da URL, se for URL
+                AudioUtil.getInstance().playSoundURL(soundUrl);
             } else if (TextUtil.isAllInteger(soundUrl)) {
                 AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
             } else {
