@@ -1,6 +1,7 @@
 package br.ufpb.dcx.appalpha.control.api;
 
 import java.security.cert.CertificateException;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -61,6 +62,8 @@ public class RetrofitInitializer {
                     }
                 });
             }
+			builder.connectTimeout(30, TimeUnit.MINUTES);
+            builder.readTimeout(30, TimeUnit.MINUTES);
             OkHttpClient okHttpClient = builder.build();
             return okHttpClient;
         } catch (Exception e) {
