@@ -26,13 +26,18 @@ public class LogManagerExtStor extends JsonWriter {
     public LogManagerExtStor(Context appContext){
         try {
             this.jsonObjLog = super.getJsonObjectOfArchive(appContext); //Recupera o Json Object do arquivo ou cria um novo com o arquivo do asset
+            if(this.jsonObjLog==null) {
+                this.jsonObjLog = new JSONObject();
+            }
             this.erroCount = this.jsonObjLog.getInt("erro_count"); //Recupera o contador de erros do jsonObject
             this.jsonErroArray = this.jsonObjLog.getJSONArray("erros"); //Recupera o JsonArray de erros do JsonObejct
-
+            if(this.jsonErroArray==null) {
+                this.jsonErroArray = new JSONArray();
+            }
         }  catch (IOException e) {
             Log.e(LOG_TAG,"Erro ao recuperar JSON File");
             e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG,"Erro ao criar JSON Object");
             e.printStackTrace();
         }
@@ -56,7 +61,7 @@ public class LogManagerExtStor extends JsonWriter {
             newJsonObj.put("erros", erro);
             this.jsonObjLog = newJsonObj;
             Log.i(LOG_TAG,"Erro salvo com sucesso no JsonObject!");
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG,"Erro salvar novo erro no JsonObejct!");
             e.printStackTrace();
         }
@@ -70,11 +75,11 @@ public class LogManagerExtStor extends JsonWriter {
             this.jsonObjLog.put("erros", this.jsonErroArray);
             super.writeJsonObject(this.jsonObjLog);
             Log.i(LOG_TAG,"JsonObject salvo no arquivo log.json!");
-        } catch (JSONException e) {
-            Log.e(LOG_TAG,"Erro ao adicionar o jsonArray ao JsonObject!");
-            e.printStackTrace();
         } catch (IOException e) {
             Log.e(LOG_TAG,"Erro salvar JsonObject no arquivo!");
+            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(LOG_TAG,"Erro ao adicionar o jsonArray ao JsonObject!");
             e.printStackTrace();
         }
     }

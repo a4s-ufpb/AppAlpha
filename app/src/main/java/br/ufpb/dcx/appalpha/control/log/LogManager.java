@@ -21,11 +21,17 @@ public class LogManager extends JsonManager {
     public LogManager(Context appContext){
         this.appContext = appContext;
         this.jsonObjLog = super.getJsonObjectOfArchive(appContext);
+        if(this.jsonObjLog==null) {
+            this.jsonObjLog = new JSONObject();
+        }
         Log.i("Json-Log", jsonObjLog.toString());
         try {
             this.erroCount = this.jsonObjLog.getInt("erro_count");
             this.jsonErroArray = this.jsonObjLog.getJSONArray("erros");
-        } catch (JSONException e) {
+            if(this.jsonErroArray==null) {
+                this.jsonErroArray = new JSONArray();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -52,7 +58,7 @@ public class LogManager extends JsonManager {
             this.jsonErroArray.put(erro);
             newJsonObj.put("erros", erro);
             this.jsonObjLog = newJsonObj;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -62,7 +68,7 @@ public class LogManager extends JsonManager {
             this.jsonObjLog.put("erros", this.jsonErroArray);
             super.writeJsonObject(appContext, this.jsonObjLog);
             Log.i("Json - Log", "All logs have been saved : " + this.jsonObjLog.toString());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

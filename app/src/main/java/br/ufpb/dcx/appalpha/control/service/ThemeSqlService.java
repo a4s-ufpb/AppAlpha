@@ -137,7 +137,7 @@ public class ThemeSqlService {
         return themes;
     }
 
-    public boolean existsByApiId(int id) {
+    public boolean existsByApiId(long id) {
         String selectQuery = "SELECT exists(SELECT id FROM " + DbHelper.THEMES_TABLE + " WHERE apiId = ? LIMIT 1)";
 
         Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});

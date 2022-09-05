@@ -64,23 +64,28 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    public long getInputThemeID()
+    {
+        long ret = -1;
+        try {
+            ret = Integer.parseInt(tlIdTheme.getEditText().getText().toString());
+        }catch (Exception e) {
+        }
+        return ret;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case(R.id.btnImport):
-                int idT = -1;
-                try {
-                    idT = (tlIdTheme.getEditText().getText() == null || tlIdTheme.getEditText().getText().length() == 0) ? -1 : Integer.parseInt(tlIdTheme.getEditText().getText().toString());
-                }catch (Exception e) {
-                }
-                if (idT==-1)
+                long themeId = getInputThemeID();
+                if (themeId==-1)
                 {
                     Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                int temeId = idT;
-                if (!themeSqlService.existsByApiId(temeId)) {
-                    Call call = new RetrofitInitializer().contextService().find(idT);
+                if (!themeSqlService.existsByApiId(themeId)) {
+                    Call call = new RetrofitInitializer().contextService().find(themeId);
                     call.enqueue(new Callback<Theme>() {
                         @Override
                         public void onResponse(Call<Theme> call, Response<Theme> response) {
@@ -94,7 +99,7 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                                 finish();
                             }else{
                                 Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
-                                Log.i(TAG, "Erro ao recuperar theme com id " + temeId);
+                                Log.i(TAG, "Erro ao recuperar theme com id " + themeId);
                             }
                         }
 
@@ -104,8 +109,8 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                         }
                     });
                 } else {
-                    Toast.makeText(getApplicationContext(), "Tema de ID " + temeId + " já está importado. Tente outro tema.", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Tema de id " + temeId + " já existe!");
+                    Toast.makeText(getApplicationContext(), "Tema de ID " + themeId + " já está importado. Tente outro tema.", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Tema de id " + themeId + " já existe!");
                 }
 
                 break;
