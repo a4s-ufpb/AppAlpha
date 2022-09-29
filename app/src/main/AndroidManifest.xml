@@ -32,6 +32,12 @@
             android:name=".view.activities.theme.ThemeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.activities.AddThemeManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activities.CreateThemeActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>

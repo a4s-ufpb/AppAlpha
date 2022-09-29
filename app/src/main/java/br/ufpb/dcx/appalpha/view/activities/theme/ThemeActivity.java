@@ -1,7 +1,6 @@
 package br.ufpb.dcx.appalpha.view.activities.theme;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +22,9 @@ import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
-import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.AddThemeActivity;
+import br.ufpb.dcx.appalpha.view.activities.AddThemeManagerActivity;
 import br.ufpb.dcx.appalpha.view.activities.ForcaActivity;
 import br.ufpb.dcx.appalpha.view.activities.ViewAnimation;
 
@@ -61,7 +60,7 @@ public class ThemeActivity extends AppCompatActivity {
         ViewAnimation.init(fabAdd);
 
         fabAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddThemeActivity.class);
+            Intent intent = new Intent(this, AddThemeManagerActivity.class);
             this.startActivity(intent);
         });
 

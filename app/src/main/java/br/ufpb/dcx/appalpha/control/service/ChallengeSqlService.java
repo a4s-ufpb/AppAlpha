@@ -11,7 +11,6 @@ import java.util.List;
 
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
-import br.ufpb.dcx.appalpha.model.bean.User;
 
 public class ChallengeSqlService {
     private final String TAG = "ChallengeApiService";
@@ -19,7 +18,6 @@ public class ChallengeSqlService {
     private DbHelper db;
     private SQLiteDatabase writableDb;
     private SQLiteDatabase readableDb;
-    private UsersSqlService usersSqlService;
 
     public static ChallengeSqlService getInstance(Context context) {
         if (instance == null) {
@@ -32,7 +30,6 @@ public class ChallengeSqlService {
         this.db = new DbHelper(context);
         this.writableDb = db.getWritableDatabase();
         this.readableDb = db.getReadableDatabase();
-        this.usersSqlService = UsersSqlService.getInstance(context);
     }
 
     public Long insert(Challenge challenge) {
@@ -43,7 +40,6 @@ public class ChallengeSqlService {
             cv.put("soundUrl", challenge.getSoundUrl());
             cv.put("videoUrl", challenge.getVideoUrl());
             cv.put("imageUrl", challenge.getImageUrl());
-            cv.put("user_creator", challenge.getCreator() != null ? challenge.getCreator().getId() : null);
 
             id = this.writableDb.insert(DbHelper.CHALLENGES_TABLE, null, cv);
             Log.i(TAG, challenge.getWord() + " added in db!");
@@ -59,14 +55,14 @@ public class ChallengeSqlService {
 
     public List<Challenge> getRelatedChallenges(Long theme_id) {
         String word, soundUrl, videoUrl, imageUrl;
-        Long id, user_creator;
+        Long id;
         word = soundUrl = videoUrl = imageUrl = "";
 
         Log.i(TAG, "" + theme_id);
 
         List<Challenge> challenges = new ArrayList<>();
 
-        String selectQuery = "SELECT " + DbHelper.CHALLENGES_TABLE + ".id, " + DbHelper.CHALLENGES_TABLE + ".word, " + DbHelper.CHALLENGES_TABLE + ".user_creator, " + DbHelper.CHALLENGES_TABLE + ".soundUrl, " + DbHelper.CHALLENGES_TABLE + ".videoUrl, " + DbHelper.CHALLENGES_TABLE + ".imageUrl FROM "
+        String selectQuery = "SELECT " + DbHelper.CHALLENGES_TABLE + ".id, " + DbHelper.CHALLENGES_TABLE + ".word, " + DbHelper.CHALLENGES_TABLE + ".soundUrl, " + DbHelper.CHALLENGES_TABLE + ".videoUrl, " + DbHelper.CHALLENGES_TABLE + ".imageUrl FROM "
                 + DbHelper.CHALLENGES_TABLE +
                 " INNER JOIN " +
                 DbHelper.CHALLENGE_THEME_TABLE + " CT ON "
@@ -79,14 +75,11 @@ public class ChallengeSqlService {
             do {
                 id = cursor.getLong(0);
                 word = cursor.getString(1);
-                user_creator = cursor.getLong(2);
-                soundUrl = cursor.getString(3);
-                videoUrl = cursor.getString(4);
-                imageUrl = cursor.getString(5);
+                soundUrl = cursor.getString(2);
+                videoUrl = cursor.getString(3);
+                imageUrl = cursor.getString(4);
 
-                User creator = usersSqlService.get(user_creator);
-
-                Challenge c = new Challenge(id, word, creator, soundUrl, videoUrl, imageUrl);
+                Challenge c = new Challenge(id, word, soundUrl, videoUrl, imageUrl);
                 challenges.add(c);
             } while (cursor.moveToNext());
         }

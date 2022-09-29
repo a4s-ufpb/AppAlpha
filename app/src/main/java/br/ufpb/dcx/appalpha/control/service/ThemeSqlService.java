@@ -14,7 +14,6 @@ import java.util.List;
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
-import br.ufpb.dcx.appalpha.model.bean.User;
 
 public class ThemeSqlService {
     private final String TAG = "ThemeSqlService";
@@ -23,7 +22,6 @@ public class ThemeSqlService {
     private SQLiteDatabase writableDb;
     private SQLiteDatabase readableDb;
     private ChallengeSqlService challengeSqlService;
-    private UsersSqlService usersSqlService;
 
     public static ThemeSqlService getInstance(Context context) {
         if (instance == null) {
@@ -37,7 +35,6 @@ public class ThemeSqlService {
         this.writableDb = db.getWritableDatabase();
         this.readableDb = db.getReadableDatabase();
         this.challengeSqlService = ChallengeSqlService.getInstance(context);
-        this.usersSqlService = UsersSqlService.getInstance(context);
     }
 
     public Long insert(Theme theme, @Nullable List<Challenge> relatedChallenges) {
@@ -49,7 +46,7 @@ public class ThemeSqlService {
             cv.put("videoUrl", theme.getVideoUrl());
             cv.put("imageUrl", theme.getImageUrl());
             cv.put("apiId", theme.getId());
-            cv.put("user_creator", theme.getCreator() != null ? theme.getCreator().getId() : null);
+            cv.put("deletavel", theme.getDeletavel());
 
             id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
             Log.i(TAG, theme.getName() + " added in db!");
@@ -87,8 +84,8 @@ public class ThemeSqlService {
     public Theme get(Long id) {
         String name, soundUrl, videoUrl, imageUrl;
         name = soundUrl = videoUrl = imageUrl = "";
-
-        String selectQuery = "SELECT name, soundUrl, videoUrl, imageUrl FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
+        int deletavel = 0;
+        String selectQuery = "SELECT name, soundUrl, videoUrl, imageUrl, deletavel FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
 
         Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});
 
@@ -97,21 +94,23 @@ public class ThemeSqlService {
             soundUrl = cursor.getString(1);
             videoUrl = cursor.getString(2);
             imageUrl = cursor.getString(3);
+            deletavel = cursor.getInt(4);
         }
 
         cursor.close();
-
-        return new Theme(name, soundUrl, videoUrl, imageUrl);
+        Theme theme = new Theme(name, soundUrl, videoUrl, imageUrl);
+        theme.setDeletavel(deletavel==1);
+        return theme;
     }
 
     public List<Theme> getAll() {
         String name, soundUrl, videoUrl, imageUrl;
-        Long id, user_creator;
+        Long id;
         String apiId;
-
+        int deletavel = 0;
         List<Theme> themes = new ArrayList<>();
 
-        String selectQuery = "SELECT id, name, user_creator, soundUrl, videoUrl, imageUrl, apiId FROM " + DbHelper.THEMES_TABLE;
+        String selectQuery = "SELECT id, name, soundUrl, videoUrl, imageUrl, apiId, deletavel FROM " + DbHelper.THEMES_TABLE;
 
         Cursor cursor = readableDb.rawQuery(selectQuery, null);
 
@@ -119,15 +118,15 @@ public class ThemeSqlService {
             do {
                 id = cursor.getLong(0);
                 name = cursor.getString(1);
-                user_creator = cursor.getLong(2);
-                soundUrl = cursor.getString(3);
-                videoUrl = cursor.getString(4);
-                imageUrl = cursor.getString(5);
-                apiId = cursor.getString(6);
+                soundUrl = cursor.getString(2);
+                videoUrl = cursor.getString(3);
+                imageUrl = cursor.getString(4);
+                apiId = cursor.getString(5);
+                deletavel = cursor.getInt(6);
                 List<Challenge> relatedChallenges = challengeSqlService.getRelatedChallenges(id);
-                User creator = usersSqlService.get(user_creator);
-                Theme t = new Theme(id, name, creator, imageUrl, soundUrl, videoUrl, relatedChallenges,
+                Theme t = new Theme(id, name, imageUrl, soundUrl, videoUrl, relatedChallenges,
                         apiId != null ? Long.parseLong(apiId) : null);
+                t.setDeletavel(deletavel==1);
                 themes.add(t);
             } while (cursor.moveToNext());
         }

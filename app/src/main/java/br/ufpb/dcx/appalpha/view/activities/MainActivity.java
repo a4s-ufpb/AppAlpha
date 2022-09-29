@@ -1,5 +1,6 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,16 +21,23 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private PermissionControll pc;
     SharedPreferences sPreferences = null;
+    public static Context mainContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainContext = getApplicationContext();
         this.pc = new PermissionControll(this);
         pc.getReadExternalStoragePermission();
         pc.getWriteExternalStoragePermission();
 
         verifyFirstRunAndInjectDb();
+    }
+
+    public static Context getMainContext()
+    {
+        return mainContext;
     }
 
     public void verifyFirstRunAndInjectDb(){

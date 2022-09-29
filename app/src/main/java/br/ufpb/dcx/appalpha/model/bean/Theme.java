@@ -8,17 +8,16 @@ import java.util.Set;
 public class Theme {
     private Long id;
     private String name;
-    private User creator;
     private String imageUrl;
     private String soundUrl;
     private String videoUrl;
     private List<Challenge>  challenges = new ArrayList<>();
     private Long apiId;
+    private Boolean deletavel;
 
-    public Theme(Long id, String name, User creator, String imageUrl, String soundUrl, String videoUrl, List<Challenge>  challenges, Long apiId) {
+    public Theme(Long id, String name, String imageUrl, String soundUrl, String videoUrl, List<Challenge>  challenges, Long apiId) {
         this.id = id;
         this.name = name;
-        this.creator = creator;
         this.imageUrl = imageUrl;
         this.soundUrl = soundUrl;
         this.videoUrl = videoUrl;
@@ -47,14 +46,6 @@ public class Theme {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
     }
 
     public String getImageUrl() {
@@ -97,6 +88,14 @@ public class Theme {
         this.apiId = apiId;
     }
 
+    public Boolean getDeletavel() {
+        return deletavel;
+    }
+
+    public void setDeletavel(Boolean deletavel) {
+        this.deletavel = deletavel;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,10 +109,10 @@ public class Theme {
         return "Theme{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", creator=" + creator +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", soundUrl='" + soundUrl + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
+                ", deletavel='" + deletavel + '\'' +
                 ", apiId='" + apiId + '\'' +
                 '}';
     }

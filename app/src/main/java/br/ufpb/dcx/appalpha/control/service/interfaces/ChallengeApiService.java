@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 
 public interface ChallengeApiService {
 
-    @GET("/educapi/v1/api/challenges")
+    @GET("v1/api/challenges")
     Call<List<Challenge>> findAll();
 
 }

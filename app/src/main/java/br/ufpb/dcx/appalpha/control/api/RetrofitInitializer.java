@@ -1,5 +1,7 @@
 package br.ufpb.dcx.appalpha.control.api;
 
+import android.content.res.Resources;
+
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
@@ -10,14 +12,21 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.service.interfaces.ChallengeApiService;
 import br.ufpb.dcx.appalpha.control.service.interfaces.ThemesApiServiceInterface;
+import br.ufpb.dcx.appalpha.view.activities.MainActivity;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInitializer {
-    private String BASE_URL = "https://api.apps4society.dcx.ufpb.br/";
+
+    public static String URL_PROD =  MainActivity.getMainContext().getResources().getString(R.string.url_api);
+
+    // "http://192.168.0.189:8080/"
+
+    public static String BASE_URL = URL_PROD;
 
     private Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).client(getUnsafeOkHttpClient()).build();
 

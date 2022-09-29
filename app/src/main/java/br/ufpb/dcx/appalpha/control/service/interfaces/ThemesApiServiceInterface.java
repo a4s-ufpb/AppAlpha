@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 
 public interface ThemesApiServiceInterface {
 
-    @GET("/educapi/v1/api/contexts/{idContext}")
+    @GET("v1/api/contexts/{idContext}")
     Call<Theme> find(@Path("idContext") long idContext);
 
 }

@@ -42,7 +42,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
         }
 
         public void onBindViewHolder(ViewHolder holder, int position) {
-                if (themes.get(holder.getAdapterPosition()).getApiId() != null && this.isDeleteMode) {
+                if ((themes.get(holder.getAdapterPosition()).getDeletavel() || themes.get(holder.getAdapterPosition()).getApiId() != null) && this.isDeleteMode) {
                         holder.btnDel.setVisibility(View.VISIBLE);
                 }
 

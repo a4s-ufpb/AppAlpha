@@ -10,15 +10,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.squareup.picasso.Picasso;
-
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
-import br.ufpb.dcx.appalpha.control.config.ButtonDelay;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
-import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 
 public class ProgressActivity extends AppCompatActivity {
     private final String TAG = "ProgressActivity";
@@ -27,7 +23,7 @@ public class ProgressActivity extends AppCompatActivity {
     private int millis = 2500;
     private char[] letras;
     private Thread leitor;
-    private Boolean stopFalarLetra;
+    public Handler handlerBotao = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,15 +320,25 @@ public class ProgressActivity extends AppCompatActivity {
      * @param v View do botão
      */
     public void goToTheNextActivityByCondiction(View v) {
-        // Testa se o botão foi clicado mais de uma vez em um intervalo de 1 segundo
-        if (ButtonDelay.delay(1000)) {
-            Log.i(TAG, "pg" + ChallengeFacade.getInstance().getProgressCount());
-            Log.i(TAG, "size" + ChallengeFacade.getInstance().getChallenges().size());
-            if (ChallengeFacade.getInstance().getProgressCount() == ChallengeFacade.getInstance().getChallenges().size() - 1) {
-                goToTheFinalActivity();
-            } else {
-                goToTheNextChallenge();
+        // Testa se o botão foi clicado mais de uma vez em um intervalo de 0,5 segundo
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                goToTheNextActivityByCondictionNow();
             }
+        };
+        handlerBotao.removeCallbacksAndMessages(null);
+        handlerBotao.postDelayed(r, 500);
+    }
+
+    public void goToTheNextActivityByCondictionNow()
+    {
+        Log.i(TAG, "pg" + ChallengeFacade.getInstance().getProgressCount());
+        Log.i(TAG, "size" + ChallengeFacade.getInstance().getChallenges().size());
+        if (ChallengeFacade.getInstance().getProgressCount() == ChallengeFacade.getInstance().getChallenges().size() - 1) {
+            goToTheFinalActivity();
+        } else {
+            goToTheNextChallenge();
         }
         finish();
     }
@@ -341,18 +347,7 @@ public class ProgressActivity extends AppCompatActivity {
         ImageView img_desafio = findViewById(R.id.img_desafio);
         String imgUrl = ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl();
 
-        ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), img_desafio, getApplicationContext());
-
-        //if (imgUrl != null && !imgUrl.isEmpty()) {
-        //    if (imgUrl.startsWith("http")) {
-        //        Picasso.get().load(imgUrl).into(img_desafio);
-        //    } else {
-        //        img_desafio.setImageResource(Integer.parseInt(imgUrl));
-        //    }
-        //} else {
-        //    // TODO tratar quando não tem imagem
-        //}
-
+        ImageLoadUtil.getInstance().loadImage(imgUrl, img_desafio, getApplicationContext());
     }
 
     public void setTextViewWord(String underscore) {
