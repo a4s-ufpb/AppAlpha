@@ -22,7 +22,6 @@ import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
 import br.ufpb.dcx.appalpha.control.log.LogManagerExtStor;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
-import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 
 
 public class ForcaActivity extends AppCompatActivity {

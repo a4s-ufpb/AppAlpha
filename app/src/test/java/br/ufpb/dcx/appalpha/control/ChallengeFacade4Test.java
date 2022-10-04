@@ -17,7 +17,7 @@ public class ChallengeFacade4Test {
     @Before
     public void setUp() {
         Theme kitchenTheme = new Theme("cozinha",  Integer.toString(R.drawable.cozinha), Integer.toString(R.raw.cozinha), null);
-        Challenge spoonChallenge = new Challenge("colher", null, Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));
+        Challenge spoonChallenge = new Challenge("colher", Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));
         challengeFacade = ChallengeFacade.getInstance();
         challengeFacade.init(Collections.singletonList(spoonChallenge), kitchenTheme);
     }

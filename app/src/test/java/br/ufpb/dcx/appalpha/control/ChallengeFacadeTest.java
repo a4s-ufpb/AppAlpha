@@ -21,8 +21,8 @@ class ChallengeFacadeTest {
     @BeforeEach
     void setUp() {
         Theme kitchenTheme = new Theme("cozinha",  Integer.toString(R.drawable.cozinha), Integer.toString(R.raw.cozinha), null);
-        Challenge spoonChallenge = new Challenge("colher", null, Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));
-        Challenge knifeChallenge = new Challenge("faca", null, Integer.toString(R.raw.faca), null, Integer.toString(R.drawable.faca));
+        Challenge spoonChallenge = new Challenge("colher", Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));
+        Challenge knifeChallenge = new Challenge("faca", Integer.toString(R.raw.faca), null, Integer.toString(R.drawable.faca));
         challengeFacade = ChallengeFacade.getInstance();
         challengeFacade.init(Arrays.asList(spoonChallenge, knifeChallenge), kitchenTheme);
     }

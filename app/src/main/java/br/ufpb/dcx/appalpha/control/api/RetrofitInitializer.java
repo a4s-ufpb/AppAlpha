@@ -1,7 +1,5 @@
 package br.ufpb.dcx.appalpha.control.api;
 
-import android.content.res.Resources;
-
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +29,7 @@ public class RetrofitInitializer {
     private Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).client(getUnsafeOkHttpClient()).build();
 
     // ativar MiTM, para Debugger na conexao
-    private static boolean desabilitar_SSL_Pinning = true;
+    private static boolean desabilitar_SSL_Pinning = false;
 
     private static OkHttpClient getUnsafeOkHttpClient() {
         try {

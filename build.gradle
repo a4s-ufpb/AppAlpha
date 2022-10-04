@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.7.1.1"
         classpath 'org.robolectric:robolectric-gradle-plugin:1.0.1'
 

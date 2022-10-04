@@ -1,10 +1,14 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -71,15 +75,15 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
         imagemTema.setOnClickListener(v -> {
             ImagePicker.with(CreateThemeActivity.this)
-                        .crop()	    			//Crop image(Optional), Check Customization for more option
-                        .compress(1024)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .crop()
+                        .compress(1024)
                         .start(1);
         });
 
         imagemPalavra.setOnClickListener(v -> {
             ImagePicker.with(CreateThemeActivity.this)
-                    .crop()	    			//Crop image(Optional), Check Customization for more option
-                    .compress(1024)	//Final image resolution will be less than 1080 x 1080(Optional)
+                    .crop()
+                    .compress(1024)
                     .start(2);
         });
 
@@ -101,7 +105,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
             tlIdPalavra.getEditText().setText(null);
             urlImagePalavra = null;
-            imagemPalavra.setImageResource(android.R.drawable.ic_menu_camera);
+            imagemPalavra.setImageResource(android.R.drawable.ic_menu_gallery);
         });
 
         fillRecycleView();
@@ -136,6 +140,25 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         newTheme.setDeletavel(true);
         service.insert(newTheme, palavras);
         Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", newTheme.getName()), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+        View v = getCurrentFocus();
+        boolean ret = super.dispatchTouchEvent(event);
+        if (v instanceof EditText) {
+            View w = getCurrentFocus();
+            int scrcoords[] = new int[2];
+            w.getLocationOnScreen(scrcoords);
+            float x = event.getRawX() + w.getLeft() - scrcoords[0];
+            float y = event.getRawY() + w.getTop() - scrcoords[1];
+            if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom()) ) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+            }
+        }
+        return ret;
     }
 
     @Override
