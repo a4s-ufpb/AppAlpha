@@ -11,8 +11,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.PermissionControll;
+import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.control.service.MockThemes;
 import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 
@@ -39,16 +42,28 @@ public class MainActivity extends AppCompatActivity {
         return mainContext;
     }
 
-    public void verifyFirstRunAndInjectDb(){
-        sPreferences = getSharedPreferences("firstRun", MODE_PRIVATE);
+    public void verifyFirstRunAndInjectDb()
+    {
+        boolean sholdCreateDatabase = false;
 
+        sPreferences = getSharedPreferences("firstRun", MODE_PRIVATE);
         if (sPreferences.getBoolean("firstRun", true)) {
             sPreferences.edit().putBoolean("firstRun", false).apply();
-            MockThemes mt = new MockThemes(getApplicationContext());
-            mt.run();
+            sholdCreateDatabase = true;
             Log.i(TAG, "First Run");
         } else {
             Log.i(TAG, "Don't is the first Run");
+        }
+
+        File dataBaseFile = getApplicationContext().getDatabasePath(DbHelper.NAME);
+        if (!dataBaseFile.exists()) {
+            sholdCreateDatabase = true;
+        }
+
+        if(sholdCreateDatabase) {
+            Log.i(TAG, "Criando Default Database.");
+            MockThemes mt = new MockThemes(getApplicationContext());
+            mt.run();
         }
     }
 

@@ -31,6 +31,7 @@ import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.ImgurHelper;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
+import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 
 
 public class CreateThemeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -131,7 +132,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
 
         salvarTemaAtual();
-        finish();
+
+        Intent intent = new Intent(CreateThemeActivity.this, ThemeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public void salvarTemaAtual()
@@ -198,7 +202,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         ImgurHelper.getImageLink(getApplicationContext(), fileImage, null, new ImgurHelper.ImgurHelperCompletionHandler() {
             @Override
             public void success(String link) {
-                Log.w("ImgurHelper success: ", link);
+                Log.w(TAG, "ImgurHelper success: "+ link);
                 if(requestCode == 1) {
                     urlImageTema = link;
                     updateImagemTema();
@@ -210,7 +214,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void failed(String reason) {
-                Log.w("ImgurHelper: failed: ", reason);
+                Log.w(TAG,"ImgurHelper: failed: "+ reason);
                 Toast.makeText(CreateThemeActivity.this, "ImgurHelper: Error "+reason, Toast.LENGTH_SHORT).show();
             }
         });

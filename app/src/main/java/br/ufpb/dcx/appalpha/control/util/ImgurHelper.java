@@ -27,7 +27,9 @@ import retrofit2.http.Part;
    Criado por Julio Verne
  */
 
-public class ImgurHelper {
+public class ImgurHelper
+{
+    public static String API_CLIENT_KEY = "520dd4dcbe12c2a";
 
     public static Retrofit retrofit_imgur = new Retrofit.Builder()
             .baseUrl("https://api.imgur.com/")
@@ -99,10 +101,9 @@ public class ImgurHelper {
                 file = fileTmp;
             }
 
-
             RequestBody fbody = RequestBody.create(MediaType.parse("image/*"), file);
 
-            Response<ImgurResponse> response = service.sendImage("Client-ID 520dd4dcbe12c2a", fbody).execute();
+            Response<ImgurResponse> response = service.sendImage("Client-ID "+ API_CLIENT_KEY, fbody).execute();
 
             if(fileTmp != null) {
                 fileTmp.delete();

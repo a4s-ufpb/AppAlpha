@@ -1,5 +1,6 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +20,7 @@ import br.ufpb.dcx.appalpha.control.api.RetrofitInitializer;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.service.ThemesApiService;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
+import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -96,7 +98,10 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                                 themeSqlService.insert(theme, theme.getChallenges());
                                 Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
                                 Log.i(TAG, "Theme recuperado com sucesso!");
-                                finish();
+
+                                Intent intent = new Intent(AddThemeActivity.this, ThemeActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
                             }else{
                                 Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
                                 Log.i(TAG, "Erro ao recuperar theme com id " + themeId);

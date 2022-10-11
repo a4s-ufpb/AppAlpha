@@ -13,7 +13,7 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private final String TAG = "DbHelper";
     private static final int VERSION = 1;
-    private static final String NAME = "AppAlpha";
+    public static final String NAME = "AppAlpha.db";
     /* Table names */
     public final static String RECORDS_TABLE = "records";
     public final static String THEMES_TABLE = "themes";
