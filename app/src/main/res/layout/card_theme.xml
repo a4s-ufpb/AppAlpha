@@ -44,6 +44,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_baseline_delete_24" />
 
+        <ImageButton
+            android:id="@+id/btnEdit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="-150dp"
+            android:layout_weight="1"
+            android:background="@drawable/white_rounded_backgroud_2"
+            android:fadingEdge="horizontal"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="@android:color/white"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/img_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
         <br.ufpb.dcx.appalpha.control.config.AlphaTextView
             android:id="@+id/tv_theme_name_left"
             android:layout_width="0dp"

@@ -39,8 +39,10 @@ public class ThemeActivity extends AppCompatActivity {
     private FloatingActionButton fabMore;
     private FloatingActionButton fabDel;
     private FloatingActionButton fabAdd;
+    private FloatingActionButton fabEdit;
     boolean isRotate = false;
     private boolean isDeleteMode = false;
+    private boolean isEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,31 +56,48 @@ public class ThemeActivity extends AppCompatActivity {
         fabMore = findViewById(R.id.fabMore);
         fabDel = findViewById(R.id.fabDel);
         fabAdd = findViewById(R.id.fabAdd);
+        fabEdit = findViewById(R.id.fabEdit);
         AudioUtil.getInstance(getApplicationContext());
 
         ViewAnimation.init(fabDel);
         ViewAnimation.init(fabAdd);
+        ViewAnimation.init(fabEdit);
 
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddThemeManagerActivity.class);
             this.startActivity(intent);
+            toggleMoreAction(false);
         });
 
         fabDel.setOnClickListener(v -> {
             this.isDeleteMode = !this.isDeleteMode;
             this.fillRecycleView(this.themes);
+            toggleMoreAction(false);
+        });
+
+        fabEdit.setOnClickListener(v -> {
+            this.isEditMode = !this.isEditMode;
+            this.fillRecycleView(this.themes);
+            toggleMoreAction(false);
         });
 
         this.fabMore.setOnClickListener(view -> {
-            this.isRotate = ViewAnimation.rotateFab(view, !this.isRotate);
-            if(isRotate){
-                ViewAnimation.showIn(fabAdd);
-                ViewAnimation.showIn(fabDel);
-            }else{
-                ViewAnimation.showOut(fabAdd);
-                ViewAnimation.showOut(fabDel);
-            }
+            toggleMoreAction(!this.isRotate);
         });
+    }
+
+    public void toggleMoreAction(boolean show)
+    {
+        this.isRotate = ViewAnimation.rotateFab(fabMore, show);
+        if(isRotate){
+            ViewAnimation.showIn(fabAdd);
+            ViewAnimation.showIn(fabEdit);
+            ViewAnimation.showIn(fabDel);
+        }else{
+            ViewAnimation.showOut(fabAdd);
+            ViewAnimation.showOut(fabEdit);
+            ViewAnimation.showOut(fabDel);
+        }
     }
 
     public void updateRecycleView() {
@@ -88,7 +107,7 @@ public class ThemeActivity extends AppCompatActivity {
 
     public void fillRecycleView(List<Theme> themes){
         recyclerView.setLayoutManager(layManager);
-        recyclerView.setAdapter(new ThemeAdapter(themes, getApplicationContext(), this.isDeleteMode));
+        recyclerView.setAdapter(new ThemeAdapter(themes, getApplicationContext(), this.isDeleteMode, this.isEditMode));
     }
 
     @Override

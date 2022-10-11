@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import br.ufpb.dcx.appalpha.R;
+import br.ufpb.dcx.appalpha.control.config.AlphaTextView;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.ImgurHelper;
@@ -43,6 +44,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView recyclerView;
     private GridLayoutManager layManager;
 
+    public Theme tema;
     public ArrayList<Challenge> palavras;
 
     private TextInputLayout tlIdPalavra;
@@ -53,6 +55,9 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     private String urlImageTema;
     private ImageView imagemTema;
 
+    private boolean editMode = false;
+    private Long themeID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -61,7 +66,21 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         service = ThemeSqlService.getInstance(getApplicationContext());
 
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            Object editVal = intent.getSerializableExtra("editMode");
+            if(editVal != null) {
+                editMode = (boolean)editVal;
+            }
+            Object themeIDVal = intent.getSerializableExtra("themeID");
+            if(themeIDVal != null) {
+                themeID = (Long)themeIDVal;
+            }
+        }
+
         setContentView(R.layout.activity_create_theme);
+
         back_btn = findViewById(R.id.btn_back);
         back_btn.setOnClickListener(this);
 
@@ -100,7 +119,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
                 return;
             }
 
-            Challenge palavaNova = new Challenge(palavra, null, null, urlImagePalavra);
+            Challenge palavaNova = new Challenge(palavra.trim(), null, null, urlImagePalavra);
             palavras.add(palavaNova);
             recyclerView.getAdapter().notifyItemInserted(palavras.indexOf(palavaNova));
 
@@ -108,6 +127,13 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             urlImagePalavra = null;
             imagemPalavra.setImageResource(android.R.drawable.ic_menu_gallery);
         });
+
+        if(this.editMode) {
+            AlphaTextView title = findViewById(R.id.textView19);
+            title.setText("Editar Tema");
+
+
+        }
 
         fillRecycleView();
     }
@@ -140,10 +166,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     public void salvarTemaAtual()
     {
-        Theme newTheme = new Theme(tlIdTema.getEditText().getText().toString(),  urlImageTema, null, null);
-        newTheme.setDeletavel(true);
-        service.insert(newTheme, palavras);
-        Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", newTheme.getName()), Toast.LENGTH_SHORT).show();
+        tema = new Theme(tlIdTema.getEditText().getText().toString().trim(),  urlImageTema, null, null);
+        tema.setDeletavel(true);
+        service.insert(tema, palavras);
+        Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", tema.getName()), Toast.LENGTH_SHORT).show();
     }
 
     @Override

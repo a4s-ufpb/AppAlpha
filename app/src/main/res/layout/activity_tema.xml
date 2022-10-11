@@ -57,14 +57,26 @@
                 app:srcCompat="@drawable/ic_baseline_delete_24" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:tint="@color/grey_80"
+                app:backgroundTint="@color/grey_20"
+                app:fabSize="mini"
+                app:rippleColor="@color/white"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabAdd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:clickable="true"
                 android:tint="@color/grey_80"
                 app:backgroundTint="@color/grey_20"
                 app:fabSize="mini"
-                android:clickable="true"
                 app:rippleColor="@color/white"
                 app:srcCompat="@drawable/ic_add_white_24dp" />
 

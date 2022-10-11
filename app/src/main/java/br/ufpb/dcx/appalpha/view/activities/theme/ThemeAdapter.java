@@ -2,6 +2,7 @@ package br.ufpb.dcx.appalpha.view.activities.theme;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +20,20 @@ import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
+import br.ufpb.dcx.appalpha.view.activities.AddThemeManagerActivity;
+import br.ufpb.dcx.appalpha.view.activities.CreateThemeActivity;
 
 public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> {
         private List<Theme> themes;
         private String  TAG = "ThemeListAdapter";
         private Context activityContext;
         private boolean isDeleteMode;
-
-        public ThemeAdapter(List<Theme> themes, Context context, boolean isDeleteMode) {
+        private boolean isEditMode;
+        public ThemeAdapter(List<Theme> themes, Context context, boolean isDeleteMode, boolean isEditMode) {
                 this.themes = themes;
                 this.activityContext = context;
                 this.isDeleteMode = isDeleteMode;
+                this.isEditMode = isEditMode;
         }
 
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,6 +50,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                         holder.btnDel.setVisibility(View.VISIBLE);
                 }
 
+                if (themes.get(holder.getAdapterPosition()).getDeletavel() && this.isEditMode) {
+                        holder.btnEdit.setVisibility(View.VISIBLE);
+                }
+
                 holder.themeName.setText(themes.get(holder.getAdapterPosition()).getName());
                 ImageLoadUtil.getInstance().loadImage(themes.get(holder.getAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
 
@@ -58,9 +66,13 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                         this.deleteSelectedTheme(holder.getAdapterPosition());
                 });
 
+                holder.btnEdit.setOnClickListener(v -> {
+                        this.editSelectedTheme(holder.getAdapterPosition());
+                });
         }
 
-        private void deleteSelectedTheme(int position){
+        private void deleteSelectedTheme(int position)
+        {
                 Log.i(TAG, "Theme " + themes.get(position).getName() + " Clicked to delete!");
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ThemeActivity.activity);
@@ -83,16 +95,28 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 dialog.show();
         }
 
+        private void editSelectedTheme(int position)
+        {
+                Log.i(TAG, "Theme " + themes.get(position).toString() + " Clicked to edit!");
+                Intent intent = new Intent(activityContext, CreateThemeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("editMode", true);
+                intent.putExtra("themeID", themes.get(position).getId());
+                activityContext.startActivity(intent);
+        }
+
         class ViewHolder extends RecyclerView.ViewHolder {
                 ImageView themeImage;
                 TextView themeName;
                 ImageButton btnDel;
+                ImageButton btnEdit;
 
                 private ViewHolder(View itemView) {
                         super(itemView);
                         themeImage = itemView.findViewById(R.id.img_left);
                         themeName = itemView.findViewById(R.id.tv_theme_name_left);
                         btnDel = itemView.findViewById(R.id.btnDel);
+                        btnEdit = itemView.findViewById(R.id.btnEdit);
                 }
 
         }
