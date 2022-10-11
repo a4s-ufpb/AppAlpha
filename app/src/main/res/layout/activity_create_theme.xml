@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollTemaEdit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fundogeral"
@@ -229,13 +230,32 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
-                    android:id="@+id/buttonAddPalavra"
-                    android:layout_width="274dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:alpha="0.8"
-                    android:text="Adicionar Palavra" />
+                <LinearLayout
+                    android:id="@+id/view3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:layout_gravity="bottom|center">
+
+                    <Button
+                        android:id="@+id/buttonAddPalavra2"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight=".40"
+                        android:alpha="0.8"
+                        android:text="Cancelar"
+                        android:visibility="gone"
+                        tools:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/buttonAddPalavra"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="left"
+                        android:layout_weight=".40"
+                        android:alpha="0.8"
+                        android:text="Adicionar Palavra"
+                        tools:visibility="visible" />
+                </LinearLayout>
 
             </FrameLayout>
 

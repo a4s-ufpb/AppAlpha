@@ -88,4 +88,36 @@ public class ChallengeSqlService {
         Log.i(TAG, "TAMANHO " + challenges.size());
         return challenges;
     }
+
+    public void deleteById(Long id)
+    {
+        String deleteQuery = "DELETE FROM " + DbHelper.CHALLENGES_TABLE + " WHERE id = ?";
+
+        Cursor cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
+
+        if (cursor.moveToFirst()) {
+            Integer value = cursor.getInt(0);
+            Log.i(TAG, value + "");
+            cursor.close();
+        }
+    }
+
+    public void update(Challenge challenge)
+    {
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put("word", challenge.getWord());
+            cv.put("soundUrl", challenge.getSoundUrl());
+            cv.put("videoUrl", challenge.getVideoUrl());
+            cv.put("imageUrl", challenge.getImageUrl());
+
+            this.writableDb.update(DbHelper.CHALLENGES_TABLE, cv, "id="+challenge.getId(), null);
+            Log.i(TAG, challenge.getWord() + " updated in db!");
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            cv.clear();
+        }
+    }
 }

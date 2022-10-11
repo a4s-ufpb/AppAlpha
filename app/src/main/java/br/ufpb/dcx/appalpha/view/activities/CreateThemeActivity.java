@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,9 +26,12 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.config.AlphaTextView;
+import br.ufpb.dcx.appalpha.control.service.ChallengeSqlService;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.ImgurHelper;
@@ -39,31 +44,40 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     private static final String TAG = "CreateThemeActivity";
     private ImageButton back_btn;
 
-    private ThemeSqlService service;
+    private ThemeSqlService themeSqlService;
+    private ChallengeSqlService challengeSqlService;
 
     private RecyclerView recyclerView;
     private GridLayoutManager layManager;
 
     public Theme tema;
-    public ArrayList<Challenge> palavras;
-
-    private TextInputLayout tlIdPalavra;
-    private String urlImagePalavra;
-    private ImageView imagemPalavra;
 
     private TextInputLayout tlIdTema;
     private String urlImageTema;
     private ImageView imagemTema;
 
     private boolean editMode = false;
-    private Long themeID;
+    private Long editThemeID;
+
+    private TextInputLayout tlIdPalavra;
+    private String urlImagePalavra;
+    private ImageView imagemPalavra;
+
+    public boolean editPalavraMode;
+    public Challenge editPalavra;
+    List<Long> palavrasID_Remover;
+    List<Challenge> palavras_Adicionar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        this.palavrasID_Remover = new ArrayList<Long>();
+        this.palavras_Adicionar = new ArrayList<Challenge>();
 
-        this.palavras = new ArrayList<Challenge>();
+        this.tema = new Theme(null, null, null, null);
 
-        service = ThemeSqlService.getInstance(getApplicationContext());
+        themeSqlService = ThemeSqlService.getInstance(getApplicationContext());
+        challengeSqlService = ChallengeSqlService.getInstance(getApplicationContext());
 
         super.onCreate(savedInstanceState);
 
@@ -75,7 +89,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             }
             Object themeIDVal = intent.getSerializableExtra("themeID");
             if(themeIDVal != null) {
-                themeID = (Long)themeIDVal;
+                editThemeID = (Long)themeIDVal;
             }
         }
 
@@ -119,23 +133,110 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
                 return;
             }
 
-            Challenge palavaNova = new Challenge(palavra.trim(), null, null, urlImagePalavra);
-            palavras.add(palavaNova);
-            recyclerView.getAdapter().notifyItemInserted(palavras.indexOf(palavaNova));
-
+            if(this.editPalavraMode) {
+                editPalavra.setImageUrl(urlImagePalavra);
+                editPalavra.setWord(palavra.trim());
+                updateEditModePalavra(false);
+                recyclerView.getAdapter().notifyItemChanged(tema.getChallenges().indexOf(editPalavra));
+            } else {
+                Challenge palavaNova = new Challenge(palavra.trim(), null, null, urlImagePalavra);
+                tema.getChallenges().add(palavaNova);
+                this.palavras_Adicionar.add(palavaNova);
+                recyclerView.getAdapter().notifyItemInserted(tema.getChallenges().indexOf(palavaNova));
+            }
             tlIdPalavra.getEditText().setText(null);
             urlImagePalavra = null;
-            imagemPalavra.setImageResource(android.R.drawable.ic_menu_gallery);
+            updatePalavraInfo();
+        });
+
+        findViewById(R.id.buttonAddPalavra2).setOnClickListener(v -> {
+            updateEditModePalavra(false);
         });
 
         if(this.editMode) {
+            // Titulo para modo de ediçao
             AlphaTextView title = findViewById(R.id.textView19);
             title.setText("Editar Tema");
 
+            // recuperar Tema da base de dados
+            this.tema = themeSqlService.get(editThemeID);
+            List<Challenge> storedChallenges = challengeSqlService.getRelatedChallenges(this.tema.getId());
+            if(storedChallenges != null) {
+                this.tema.setChallenges(storedChallenges);
+            }
 
+            Log.i(TAG, "Edit tema: "+ this.tema.toString());
         }
 
+        updateTemaInfo();
+
         fillRecycleView();
+    }
+
+    public void updateTemaInfo()
+    {
+        if(this.tema != null) {
+            tlIdTema.getEditText().setText(this.tema.getName());
+            urlImageTema = this.tema.getImageUrl();
+            if(urlImageTema == null) {
+                imagemTema.setImageResource(android.R.drawable.ic_menu_gallery);
+            } else {
+                updateImagemTema();
+            }
+        }
+    }
+
+    public void updatePalavraInfo()
+    {
+        if(urlImagePalavra == null) {
+            imagemPalavra.setImageResource(android.R.drawable.ic_menu_gallery);
+        } else {
+            updateImagemPalavra();
+        }
+    }
+
+    public void editPalavra(Challenge challenge)
+    {
+        ScrollView scrollV = findViewById(R.id.scrollTemaEdit);
+        scrollV.fullScroll(ScrollView.FOCUS_UP);
+
+        editPalavra = challenge;
+        tlIdPalavra.getEditText().setText(challenge.getWord());
+        urlImagePalavra = challenge.getImageUrl();
+        updateEditModePalavra(true);
+    }
+
+    public void updateEditModePalavra(boolean edit)
+    {
+        this.editPalavraMode = edit;
+
+        if(this.editPalavraMode) {
+            Button addBt2 = findViewById(R.id.buttonAddPalavra2);
+            addBt2.setVisibility(View.VISIBLE);
+            Button addBt = findViewById(R.id.buttonAddPalavra);
+            addBt.setText("OK");
+        } else {
+            Button addBt2 = findViewById(R.id.buttonAddPalavra2);
+            addBt2.setVisibility(View.GONE);
+            Button addBt = findViewById(R.id.buttonAddPalavra);
+            addBt.setText("Adicionar Palavra");
+
+            tlIdPalavra.getEditText().setText(null);
+            urlImagePalavra = null;
+        }
+        updatePalavraInfo();
+    }
+
+    public void removePalavra(Challenge challenge)
+    {
+        this.tema.getChallenges().remove(challenge);
+        this.palavras_Adicionar.remove(challenge);
+        if(challenge.getId() != null) {
+            palavrasID_Remover.add(challenge.getId());
+        }
+        if(this.editPalavraMode && challenge == this.editPalavra) {
+            updateEditModePalavra(false);
+        }
     }
 
     public void saveChanges(View v)
@@ -152,7 +253,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             return;
         }
 
-        if(palavras.size() == 0) {
+        if(tema.getChallenges().size() == 0) {
             Toast.makeText(getApplicationContext(), "Adicione algumas palavras ao Tema", Toast.LENGTH_LONG).show();
             return;
         }
@@ -166,10 +267,36 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     public void salvarTemaAtual()
     {
-        tema = new Theme(tlIdTema.getEditText().getText().toString().trim(),  urlImageTema, null, null);
-        tema.setDeletavel(true);
-        service.insert(tema, palavras);
-        Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", tema.getName()), Toast.LENGTH_SHORT).show();
+        this.tema.setName(tlIdTema.getEditText().getText().toString().trim());
+        this.tema.setImageUrl(urlImageTema);
+        this.tema.setDeletavel(true);
+
+        if(this.editMode) {
+
+            // atualizar theme
+            this.themeSqlService.update(this.tema);
+
+            //remover palavras
+            for(Long palavraIDNow : this.palavrasID_Remover) {
+                this.challengeSqlService.deleteById(palavraIDNow);
+            }
+
+            // adicionar palavras
+            this.themeSqlService.insertThemeRelatedChallenges(this.tema.getId(), this.palavras_Adicionar);
+
+            //atualizar palavras
+            for(Challenge palavraNow : this.tema.getChallenges()) {
+                if(palavraNow.getId() == null) {
+                    continue;
+                }
+                this.challengeSqlService.update(palavraNow);
+            }
+
+            Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
+        } else {
+            this.themeSqlService.insert(tema, tema.getChallenges());
+            Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -249,7 +376,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     public void fillRecycleView()
     {
         recyclerView.setLayoutManager(layManager);
-        recyclerView.setAdapter(new CreatePalavraAdapter(this, getApplicationContext(), true));
+        recyclerView.setAdapter(new CreatePalavraAdapter(this, getApplicationContext(), true, true));
     }
 
     @Override
@@ -266,4 +393,6 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         super.onBackPressed();
         finish();
     }
+
+
 }

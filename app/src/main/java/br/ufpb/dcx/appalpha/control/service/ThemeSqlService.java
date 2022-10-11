@@ -63,7 +63,7 @@ public class ThemeSqlService {
         return id;
     }
 
-    private void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges) {
+    public void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges) {
         ContentValues cv = new ContentValues();
 
         for (Challenge c : relatedChallenges) {
@@ -98,7 +98,8 @@ public class ThemeSqlService {
         }
 
         cursor.close();
-        Theme theme = new Theme(name, soundUrl, videoUrl, imageUrl);
+        Theme theme = new Theme(name, imageUrl, soundUrl, videoUrl);
+        theme.setId(id);
         theme.setDeletavel(deletavel==1);
         return theme;
     }
@@ -162,4 +163,24 @@ public class ThemeSqlService {
         }
     }
 
+    public void update(Theme theme)
+    {
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put("name", theme.getName());
+            cv.put("soundUrl", theme.getSoundUrl());
+            cv.put("videoUrl", theme.getVideoUrl());
+            cv.put("imageUrl", theme.getImageUrl());
+            cv.put("apiId", theme.getId());
+            cv.put("deletavel", theme.getDeletavel());
+
+            this.writableDb.update(DbHelper.THEMES_TABLE, cv, "id="+theme.getId(), null);
+            Log.i(TAG, theme.getName() + " updated in db!");
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            cv.clear();
+        }
+    }
 }
