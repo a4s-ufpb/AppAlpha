@@ -1,5 +1,7 @@
 package br.ufpb.dcx.appalpha.control.util;
 
+import static java.lang.Thread.sleep;
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -39,14 +41,13 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     }
 
-    public synchronized void playSound(int songId) {
-
+    public synchronized void playSound(int songId)
+    {
         this.mediaPlayer = MediaPlayer.create(this.context, songId);
         this.duration = mediaPlayer.getDuration();
 
         this.mediaPlayer.setOnPreparedListener(mediaPlayer -> mediaPlayer.start());
         mediaPlayer.setOnCompletionListener(mediaPlayer -> stopSound());
-
     }
 
     public synchronized void playSoundURL(String url) {
@@ -57,6 +58,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
             mediaPlayerUrl.setDataSource(url);
             mediaPlayerUrl.prepare();
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         this.duration = mediaPlayerUrl.getDuration();
@@ -85,17 +87,18 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     }
 
-    public synchronized void speakWord(String world) {
+    public synchronized void speakWord(String world)
+    {
         this.textToSpeak.speak(world, TextToSpeech.QUEUE_FLUSH, null);
-
-        this.duration = 3*1000;
+        this.duration = 0;
     }
 
     public int getDuration() {
         return duration;
     }
 
-    public void stopSoundPlayer(MediaPlayer player) {
+    public void stopSoundPlayer(MediaPlayer player)
+    {
         if (player != null) {
             try {
                 player.stop();
@@ -107,7 +110,8 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
     }
 
-    public void stopSound() {
+    public void stopSound()
+    {
         stopSoundPlayer(mediaPlayer);
         stopSoundPlayer(mediaPlayerUrl);
     }
@@ -122,11 +126,40 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
     }
 
-    public void stopTextToSpeak() {
+    public void stopTextToSpeak()
+    {
         if (this.textToSpeak != null) {
             this.textToSpeak.stop();
-            this.textToSpeak.shutdown();
         }
-        this.instance = null;
+    }
+
+    public boolean isTSS_Playing()
+    {
+        boolean ret = false;
+        try {
+            if (this.textToSpeak != null) {
+                ret = this.textToSpeak.isSpeaking();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public void esperarTssParar()
+    {
+        while (AudioUtil.getInstance()!=null && AudioUtil.getInstance().isTSS_Playing()) {
+            try {
+                sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void pararTSSePlayer()
+    {
+        stopSound();
+        stopTextToSpeak();
     }
 }

@@ -41,6 +41,13 @@ public class FinalActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
+    }
+
     /**
      * Pega o nome do jogador para colocar no recorde
      */

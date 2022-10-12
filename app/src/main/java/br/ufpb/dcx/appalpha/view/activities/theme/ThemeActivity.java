@@ -1,5 +1,7 @@
 package br.ufpb.dcx.appalpha.view.activities.theme;
 
+import static java.lang.Thread.sleep;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -144,7 +146,6 @@ public class ThemeActivity extends AppCompatActivity {
         Handler handler = new Handler();
         //Wait the song end to start new activity
         handler.postDelayed(() -> ThemeActivity.activity.startActivity(intent), AudioUtil.getInstance().getDuration());
-
     }
 
     private static void playThemeSong(Theme selectedTheme) {
@@ -157,9 +158,11 @@ public class ThemeActivity extends AppCompatActivity {
                 AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
             } else {
                 AudioUtil.getInstance().speakWord(selectedTheme.getName());
+                AudioUtil.getInstance().esperarTssParar();
             }
         } else { // Nesse caso, pode falar usando sintetização de voz
             AudioUtil.getInstance().speakWord(selectedTheme.getName());
+            AudioUtil.getInstance().esperarTssParar();
         }
     }
 

@@ -23,7 +23,6 @@ public class ProgressActivity extends AppCompatActivity {
     private int millis = 2500;
     private char[] letras;
     private Thread leitor;
-    public Handler handlerBotao = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +51,8 @@ public class ProgressActivity extends AppCompatActivity {
             AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
         }
 
+
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -66,6 +67,9 @@ public class ProgressActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+
+                AudioUtil.getInstance().esperarTssParar();
+
                 try {
                     while (!isInterrupted()) {
                         for (final char letra : TextUtil.normalize(new String(letras)).toCharArray()) {
@@ -103,13 +107,19 @@ public class ProgressActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
+    }
+
     /**
      * Quando a activity é destruida também destroi o objeto do media player
      */
     protected void onDestroy() {
         super.onDestroy();
         //leitor.interrupt();
-        AudioUtil.getInstance(getApplicationContext()).stopSound();
         hasChangedActivity = true;
     }
 
@@ -323,6 +333,8 @@ public class ProgressActivity extends AppCompatActivity {
     {
         // Desativar o botão depois do click
         v.setEnabled(false);
+
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
 
         Log.i(TAG, "pg" + ChallengeFacade.getInstance().getProgressCount());
         Log.i(TAG, "size" + ChallengeFacade.getInstance().getChallenges().size());

@@ -66,6 +66,13 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         //AudioUtil.getInstance().stopSound();

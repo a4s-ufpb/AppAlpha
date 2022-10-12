@@ -213,9 +213,12 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
         if(this.editPalavraMode) {
             Button addBt2 = findViewById(R.id.buttonAddPalavra2);
+            addBt2.setVisibility(View.GONE);
             addBt2.setVisibility(View.VISIBLE);
             Button addBt = findViewById(R.id.buttonAddPalavra);
             addBt.setText("OK");
+            addBt.setVisibility(View.GONE);
+            addBt.setVisibility(View.VISIBLE);
         } else {
             Button addBt2 = findViewById(R.id.buttonAddPalavra2);
             addBt2.setVisibility(View.GONE);
@@ -245,8 +248,6 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     public void saveChanges(View v)
     {
-        v.setEnabled(false);
-
         String temaNome = tlIdTema.getEditText().getText().toString();
 
         if(temaNome == null || temaNome.length() == 0) {
@@ -263,6 +264,8 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(getApplicationContext(), "Adicione algumas palavras ao Tema", Toast.LENGTH_LONG).show();
             return;
         }
+
+        v.setEnabled(false);
 
         salvarTemaAtual();
 
