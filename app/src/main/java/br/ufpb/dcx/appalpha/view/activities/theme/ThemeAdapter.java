@@ -67,6 +67,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 });
 
                 holder.btnEdit.setOnClickListener(v -> {
+                        holder.btnEdit.setEnabled(false);
                         this.editSelectedTheme(holder.getAdapterPosition());
                 });
         }
@@ -78,7 +79,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ThemeActivity.activity);
                 builder.setCancelable(true);
                 builder.setTitle("Tem certeza que deseja apagar o tema \"" + themes.get(position).getName() + "\"?");
-                builder.setMessage("Uma vez apagado, ainda será possível importá-lo novamente.");
+                builder.setMessage(themes.get(position).getApiId()!=null?String.format("Uma vez apagado, ainda será possível importá-lo novamente.\nInformando o Id: %d",themes.get(position).getApiId()):"Esta operação não pode ser revertida.");
                 builder.setPositiveButton("Sim, apagar",
                         (dialog, which) -> {
                                 ThemeSqlService.getInstance(ThemeActivity.activity).deleteById(themes.get(position).getId());

@@ -95,6 +95,10 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                                 Theme theme = response.body();
                                 Log.i(TAG, "Theme challenges:" + theme.getChallenges().size());
 
+                                // theme Id is ur apiId
+                                theme.setApiId(theme.getId());
+                                theme.setId(null);
+
                                 themeSqlService.insert(theme, theme.getChallenges());
                                 Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
                                 Log.i(TAG, "Theme recuperado com sucesso!");

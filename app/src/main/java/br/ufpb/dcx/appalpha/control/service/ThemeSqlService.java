@@ -45,7 +45,7 @@ public class ThemeSqlService {
             cv.put("soundUrl", theme.getSoundUrl());
             cv.put("videoUrl", theme.getVideoUrl());
             cv.put("imageUrl", theme.getImageUrl());
-            cv.put("apiId", theme.getId());
+            cv.put("apiId", theme.getApiId());
             cv.put("deletavel", theme.getDeletavel());
 
             id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
@@ -82,10 +82,10 @@ public class ThemeSqlService {
     }
 
     public Theme get(Long id) {
-        String name, soundUrl, videoUrl, imageUrl;
-        name = soundUrl = videoUrl = imageUrl = "";
+        String name, soundUrl, videoUrl, imageUrl, apiId;
+        name = soundUrl = videoUrl = imageUrl = apiId = "";
         int deletavel = 0;
-        String selectQuery = "SELECT name, soundUrl, videoUrl, imageUrl, deletavel FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
+        String selectQuery = "SELECT name, soundUrl, videoUrl, imageUrl, apiId, deletavel FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
 
         Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});
 
@@ -94,13 +94,16 @@ public class ThemeSqlService {
             soundUrl = cursor.getString(1);
             videoUrl = cursor.getString(2);
             imageUrl = cursor.getString(3);
-            deletavel = cursor.getInt(4);
+            apiId = cursor.getString(4);
+            deletavel = cursor.getInt(5);
         }
-
         cursor.close();
+
         Theme theme = new Theme(name, imageUrl, soundUrl, videoUrl);
         theme.setId(id);
+        theme.setApiId(apiId != null ? Long.parseLong(apiId) : null);
         theme.setDeletavel(deletavel==1);
+
         return theme;
     }
 
@@ -171,7 +174,7 @@ public class ThemeSqlService {
             cv.put("soundUrl", theme.getSoundUrl());
             cv.put("videoUrl", theme.getVideoUrl());
             cv.put("imageUrl", theme.getImageUrl());
-            cv.put("apiId", theme.getId());
+            cv.put("apiId", theme.getApiId());
             cv.put("deletavel", theme.getDeletavel());
 
             this.writableDb.update(DbHelper.THEMES_TABLE, cv, "id="+theme.getId(), null);

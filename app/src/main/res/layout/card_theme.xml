@@ -29,51 +29,52 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/comida" />
 
-        <ImageButton
-            android:id="@+id/btnDel"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@drawable/white_rounded_backgroud_2"
-            android:fadingEdge="horizontal"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:tint="@android:color/white"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/img_left"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_delete_24" />
+        <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="@+id/img_left"
+            app:layout_constraintTop_toTopOf="@+id/img_left">
 
-        <ImageButton
-            android:id="@+id/btnEdit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="-150dp"
-            android:layout_weight="1"
-            android:background="@drawable/white_rounded_backgroud_2"
-            android:fadingEdge="horizontal"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:tint="@android:color/white"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@+id/img_left"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+            <ImageButton
+                android:id="@+id/btnDel"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right|top"
+                android:layout_weight="1"
+                android:background="@drawable/white_rounded_backgroud_2"
+                android:fadingEdge="horizontal"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:tint="@color/colorAccent"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_baseline_delete_24" />
 
-        <br.ufpb.dcx.appalpha.control.config.AlphaTextView
-            android:id="@+id/tv_theme_name_left"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/background_text_item_themes_menu_black_transparent"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="4dp"
-            android:text="Comida"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="@+id/img_left"
-            app:layout_constraintEnd_toEndOf="@+id/img_left"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/img_left" />
+            <ImageButton
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="top|left"
+                android:layout_weight="1"
+                android:background="@drawable/white_rounded_backgroud_left"
+                android:fadingEdge="horizontal"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:tint="@color/yellow_mustard"
+                android:visibility="invisible"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <br.ufpb.dcx.appalpha.control.config.AlphaTextView
+                android:id="@+id/tv_theme_name_left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/background_text_item_themes_menu_black_transparent"
+                android:gravity="center_horizontal|center_vertical"
+                android:padding="4dp"
+                android:text="Comida"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

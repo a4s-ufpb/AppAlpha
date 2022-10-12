@@ -319,20 +319,11 @@ public class ProgressActivity extends AppCompatActivity {
      *
      * @param v View do botão
      */
-    public void goToTheNextActivityByCondiction(View v) {
-        // Testa se o botão foi clicado mais de uma vez em um intervalo de 0,5 segundo
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                goToTheNextActivityByCondictionNow();
-            }
-        };
-        handlerBotao.removeCallbacksAndMessages(null);
-        handlerBotao.postDelayed(r, 500);
-    }
-
-    public void goToTheNextActivityByCondictionNow()
+    public void goToTheNextActivityByCondiction(View v)
     {
+        // Desativar o botão depois do click
+        v.setEnabled(false);
+
         Log.i(TAG, "pg" + ChallengeFacade.getInstance().getProgressCount());
         Log.i(TAG, "size" + ChallengeFacade.getInstance().getChallenges().size());
         if (ChallengeFacade.getInstance().getProgressCount() == ChallengeFacade.getInstance().getChallenges().size() - 1) {

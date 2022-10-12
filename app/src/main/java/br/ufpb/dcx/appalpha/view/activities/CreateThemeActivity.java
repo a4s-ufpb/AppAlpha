@@ -138,11 +138,13 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
                 editPalavra.setWord(palavra.trim());
                 updateEditModePalavra(false);
                 recyclerView.getAdapter().notifyItemChanged(tema.getChallenges().indexOf(editPalavra));
+                Toast.makeText(getApplicationContext(), "Palavra \""+editPalavra.getWord()+"\" foi atualizada.", Toast.LENGTH_LONG).show();
             } else {
                 Challenge palavaNova = new Challenge(palavra.trim(), null, null, urlImagePalavra);
                 tema.getChallenges().add(palavaNova);
                 this.palavras_Adicionar.add(palavaNova);
                 recyclerView.getAdapter().notifyItemInserted(tema.getChallenges().indexOf(palavaNova));
+                Toast.makeText(getApplicationContext(), "Palavra \""+palavaNova.getWord()+"\" foi adicionada.", Toast.LENGTH_LONG).show();
             }
             tlIdPalavra.getEditText().setText(null);
             urlImagePalavra = null;
@@ -197,8 +199,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     public void editPalavra(Challenge challenge)
     {
-        ScrollView scrollV = findViewById(R.id.scrollTemaEdit);
-        scrollV.fullScroll(ScrollView.FOCUS_UP);
+        tlIdPalavra.requestFocus();
 
         editPalavra = challenge;
         tlIdPalavra.getEditText().setText(challenge.getWord());
@@ -220,6 +221,8 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             addBt2.setVisibility(View.GONE);
             Button addBt = findViewById(R.id.buttonAddPalavra);
             addBt.setText("Adicionar Palavra");
+            addBt.setVisibility(View.GONE);
+            addBt.setVisibility(View.VISIBLE);
 
             tlIdPalavra.getEditText().setText(null);
             urlImagePalavra = null;
@@ -237,10 +240,13 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         if(this.editPalavraMode && challenge == this.editPalavra) {
             updateEditModePalavra(false);
         }
+        Toast.makeText(getApplicationContext(), "Palavra \""+challenge.getWord()+"\" foi removida", Toast.LENGTH_LONG).show();
     }
 
     public void saveChanges(View v)
     {
+        v.setEnabled(false);
+
         String temaNome = tlIdTema.getEditText().getText().toString();
 
         if(temaNome == null || temaNome.length() == 0) {
@@ -291,7 +297,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
                 }
                 this.challengeSqlService.update(palavraNow);
             }
-
+            Log.i(TAG, "Alterações do Tema Salva com sucesso!");
             Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
         } else {
             this.themeSqlService.insert(tema, tema.getChallenges());
