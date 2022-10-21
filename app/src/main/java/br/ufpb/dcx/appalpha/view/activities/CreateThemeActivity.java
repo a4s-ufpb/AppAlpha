@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,24 +22,29 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.config.AlphaTextView;
 import br.ufpb.dcx.appalpha.control.service.ChallengeSqlService;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
-import br.ufpb.dcx.appalpha.control.util.ImgurHelper;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 
 
-public class CreateThemeActivity extends AppCompatActivity implements View.OnClickListener {
+public class CreateThemeActivity extends AppCompatActivity implements View.OnClickListener
+{
     private static final String TAG = "CreateThemeActivity";
     private ImageButton back_btn;
 
@@ -65,16 +69,23 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     public boolean editPalavraMode;
     public Challenge editPalavra;
-    List<Long> palavrasID_Remover;
-    List<Challenge> palavras_Adicionar;
+    public List<Long> palavrasID_Remover;
+    public List<Challenge> palavras_Adicionar;
+
+    public HashMap<Object, String> imagePathToObjectMap;
+    public String imageSavePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         this.palavrasID_Remover = new ArrayList<Long>();
         this.palavras_Adicionar = new ArrayList<Challenge>();
+        this.imagePathToObjectMap = new HashMap<Object, String>();
+
+        this.imageSavePath = getFilesDir().getAbsolutePath() + File.separator + "images";
 
         this.tema = new Theme(null, null, null, null);
+        this.editPalavra = new Challenge(null, null,null,null,null);
 
         themeSqlService = ThemeSqlService.getInstance(getApplicationContext());
         challengeSqlService = ChallengeSqlService.getInstance(getApplicationContext());
@@ -246,6 +257,73 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         Toast.makeText(getApplicationContext(), "Palavra \""+challenge.getWord()+"\" foi removida", Toast.LENGTH_LONG).show();
     }
 
+
+    public static void copyFile(File src, File dst) throws IOException
+    {
+        try (InputStream in = new FileInputStream(src)) {
+            try (OutputStream out = new FileOutputStream(dst)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+        }
+    }
+
+    public String getImagePathFromObject(Object object)
+    {
+        String path = imagePathToObjectMap.get(object);
+        return path;
+    }
+
+    // save temp image to cache dir
+    public void setImageToObject(File image, Object object)
+    {
+        if(object == null || image == null) {
+            return;
+        }
+        String imagePathTemp = null;
+        try {
+            File outputDir = getApplicationContext().getCacheDir();
+            File outputFile = File.createTempFile("image", ".jpg", outputDir);
+            imagePathTemp = outputFile.getPath();
+            copyFile(image, outputFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(imagePathTemp != null) {
+            imagePathToObjectMap.put(object, imagePathTemp);
+        }
+    }
+
+    // save image to app files
+    public String saveImageToFiles(String pathTempImage)
+    {
+        String pathRet = null;
+        if(pathTempImage != null) {
+            if(pathTempImage.startsWith(this.imageSavePath)) {
+                return pathTempImage;
+            }
+            try {
+                File dirPath = new File(this.imageSavePath);
+                if (!dirPath.exists()) {
+                    dirPath.mkdirs();
+                }
+                File imagePath = File.createTempFile("image", ".jpg", dirPath);
+                File imageFileTemp = new File(pathTempImage);
+                copyFile(imageFileTemp, imagePath);
+                // delete temp image cache dir
+                imageFileTemp.delete();
+                pathRet = imagePath.getPath();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return pathRet;
+    }
+
     public void saveChanges(View v)
     {
         String temaNome = tlIdTema.getEditText().getText().toString();
@@ -274,6 +352,41 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         startActivity(intent);
     }
 
+    public void saveImageToObject(Object object)
+    {
+        String origImagePath = null;
+        String newImagePath = null;
+        if(object != null) {
+            if (object instanceof Theme) {
+                Long id = ((Theme)object).getId();
+                if(id!=null) {
+                    Theme temaGet = themeSqlService.get(id);
+                    origImagePath = temaGet.getImageUrl();
+                }
+                String ImagePath = ((Theme)object).getImageUrl();
+                if(ImagePath != null && ImagePath.startsWith("/")) {
+                    newImagePath = saveImageToFiles(ImagePath);
+                    ((Theme)object).setImageUrl(newImagePath);
+                }
+            } else if (object instanceof Challenge) {
+                Long id = ((Challenge)object).getId();
+                if(id!=null) {
+                    Challenge palavraGet = challengeSqlService.get(id);
+                    origImagePath = palavraGet.getImageUrl();
+                }
+                String ImagePath = ((Challenge)object).getImageUrl();
+                if(ImagePath != null && ImagePath.startsWith("/")) {
+                    newImagePath = saveImageToFiles(ImagePath);
+                    ((Challenge)object).setImageUrl(newImagePath);
+                }
+            }
+        }
+        if(origImagePath!=null && newImagePath!=null && !origImagePath.equals(newImagePath)) {
+            File oldImage = new File(origImagePath);
+            oldImage.delete();
+        }
+    }
+
     public void salvarTemaAtual()
     {
         this.tema.setName(tlIdTema.getEditText().getText().toString().trim());
@@ -283,27 +396,38 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         if(this.editMode) {
 
             // atualizar theme
+            saveImageToObject(this.tema);
             this.themeSqlService.update(this.tema);
+
+            // adicionar palavras
+            for(Challenge palavraNow : this.palavras_Adicionar) {
+                saveImageToObject(palavraNow);
+            }
+            this.themeSqlService.insertThemeRelatedChallenges(this.tema.getId(), this.palavras_Adicionar);
+
+            //atualizar palavras
+            for(Challenge palavraNow : this.tema.getChallenges()) {
+                saveImageToObject(palavraNow);
+                if(palavraNow.getId() == null) {
+                    continue;
+                }
+                this.challengeSqlService.update(palavraNow);
+            }
 
             //remover palavras
             for(Long palavraIDNow : this.palavrasID_Remover) {
                 this.challengeSqlService.deleteById(palavraIDNow);
             }
 
-            // adicionar palavras
-            this.themeSqlService.insertThemeRelatedChallenges(this.tema.getId(), this.palavras_Adicionar);
-
-            //atualizar palavras
-            for(Challenge palavraNow : this.tema.getChallenges()) {
-                if(palavraNow.getId() == null) {
-                    continue;
-                }
-                this.challengeSqlService.update(palavraNow);
-            }
             Log.i(TAG, "Alterações do Tema Salva com sucesso!");
             Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
         } else {
-            this.themeSqlService.insert(tema, tema.getChallenges());
+            // save image to app files
+            saveImageToObject(this.tema);
+            for(Challenge palavraNow : this.tema.getChallenges()) {
+                saveImageToObject(palavraNow);
+            }
+            this.themeSqlService.insert(this.tema, this.tema.getChallenges());
             Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
         }
     }
@@ -342,6 +466,8 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
                 e.printStackTrace();
             }
 
+            Log.w(TAG, "Image path file: "+ dataFile.toString());
+
             sendImage(dataFile, requestCode);
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
@@ -361,25 +487,15 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     public void sendImage(File fileImage, int requestCode)
     {
-        ImgurHelper.getImageLink(getApplicationContext(), fileImage, null, new ImgurHelper.ImgurHelperCompletionHandler() {
-            @Override
-            public void success(String link) {
-                Log.w(TAG, "ImgurHelper success: "+ link);
-                if(requestCode == 1) {
-                    urlImageTema = link;
-                    updateImagemTema();
-                } else if(requestCode == 2) {
-                    urlImagePalavra = link;
-                    updateImagemPalavra();
-                }
-            }
-
-            @Override
-            public void failed(String reason) {
-                Log.w(TAG,"ImgurHelper: failed: "+ reason);
-                Toast.makeText(CreateThemeActivity.this, "ImgurHelper: Error "+reason, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if(requestCode == 1) {
+            setImageToObject(fileImage, tema);
+            urlImageTema = getImagePathFromObject(tema);
+            updateImagemTema();
+        } else if(requestCode == 2) {
+            setImageToObject(fileImage, editPalavra);
+            urlImagePalavra = getImagePathFromObject(editPalavra);
+            updateImagemPalavra();
+        }
     }
 
     public void fillRecycleView()

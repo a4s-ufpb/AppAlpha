@@ -8,10 +8,13 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
+import br.ufpb.dcx.appalpha.control.service.interfaces.ChallengeApiService;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
@@ -154,11 +157,34 @@ public class ThemeSqlService {
         }
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id)
+    {
+        // delete saved local image file
+        Theme tema = get(id);
+        if(tema!=null && tema.getImageUrl()!=null) {
+            String imageSt = tema.getImageUrl();
+            if(imageSt.startsWith("/")) {
+                File imageFile = new File(imageSt);
+                imageFile.delete();
+            }
+        }
+
+        // delete all chalenges of theme
+        for(Challenge palavras : challengeSqlService.getRelatedChallenges(id)) {
+            challengeSqlService.deleteById(palavras.getId());
+        }
+
         String deleteQuery = "DELETE FROM " + DbHelper.THEMES_TABLE + " WHERE id = ?";
-
         Cursor cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
+        if (cursor.moveToFirst()) {
+            Integer value = cursor.getInt(0);
+            Log.i(TAG, value + "");
+            cursor.close();
+        }
 
+        // delete all from theme relation
+        deleteQuery = "DELETE FROM " + DbHelper.CHALLENGE_THEME_TABLE + " WHERE theme_id = ?";
+        cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
         if (cursor.moveToFirst()) {
             Integer value = cursor.getInt(0);
             Log.i(TAG, value + "");

@@ -6,11 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
+import br.ufpb.dcx.appalpha.model.bean.Theme;
 
 public class ChallengeSqlService {
     private final String TAG = "ChallengeApiService";
@@ -53,6 +55,24 @@ public class ChallengeSqlService {
         return id;
     }
 
+    public Challenge get(Long id)
+    {
+        String word, soundUrl, videoUrl, imageUrl;
+        word = soundUrl = videoUrl = imageUrl = "";
+
+        String selectQuery = "SELECT word, soundUrl, videoUrl, imageUrl FROM " + DbHelper.CHALLENGES_TABLE + " WHERE id = ?";
+        Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});
+        if (cursor.moveToFirst()) {
+            word = cursor.getString(0);
+            soundUrl = cursor.getString(1);
+            videoUrl = cursor.getString(2);
+            imageUrl = cursor.getString(3);
+        }
+        cursor.close();
+        Challenge c = new Challenge(id, word, soundUrl, videoUrl, imageUrl);
+        return c;
+    }
+
     public List<Challenge> getRelatedChallenges(Long theme_id) {
         String word, soundUrl, videoUrl, imageUrl;
         Long id;
@@ -91,10 +111,27 @@ public class ChallengeSqlService {
 
     public void deleteById(Long id)
     {
+        // delete saved local image file
+        Challenge palavra = get(id);
+        if(palavra!=null && palavra.getImageUrl()!=null) {
+            String imageSt = palavra.getImageUrl();
+            if(imageSt.startsWith("/")) {
+                File imageFile = new File(imageSt);
+                imageFile.delete();
+            }
+        }
+
         String deleteQuery = "DELETE FROM " + DbHelper.CHALLENGES_TABLE + " WHERE id = ?";
-
         Cursor cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
+        if (cursor.moveToFirst()) {
+            Integer value = cursor.getInt(0);
+            Log.i(TAG, value + "");
+            cursor.close();
+        }
 
+        // delete chalange from relation
+        deleteQuery = "DELETE FROM " + DbHelper.CHALLENGE_THEME_TABLE + " WHERE challenge_id = ?";
+        cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
         if (cursor.moveToFirst()) {
             Integer value = cursor.getInt(0);
             Log.i(TAG, value + "");
