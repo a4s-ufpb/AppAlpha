@@ -30,7 +30,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String recordsSql = "CREATE TABLE IF NOT EXISTS " + RECORDS_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, points REAL)";
         String themesSql = "CREATE TABLE IF NOT EXISTS " + THEMES_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, soundUrl VARCHAR, videoUrl VARCHAR, imageUrl VARCHAR, apiId INTEGER UNIQUE, deletavel INTEGER DEFAULT 0)";
         String challengesSql = "CREATE TABLE IF NOT EXISTS " + CHALLENGES_TABLE + "(id INTEGER PRIMARY KEY AUTOINCREMENT, word VARCHAR, soundUrl VARCHAR, videoUrl VARCHAR, imageUrl VARCHAR)";
-        String challenge_themeSql = "CREATE TABLE IF NOT EXISTS " + CHALLENGE_THEME_TABLE + "(challenge_id, theme_id INTEGER, FOREIGN KEY (challenge_id) REFERENCES challenges(id), FOREIGN KEY (theme_id) REFERENCES themes(id))";
+        String challenge_themeSql = "CREATE TABLE IF NOT EXISTS " + CHALLENGE_THEME_TABLE + "(challenge_id INTEGER, theme_id INTEGER)";
 
         List<String> sqls = new ArrayList<>(Arrays.asList(activateForeignKey, recordsSql, themesSql, challengesSql, challenge_themeSql));
 

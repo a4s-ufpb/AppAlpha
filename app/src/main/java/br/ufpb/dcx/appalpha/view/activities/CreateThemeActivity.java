@@ -121,14 +121,14 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         imagemTema.setOnClickListener(v -> {
             ImagePicker.with(CreateThemeActivity.this)
                         .crop()
-                        .compress(1024)
+                        .compress(420)
                         .start(1);
         });
 
         imagemPalavra.setOnClickListener(v -> {
             ImagePicker.with(CreateThemeActivity.this)
                     .crop()
-                    .compress(1024)
+                    .compress(420)
                     .start(2);
         });
 
@@ -290,6 +290,8 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             File outputFile = File.createTempFile("image", ".jpg", outputDir);
             imagePathTemp = outputFile.getPath();
             copyFile(image, outputFile);
+            // delete image in old app file
+            image.delete();
         } catch (Exception e) {
             e.printStackTrace();
         }

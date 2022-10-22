@@ -151,7 +151,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         while (AudioUtil.getInstance()!=null && AudioUtil.getInstance().isTSS_Playing()) {
             try {
                 sleep(200);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
