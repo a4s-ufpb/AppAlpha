@@ -1,4 +1,5 @@
 {
   "letter_type":"casual",
-  "letter_case":"maiúsculas"
+  "letter_case":"maiúsculas",
+  "url_api":"https://api.apps4society.dcx.ufpb.br/educapi/"
 }

@@ -17,6 +17,7 @@ public class AppConfig extends JsonManager {
     public static final String LOWER = "minúsculas";
     private String currentLetterType;
     private String currentLetterCase;
+    private String url_api;
     private JSONObject jsonObjConfig;
 
     private AppConfig(Context appContext){
@@ -24,6 +25,7 @@ public class AppConfig extends JsonManager {
         try {
             this.currentLetterType = (String) this.jsonObjConfig.get("letter_type");
             this.currentLetterCase = (String) this.jsonObjConfig.get("letter_case");
+            this.url_api = (String) this.jsonObjConfig.get("url_api");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -63,11 +65,20 @@ public class AppConfig extends JsonManager {
         this.currentLetterCase = currentLetterCase.toLowerCase();
     }
 
+    public String getUrl_api() {
+        return url_api;
+    }
+
+    public void setUrl_api(String url_api) {
+        this.url_api = url_api;
+    }
+
     public void saveAllChange(Context appContext){
         JSONObject newJsonObjConfig = new JSONObject();
         try {
             newJsonObjConfig.put("letter_type", this.currentLetterType);
             newJsonObjConfig.put("letter_case", this.currentLetterCase);
+            newJsonObjConfig.put("url_api", this.url_api);
             this.jsonObjConfig = newJsonObjConfig;
             super.writeJsonObject(appContext, this.jsonObjConfig);
             Log.i("Json - AppConfig", "All changes have been saved");
