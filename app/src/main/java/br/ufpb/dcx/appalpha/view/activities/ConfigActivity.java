@@ -101,7 +101,7 @@ public class ConfigActivity extends AppCompatActivity {
      */
     public void saveChanges(View view){
         pushChanges();
-        this.configurator.saveAllChange(getApplicationContext());
+        this.configurator.saveAllChange();
         this.recreate();
         Toast.makeText(this, "Configurações salvas com sucesso!", Toast.LENGTH_SHORT).show();
     }

@@ -1,52 +1,46 @@
 package br.ufpb.dcx.appalpha.control.config;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
-import br.ufpb.dcx.appalpha.control.json.JsonManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class AppConfig extends JsonManager {
+public class AppConfig
+{
     private static AppConfig instance;
+    SharedPreferences sPreferences = null;
+
     public static final String CASUAL = "casual";
     public static final String CURSIVA = "cursiva";
     public static final String BASTAO = "bastão";
     public static final String UPPER = "maiúsculas";
     public static final String LOWER = "minúsculas";
+
     private String currentLetterType;
     private String currentLetterCase;
     private String url_api;
-    private JSONObject jsonObjConfig;
 
-    private AppConfig(Context appContext){
-        this.jsonObjConfig = super.getJsonObjectOfArchive(appContext);
+    private AppConfig(Context appContext)
+    {
         try {
-            this.currentLetterType = (String) this.jsonObjConfig.get("letter_type");
-            this.currentLetterCase = (String) this.jsonObjConfig.get("letter_case");
-            this.url_api = (String) this.jsonObjConfig.get("url_api");
-        } catch (JSONException e) {
+            if(sPreferences == null) {
+                sPreferences = appContext.getSharedPreferences("configs", MODE_PRIVATE);
+            }
+            this.currentLetterType = sPreferences.getString("letter_type", "casual");
+            this.currentLetterCase = sPreferences.getString("letter_case", "maiúsculas");
+            this.url_api = sPreferences.getString("url_api", "https://api.apps4society.dcx.ufpb.br/educapi/");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static AppConfig getInstance(Context appContext){
+    public static AppConfig getInstance(Context appContext)
+    {
         if(instance == null){
             instance = new AppConfig(appContext);
         }
-
         return instance;
-    }
-
-    @Override
-    protected String getDiretory() {
-        return "configs/";
-    }
-
-    @Override
-    protected String getJsonFileName() {
-        return "configs.json";
     }
 
     public String getCurrentLetterType() {
@@ -73,16 +67,16 @@ public class AppConfig extends JsonManager {
         this.url_api = url_api;
     }
 
-    public void saveAllChange(Context appContext){
-        JSONObject newJsonObjConfig = new JSONObject();
+    public void saveAllChange()
+    {
         try {
-            newJsonObjConfig.put("letter_type", this.currentLetterType);
-            newJsonObjConfig.put("letter_case", this.currentLetterCase);
-            newJsonObjConfig.put("url_api", this.url_api);
-            this.jsonObjConfig = newJsonObjConfig;
-            super.writeJsonObject(appContext, this.jsonObjConfig);
-            Log.i("Json - AppConfig", "All changes have been saved");
-        } catch (JSONException e) {
+            SharedPreferences.Editor edit = sPreferences.edit();
+            edit.putString("letter_type", this.currentLetterType);
+            edit.putString("letter_case", this.currentLetterCase);
+            edit.putString("url_api", this.url_api);
+            edit.apply();
+            Log.i("AppConfig", "All changes have been saved");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

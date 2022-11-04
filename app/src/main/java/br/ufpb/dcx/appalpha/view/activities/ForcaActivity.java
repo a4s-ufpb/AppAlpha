@@ -20,7 +20,6 @@ import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
-import br.ufpb.dcx.appalpha.control.log.LogManagerExtStor;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
 
@@ -29,7 +28,6 @@ public class ForcaActivity extends AppCompatActivity {
     final int QTD_MAX_ERROS = 6;
     ForcaController forcaController;
     Cronometro cronometro;
-    private LogManagerExtStor logManagerExt;
     private ImageView imgPalavra;
 
     public void memoryFree() {
@@ -60,9 +58,6 @@ public class ForcaActivity extends AppCompatActivity {
         cronometro = new Cronometro(findViewById(R.id.cronometro), getApplicationContext());
         cronometro.comecarCronometro();
 
-        //Iniciando o gerenciador de Logs para memória interna
-        this.logManagerExt = new LogManagerExtStor(getApplicationContext());
-
     }
 
     @Override
@@ -83,7 +78,6 @@ public class ForcaActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        this.logManagerExt.saveLogInFile();
     }
 
     private void feedbackTatil() {
@@ -111,10 +105,6 @@ public class ForcaActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Você já chutou essa letra!", Toast.LENGTH_SHORT).show();
         } else { // ATTEMP_REJECTED
             btnClicado.setBackgroundResource(R.drawable.red_rounded_backgroud);
-
-            Log.i("Json-Log", ChallengeFacade.getInstance().getCurrentChallenge().getWord() + " - " + letraClicada);
-            this.logManagerExt.addNewErro(ChallengeFacade.getInstance().getCurrentChallenge().getWord(), letraClicada); //Adicionando caso de erro ao arquivo JSON
-            Log.i("Json-Log", ChallengeFacade.getInstance().getCurrentChallenge().getWord() + " - " + letraClicada);
         }
     }
 
