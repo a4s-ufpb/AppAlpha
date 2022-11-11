@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiConfig
 {
-    public static final String GITHUB_USER = "julio-ufpb";
+    public static final String GITHUB_USER = "a4s-ufpb";
 
     private static ApiConfig instance;
     public SharedPreferences sPreferences = null;
@@ -53,7 +53,7 @@ public class ApiConfig
     {
         long lastTime = sPreferences.getLong("time", System.currentTimeMillis());
         if((System.currentTimeMillis()-lastTime) > updateInterval) {
-            Log.i("ApiConfig", "Check Bypassed, Checked less than minimum interval.");
+            Log.i("ApiConfig", "Check Bypassed, Checked less than minimum interval "+updateInterval+" secs.");
             return;
         }
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://raw.githubusercontent.com/"+ GITHUB_USER +"/EducAPI-Config/main/").addConverterFactory(GsonConverterFactory.create()).client(getOkHttpClient()).build();
@@ -65,10 +65,13 @@ public class ApiConfig
                 if (response.isSuccessful()) {
                     Map apiConfigDic = response.body();
                     if(apiConfigDic!=null && apiConfigDic.containsKey("sucess") && new Boolean((Boolean) apiConfigDic.get("sucess")).booleanValue()==true) {
+
+                        // use specific config by application id, if available
                         Map configForApp = (Map)apiConfigDic.get(BuildConfig.APPLICATION_ID);
                         if(configForApp != null) {
                             apiConfigDic = configForApp;
                         }
+
                         // update to settings
                         Object dominioVal = apiConfigDic.get("dominio");
                         if(dominioVal!=null) {
