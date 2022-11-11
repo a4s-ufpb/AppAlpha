@@ -29,6 +29,8 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
         private Context activityContext;
         private boolean isDeleteMode;
         private boolean isEditMode;
+        private boolean editAnyTheme = true;
+
         public ThemeAdapter(List<Theme> themes, Context context, boolean isDeleteMode, boolean isEditMode) {
                 this.themes = themes;
                 this.activityContext = context;
@@ -50,7 +52,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                         holder.btnDel.setVisibility(View.VISIBLE);
                 }
 
-                if (themes.get(holder.getAdapterPosition()).getDeletavel() && this.isEditMode) {
+                if ((editAnyTheme || themes.get(holder.getAdapterPosition()).getDeletavel()) && this.isEditMode) {
                         holder.btnEdit.setVisibility(View.VISIBLE);
                 }
 
