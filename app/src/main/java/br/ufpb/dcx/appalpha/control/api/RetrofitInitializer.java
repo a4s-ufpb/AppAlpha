@@ -10,7 +10,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import br.ufpb.dcx.appalpha.control.config.AppConfig;
 import br.ufpb.dcx.appalpha.control.service.interfaces.ChallengeApiService;
 import br.ufpb.dcx.appalpha.control.service.interfaces.ThemesApiServiceInterface;
 import br.ufpb.dcx.appalpha.view.activities.MainActivity;
@@ -20,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitInitializer {
 
-    public static String URL_PROD = AppConfig.getInstance(MainActivity.getMainContext()).getUrl_api();
+    public static String URL_PROD = ApiConfig.getInstance(MainActivity.getMainContext()).getDominio();
 
     public static String URL_DEV = "http://192.168.0.189:8080/";
 

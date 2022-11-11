@@ -15,6 +15,7 @@ import java.io.File;
 
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.PermissionControll;
+import br.ufpb.dcx.appalpha.control.api.ApiConfig;
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.control.service.MockThemes;
 import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         pc.getWriteExternalStoragePermission();
 
         verifyFirstRunAndInjectDb();
+        
+        // init API Configurations
+        ApiConfig.getInstance(getApplicationContext());
     }
 
     public static Context getMainContext()
