@@ -4,7 +4,7 @@ android {
     compileSdk 28
     defaultConfig {
         applicationId "br.ufpb.dcx.appalpha"
-        minSdk 22
+        minSdk 21
         targetSdkVersion 29
         versionCode 1
         versionName '1.0.4'
@@ -13,6 +13,9 @@ android {
         multiDexEnabled = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // get API URL from system enviroment variable
+        buildConfigField "String", "EDUC_API_URL", "\""+System.getenv("EDUC_API_URL")+"\""
     }
     buildTypes {
         release {
