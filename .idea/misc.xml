@@ -31,7 +31,10 @@
         <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/activity_splash.xml" value="0.33489583333333334" />
         <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/activity_tela_progresso_.xml" value="0.33489583333333334" />
         <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/activity_tema.xml" value="0.18802083333333333" />
+        <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/alerta_imagem_options.xml" value="0.17831813576494426" />
         <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/card_theme.xml" value="0.18802083333333333" />
+        <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/fragment_nav_search.xml" value="0.22" />
+        <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/search_card_grid.xml" value="0.17831813576494426" />
         <entry key="..\:/Documents/GitHub/AppAlpha/app/src/main/res/layout/teclado_qwerty_brasileiro.xml" value="0.18802083333333333" />
       </map>
     </option>
@@ -41,5 +44,8 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="SuppressKotlinCodeStyleNotification">
+    <option name="disableForAll" value="true" />
   </component>
 </project>

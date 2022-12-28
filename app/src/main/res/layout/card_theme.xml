@@ -63,7 +63,7 @@
                     android:fadingEdge="horizontal"
                     android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/colorAccent"
+                    android:tint="#8F3D59"
                     android:visibility="invisible"
                     app:srcCompat="@drawable/ic_baseline_delete_24" />
 
@@ -77,7 +77,6 @@
                     android:fadingEdge="horizontal"
                     android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/yellow_mustard"
                     android:visibility="invisible"
                     app:srcCompat="@android:drawable/ic_menu_edit" />
             </androidx.cardview.widget.CardView>
