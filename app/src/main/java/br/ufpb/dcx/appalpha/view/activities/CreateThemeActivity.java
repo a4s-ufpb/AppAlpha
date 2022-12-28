@@ -125,11 +125,12 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         recyclerView = findViewById(R.id.palavrasRows);
         layManager = new GridLayoutManager(getApplicationContext(), 2);
 
-        imagemTema.setOnClickListener(v -> {
+
+        findViewById(R.id.areaImagemTema).setOnClickListener(v -> {
             mostrarOpcaoDeSelecionarImagem(1);
         });
 
-        imagemPalavra.setOnClickListener(v -> {
+        findViewById(R.id.areaImagemPalavra).setOnClickListener(v -> {
             mostrarOpcaoDeSelecionarImagem(2);
         });
 
