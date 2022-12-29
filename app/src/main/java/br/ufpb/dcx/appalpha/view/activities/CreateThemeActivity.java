@@ -199,12 +199,6 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
         win.setBackgroundDrawableResource(R.drawable.fundoazul);
 
-        //ImageView imageTemaView = (ImageView)win.findViewById(R.id.imgTema);
-        //ImageLoadUtil.getInstance().loadImage(temaSelecionado.getImageUrl(), imageTemaView, getApplicationContext());
-
-        //TextView nomeTemaView = (TextView)win.findViewById(R.id.nomeTema);
-        //nomeTemaView.setText(temaSelecionado.getNomeImagem());
-
         View web_btn = (View)win.findViewById(R.id.areaWeb);
         web_btn.setOnClickListener(new View.OnClickListener(){
             @Override
