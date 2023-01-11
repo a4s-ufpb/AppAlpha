@@ -8,7 +8,7 @@
     tools:context=".view.activities.AddThemeActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/criar_tema_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -98,7 +98,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
+        android:id="@+id/educapi_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -107,7 +107,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+        app:layout_constraintTop_toBottomOf="@+id/criar_tema_menu">
 
         <TextView
             android:id="@+id/textView2"
@@ -122,10 +122,13 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/theme_id_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:hint="Entre com o Id aqui" />
+                android:hint="Entre com o Id aqui"
+                android:inputType="number"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

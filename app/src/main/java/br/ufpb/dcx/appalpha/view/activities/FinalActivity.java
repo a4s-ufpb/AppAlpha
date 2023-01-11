@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.service.RecordsSqlService;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 
 
 public class FinalActivity extends AppCompatActivity {
@@ -25,7 +25,7 @@ public class FinalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_final);
 
-        SomUtil.getInstance().playSound(getApplicationContext(), R.raw.applause);
+        AudioUtil.getInstance(getApplicationContext()).playSound(R.raw.applause);
 
         recordeService = RecordsSqlService.getInstance(getApplicationContext());
 
@@ -39,6 +39,13 @@ public class FinalActivity extends AppCompatActivity {
 
         txtPoints.setText(String.format("Sua pontuação final foi: %s", pontuacaoFinal));
 
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
     }
 
     /**

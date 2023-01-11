@@ -33,6 +33,9 @@ proguard/
 captures/
 
 # IntelliJ
+.idea/
+.idea
+.idea/*
 *.iml
 .idea/workspace.xml
 .idea/tasks.xml
@@ -63,3 +66,5 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+.idea/deploymentTargetDropDown.xml
+.idea/deploymentTargetDropDown.xml

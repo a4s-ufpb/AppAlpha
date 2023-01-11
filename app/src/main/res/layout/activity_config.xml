@@ -151,7 +151,7 @@
             android:orientation="vertical">
 
             <br.ufpb.dcx.appalpha.control.config.AlphaTextView
-                android:id="@+id/otherConfigs"
+                android:id="@+id/ajustes_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/white_rounded_backgroud"
