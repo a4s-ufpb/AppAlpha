@@ -10,6 +10,9 @@ import android.util.Log;
 
 import java.util.Locale;
 
+/**
+ *  Class to manage sound player and TTS
+ */
 public class AudioUtil implements TextToSpeech.OnInitListener {
     private static AudioUtil instance;
     private MediaPlayer mediaPlayer;
@@ -18,6 +21,11 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
     private TextToSpeech textToSpeak;
     private Context context;
 
+    /**
+     * Get shared instance and alloc if not exist
+     * @param context
+     * @return
+     */
     public static AudioUtil getInstance(Context context) {
         if (instance == null) {
             instance = new AudioUtil(context);
@@ -26,6 +34,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         return instance;
     }
 
+    /**
+     * Get current shared instance without allocate if not exist
+     * @return
+     */
     public static AudioUtil getInstance() {
         if (instance == null) {
             throw new RuntimeException("Não há instância do serviço de áudio! Alguma activity deve" +
@@ -41,6 +53,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     }
 
+    /**
+     * Play local music file locally
+     * @param songId
+     */
     public synchronized void playSound(int songId)
     {
         this.mediaPlayer = MediaPlayer.create(this.context, songId);
@@ -50,6 +66,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         mediaPlayer.setOnCompletionListener(mediaPlayer -> stopSound());
     }
 
+    /**
+     * Play remote music from url
+     * @param url
+     */
     public synchronized void playSoundURL(String url) {
 
         this.mediaPlayerUrl = new MediaPlayer();
@@ -87,16 +107,28 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     }
 
+    /**
+     * Start TTS speak from supplied world
+     * @param world
+     */
     public synchronized void speakWord(String world)
     {
         this.textToSpeak.speak(world, TextToSpeech.QUEUE_FLUSH, null);
         this.duration = 0;
     }
 
+    /**
+     * Duration of current playing audio
+     * @return
+     */
     public int getDuration() {
         return duration;
     }
 
+    /**
+     * Stop and Release specific player
+     * @param player
+     */
     public void stopSoundPlayer(MediaPlayer player)
     {
         if (player != null) {
@@ -110,6 +142,9 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Stop and Release all players
+     */
     public void stopSound()
     {
         stopSoundPlayer(mediaPlayer);
@@ -126,6 +161,9 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Stop speaking TTS
+     */
     public void stopTextToSpeak()
     {
         if (this.textToSpeak != null) {
@@ -133,6 +171,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Check if TTS is currently playing
+     * @return
+     */
     public boolean isTSS_Playing()
     {
         boolean ret = false;
@@ -146,6 +188,9 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         return ret;
     }
 
+    /**
+     * Wait in current thread until TTS finish
+     */
     public void esperarTssParar()
     {
         while (AudioUtil.getInstance()!=null && AudioUtil.getInstance().isTSS_Playing()) {
@@ -157,6 +202,9 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Stop TTS and All Playes
+     */
     public void pararTSSePlayer()
     {
         stopSound();
