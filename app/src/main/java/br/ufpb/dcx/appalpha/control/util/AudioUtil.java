@@ -108,7 +108,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
     }
 
     /**
-     * Start TTS speak from supplied world
+     * Start TTS speak from supplied word
      * @param world
      */
     public synchronized void speakWord(String world)

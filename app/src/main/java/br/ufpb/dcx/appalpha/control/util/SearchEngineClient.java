@@ -18,6 +18,9 @@ import java.util.Map;
 
 import br.ufpb.dcx.appalpha.R;
 
+/**
+ * Class to search image from an typed word via API Rest
+ */
 public class SearchEngineClient {
 
     private static String API_KEY = null;

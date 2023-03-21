@@ -7,8 +7,8 @@ import android.widget.Chronometer;
 
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 
-/*
-Classe que implementa o cronômetro para a contagem de pontos
+/**
+ * Class to manage stopwatch for count points
  */
 public class Cronometro {
     private Chronometer cronometro;
@@ -32,6 +32,11 @@ public class Cronometro {
         });
     }
 
+    /**
+     * Verify Time for play sound help
+     * @param tempo
+     * @return
+     */
     private boolean verificarHoraDaDica(String tempo) {
         boolean hora_chegou = false;
         String tempo_formatado = tempo.replace(":", ".");
@@ -51,11 +56,14 @@ public class Cronometro {
         return hora_chegou;
     }
 
+    /**
+     * PLay help sound
+     */
     private void darDicaSonora() {
         String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
-                // TODO obter som da URL, se for URL
+                AudioUtil.getInstance(context).playSoundURL(soundUrl);
             } else if (TextUtil.isAllInteger(soundUrl)) {
                 AudioUtil.getInstance(context).playSound(Integer.parseInt(soundUrl));
             } else {
@@ -66,16 +74,17 @@ public class Cronometro {
         }
     }
 
-    /*
-    Começa a contagem do cronômetro
+    /**
+     * Start stopwatch count
      */
     public void comecarCronometro() {
         cronometro.setBase(SystemClock.elapsedRealtime());
         cronometro.start();
     }
 
-    /*
-    Para o cronômetro e retorna o tempo
+    /**
+     * Stop stopwatch and return time
+     * @return
      */
     public double parandoCronometroEPegandoTempo() {
         cronometro.stop();

@@ -15,12 +15,19 @@ import java.io.IOException;
 
 import br.ufpb.dcx.appalpha.R;
 
+/**
+ * Class to manage image load with Glide framework
+ */
 public class ImageLoadUtil {
     private final String TAG = "ImageLoadUtil";
     private static ImageLoadUtil instance;
 
     private ImageLoadUtil(){}
 
+    /**
+     * Get shared instance
+     * @return
+     */
     public static ImageLoadUtil getInstance(){
         if(instance == null){
             instance = new ImageLoadUtil();
@@ -29,6 +36,12 @@ public class ImageLoadUtil {
         return instance;
     }
 
+    /**
+     * Load image in an ImageView
+     * @param imageUrl
+     * @param themeImageLeft
+     * @param context
+     */
     public void loadImage(String imageUrl, ImageView themeImageLeft, Context context){
         DiskCacheStrategy diskCacheStrategy = new DiskCacheStrategy() {
             @Override
