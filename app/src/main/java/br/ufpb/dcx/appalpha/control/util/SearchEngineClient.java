@@ -25,21 +25,36 @@ public class SearchEngineClient {
 
     private static String API_KEY = null;
 
+    /**
+     * Alloc class with context to load API key
+     * @param context
+     */
     public SearchEngineClient(Context context){
         API_KEY = context.getResources().getString(R.string.pixabay_key);
     }
 
+    /**
+     * Callback handle response structure
+     */
     public interface SearchEngineClientBingCompletionHandler
     {
         public void success(List<HashMap<String, Object>> resultado);
         public void failed(String reason);
     }
 
+    /**
+     * Executer search of an query name of image with callback handle response
+     * @param query
+     * @param completionHandler
+     */
     public void search(final String query, SearchEngineClientBingCompletionHandler completionHandler) {
         SearchExecutorBing executor = new SearchExecutorBing(query, API_KEY, completionHandler);
         executor.start();
     }
 
+    /**
+     * Class thread to execute API call for search
+     */
     class SearchExecutorBing extends Thread {
 
         private String search;

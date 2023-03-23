@@ -4,11 +4,18 @@ import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class to manage text
+ */
 public class TextUtil {
     private static TextUtil instance;
 
     private TextUtil(){}
 
+    /**
+     * Get shared instance
+     * @return
+     */
     public static TextUtil getInstance(){
         if(instance == null){
             instance = new TextUtil();
@@ -17,6 +24,11 @@ public class TextUtil {
         return instance;
     }
 
+    /**
+     * Generate underline format from an word
+     * @param word
+     * @return
+     */
     public String getUnderlineOfThis(String word) {
         StringBuilder s = new StringBuilder(word);
         StringBuilder newS = new StringBuilder("");
@@ -47,6 +59,11 @@ public class TextUtil {
         return m.find();
     }
 
+    /**
+     * Check if an word is only number
+     * @param text
+     * @return
+     */
     public static boolean isAllInteger(String text) {
         try {
             Integer.parseInt(text);
@@ -57,9 +74,9 @@ public class TextUtil {
     }
 
     /**
-     * Tratar caractere removendo acentos e minusculo, para uma simples comparacao
+     * Treat letter, removes ascents and lowercase
      * @param caractere
-     * @return char, letra tratada
+     * @return char, letter to treat
      */
     public char tratarCaracte(char caractere)
     {
@@ -67,6 +84,11 @@ public class TextUtil {
         return Normalizer.normalize(Character.toString(caractere).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").charAt(0);
     }
 
+    /**
+     * Return an word without ascents
+     * @param text
+     * @return
+     */
     public static String normalize(String text) {
         return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
