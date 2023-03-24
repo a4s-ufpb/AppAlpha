@@ -41,9 +41,8 @@ public class ForcaActivityTest {
         launchedForcaActivity = forcaActivityActivityTestRule.launchActivity(intent);
 
         Theme mockedTheme = new Theme("cozinha",  Integer.toString(R.drawable.cozinha), Integer.toString(R.raw.cozinha), null);
-        Challenge mockedChallenge = new Challenge("colher", null, Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));
+        Challenge mockedChallenge = new Challenge(1l,"colher", Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));
         ChallengeFacade.getInstance().init(Collections.singletonList(mockedChallenge), mockedTheme);
-        ServiceLocator.getInstance().setChallengeFacade(ChallengeFacade.getInstance());
     }
 
     @After
