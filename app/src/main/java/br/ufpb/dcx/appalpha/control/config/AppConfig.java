@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+/**
+ * Class to store and retrieve App Settings
+ */
 public class AppConfig
 {
     private static AppConfig instance;
@@ -20,6 +23,10 @@ public class AppConfig
     private String currentLetterType;
     private String currentLetterCase;
 
+    /**
+     * Alloc instance loading saved settings to variables
+     * @param appContext
+     */
     private AppConfig(Context appContext)
     {
         try {
@@ -33,6 +40,11 @@ public class AppConfig
         }
     }
 
+    /**
+     * Get shared instance
+     * @param appContext
+     * @return
+     */
     public static AppConfig getInstance(Context appContext)
     {
         if(instance == null) {
@@ -57,6 +69,9 @@ public class AppConfig
         this.currentLetterCase = currentLetterCase.toLowerCase();
     }
 
+    /**
+     * Save current variables to settings
+     */
     public void saveAllChange()
     {
         try {

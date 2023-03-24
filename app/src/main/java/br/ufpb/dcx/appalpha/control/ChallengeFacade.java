@@ -8,6 +8,9 @@ import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
+/**
+ * Shared class to manage current Challenge information
+ */
 public class ChallengeFacade {
     public static final int ATTEMPT_ACEPTED = 0;
     public static final int ATTEMPT_REJECTED = 1;
@@ -27,6 +30,10 @@ public class ChallengeFacade {
     private ChallengeFacade() {
     }
 
+    /**
+     * Get shared instance
+     * @return
+     */
     public static ChallengeFacade getInstance() {
         if (instance == null) {
             instance = new ChallengeFacade();
@@ -52,6 +59,9 @@ public class ChallengeFacade {
         return currentChallenge;
     }
 
+    /**
+     * Go to next challenge in the list
+     */
     public void nextChallenge() {
         try {
             this.sumError += this.erroCount;
@@ -79,7 +89,7 @@ public class ChallengeFacade {
     }
 
     /**
-     * Deixa a palavra em underline
+     * Set word in underline
      */
     public void setUnderlinedWord() {
         this.currentUnderlinedWord = TextUtil.getInstance().getUnderlineOfThis(this.currentChallenge.getWord());

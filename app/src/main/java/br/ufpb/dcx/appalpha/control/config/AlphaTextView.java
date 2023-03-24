@@ -6,6 +6,9 @@ import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.Log;
 
+/**
+ * Class TextView to display Custom Font
+ */
 public class AlphaTextView extends AppCompatTextView {
     private Context context;
     private String fontFamily;

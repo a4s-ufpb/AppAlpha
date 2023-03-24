@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class to manage local database
+ */
 public class DbHelper extends SQLiteOpenHelper {
     private final String TAG = "DbHelper";
     private static final int VERSION = 1;
@@ -24,6 +27,10 @@ public class DbHelper extends SQLiteOpenHelper {
         super(context, NAME, null, VERSION);
     }
 
+    /**
+     * On create database execute sql query
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String activateForeignKey = "PRAGMA foreign_keys = ON";
