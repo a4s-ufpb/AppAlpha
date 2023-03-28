@@ -23,6 +23,9 @@ import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.AddThemeManagerActivity;
 import br.ufpb.dcx.appalpha.view.activities.CreateThemeActivity;
 
+/**
+ * Class of Adapter to build the main Theme list with icons
+ */
 public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> {
         private List<Theme> themes;
         private String  TAG = "ThemeListAdapter";
@@ -31,6 +34,13 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
         private boolean isEditMode;
         private boolean editAnyTheme = true;
 
+        /**
+         * Alloc instance with theme list, context, delete mode, edit mode
+         * @param themes
+         * @param context
+         * @param isDeleteMode
+         * @param isEditMode
+         */
         public ThemeAdapter(List<Theme> themes, Context context, boolean isDeleteMode, boolean isEditMode) {
                 this.themes = themes;
                 this.activityContext = context;
@@ -38,6 +48,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 this.isEditMode = isEditMode;
         }
 
+        /**
+         * Allocate the view theme
+         * @param parent
+         * @param viewType
+         * @return
+         */
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_theme, parent, false);
                 return new ViewHolder(v);
@@ -47,6 +63,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 return themes.size();
         }
 
+        /**
+         * Populate the theme icon view
+         * @param holder
+         * @param position
+         */
         public void onBindViewHolder(ViewHolder holder, int position) {
                 if ((themes.get(holder.getAdapterPosition()).getDeletavel() || themes.get(holder.getAdapterPosition()).getApiId() != null) && this.isDeleteMode) {
                         holder.btnDel.setVisibility(View.VISIBLE);
@@ -74,6 +95,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 });
         }
 
+        /**
+         * Delete action button
+         * @param position
+         */
         private void deleteSelectedTheme(int position)
         {
                 Log.i(TAG, "Theme " + themes.get(position).getName() + " Clicked to delete!");
@@ -98,6 +123,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 dialog.show();
         }
 
+        /**
+         * Edit button action
+         * @param position
+         */
         private void editSelectedTheme(int position)
         {
                 Log.i(TAG, "Theme " + themes.get(position).toString() + " Clicked to edit!");
@@ -108,6 +137,9 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 activityContext.startActivity(intent);
         }
 
+        /**
+         * Theme icon view
+         */
         class ViewHolder extends RecyclerView.ViewHolder {
                 ImageView themeImage;
                 TextView themeName;

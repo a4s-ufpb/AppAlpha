@@ -4,6 +4,9 @@ import br.ufpb.dcx.appalpha.model.bean.Record;
 
 import java.util.ArrayList;
 
+/**
+ * Interface with default methods of Record
+ */
 public interface RecordesDao {
 
     void cadastrarNovoRecorde(double pontuacao, String nome);
