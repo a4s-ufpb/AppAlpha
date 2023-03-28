@@ -4,9 +4,17 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
-
+/**
+ * Class to animate an view
+ */
 public class ViewAnimation {
 
+    /**
+     * Rotate an view
+     * @param v
+     * @param rotate
+     * @return
+     */
     public static boolean rotateFab(final View v, boolean rotate) {
         v.animate().setDuration(200)
                 .setListener(new AnimatorListenerAdapter() {
@@ -19,6 +27,10 @@ public class ViewAnimation {
         return rotate;
     }
 
+    /**
+     * Show view with animation
+     * @param v
+     */
     public static void showIn(final View v) {
         v.setVisibility(View.VISIBLE);
         v.setAlpha(0f);
@@ -35,6 +47,11 @@ public class ViewAnimation {
                 .alpha(1f)
                 .start();
     }
+
+    /**
+     * Hide view with animation
+     * @param v
+     */
     public static void showOut(final View v) {
         v.setVisibility(View.VISIBLE);
         v.setAlpha(1f);
@@ -52,6 +69,10 @@ public class ViewAnimation {
                 .start();
     }
 
+    /**
+     * Init with view
+     * @param v
+     */
     public static void init(final View v) {
         v.setVisibility(View.GONE);
         v.setTranslationY(v.getHeight());

@@ -17,6 +17,9 @@ import java.util.List;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.util.SearchEngineClient;
 
+/**
+ * Fragment to show the result of search images
+ */
 public class SearchFragment extends Fragment {
 
     private String query;
@@ -28,11 +31,23 @@ public class SearchFragment extends Fragment {
 
     private ArrayList<HashMap<String, Object>> resultado = new ArrayList();
 
+    /**
+     * Allocate instance with query term for search
+     * @param query
+     * @param TAG
+     */
     public SearchFragment(String query, int TAG) {
         this.query = query;
         this.TAG = TAG;
     }
 
+    /**
+     * On create view, Setup local variables, search the word, loading indicator
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -79,6 +94,10 @@ public class SearchFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Populate the list view with the result of search
+     * @param resultado
+     */
     private void fillRecycleView(List<HashMap<String, Object>> resultado){
         rv.setLayoutManager(laymanager);
         rv.setAdapter(new SearchListAdapter(resultado, getContext(), this, TAG));

@@ -22,7 +22,9 @@ import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.Cronometro;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
-
+/**
+ * Class of activity in the game for show the image of hanged man, word and keyboard
+ */
 public class ForcaActivity extends AppCompatActivity {
     private static final String TAG = "ForcaActivity";
     final int QTD_MAX_ERROS = 6;
@@ -30,36 +32,45 @@ public class ForcaActivity extends AppCompatActivity {
     Cronometro cronometro;
     private ImageView imgPalavra;
 
+    /**
+     * Dalloc local variables
+     */
     public void memoryFree() {
         forcaController = null;
         cronometro = null;
         imgPalavra.setImageDrawable(null);
     }
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forca);
 
-        // Setando o underscore no TextView da tela
+        // set underscore in the TextView of screen
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
         txtUnderscore.setText(ChallengeFacade.getInstance().getUnderlinedWordWithSpaces());
 
-        // Setando o ImageView da forca no objeto para modificação ao longo do jogo
+        // set ImageView da forca in ForcaController to access and update the image
         ImageView img_forca = findViewById(R.id.img_forca);
         forcaController = new ForcaController(img_forca);
 
-        // Setando imagem da palavra
-
+        // set image of word
         imgPalavra = findViewById(R.id.img_palavra);
         ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), imgPalavra, getApplicationContext());
 
-        // Iniciando cronômetro
+        // setup chronometer
         cronometro = new Cronometro(findViewById(R.id.cronometro), getApplicationContext());
         cronometro.comecarCronometro();
 
     }
 
+    /**
+     * Action call for Back button press
+     */
     @Override
     public void onBackPressed()
     {
@@ -67,6 +78,9 @@ public class ForcaActivity extends AppCompatActivity {
         AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
     }
 
+    /**
+     * On dealloc activity free memory and clean letter attempt
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -80,6 +94,9 @@ public class ForcaActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * Action for vibrate de device when tap on the letter
+     */
     private void feedbackTatil() {
         if (Build.VERSION.SDK_INT >= 26) {
             ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(80, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -89,9 +106,9 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     /**
-     * Muda a cor do botão clicado de acordo com o resultado do chute. A cor do botão mudará para verde caso acerte, caso não, mudará para vermelho.
-     * @param letraClicada a letra que o usuário chutou
-     * @param btnClicado botão correspondente a essa letra
+     * Action for check the attempted letter an change background color of button pressed based in wrong or correct
+     * @param letraClicada letter of player attempted
+     * @param btnClicado button of pressed letter
      */
     public void feedbackColorButtonLetter(String letraClicada, Button btnClicado)
     {
@@ -109,19 +126,19 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     /**
-     * Atualiza os dados da tela como a img da forca e o TextView com o underscore
-     * @param letraClicada letra que o usuário chutou
-     * @param btnClicado botão correspondente a letra
+     * Update the information in the screen
+     * @param letraClicada letter of player attempted
+     * @param btnClicado button of pressed letter
      */
     public void updateData(String letraClicada, Button btnClicado) {
 
-        // Mudando cor do botão
+        // update background of button
         feedbackColorButtonLetter(letraClicada, btnClicado);
 
-        // Atualiza a imagem da forca de acordo com a quantidade de erros
+        // update image of hanged man according to attempt count
         initForca();
 
-        // Setando o text view com o novo underscore
+        // set the text view with the new underscore
         setUnderscoreInTextview(ChallengeFacade.getInstance().getCurrentUnderlinedWord());
 
 
@@ -129,14 +146,14 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     /**
-     * Atualiza a imagem da forca
+     * Update the image of hanged man
      */
     private void initForca() {
         forcaController.mudaForca(ChallengeFacade.getInstance().getErroCount());
     }
 
     /**
-     * Verifica se a quantidade máxima de erros foi atingida ou se o usuário já acertou a palavra
+     * Check if the number of error are fired or if the word was accepted
      */
     private void verifyChallengeItsOver() {
         Intent it = new Intent(this, ProgressActivity.class);
@@ -150,9 +167,9 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     /**
-     * Seta o text view com o underscore da palavra
+     * Set text view with underscore of word
      *
-     * @param underscore underscore da palavra
+     * @param underscore underscore of word
      */
     private void setUnderscoreInTextview(String underscore) {
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
@@ -160,8 +177,7 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     /**
-     * Toca o som da palavra
-     *
+     * Play the word sound
      * @param v view
      */
     public void playWordSound(View v) {
@@ -180,10 +196,10 @@ public class ForcaActivity extends AppCompatActivity {
     }
 
     /***
-     * Evento de click em letra do teclado. A letra clicada e o botão são enviados para serem analizados e tratados de acordo com o desafio.
-     * @param view Botão clicado
+     * Action of clicked button
+     * @param view button clicked
      */
-    public void letterClick(View view){
+    public void letterClick(View view) {
         Button btClick = (Button) view;
         updateData(btClick.getText().toString().toLowerCase(), btClick);
         Log.i("Botão clicado:", btClick.getText().toString());

@@ -11,6 +11,9 @@ import android.widget.Toast;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.config.AppConfig;
 
+/**
+ * Class for activity of settings manager options of App
+ */
 public class ConfigActivity extends AppCompatActivity {
     private AppConfig configurator;
     private RadioGroup rgLetterType;
@@ -21,6 +24,10 @@ public class ConfigActivity extends AppCompatActivity {
     private RadioButton rbUpper;
     private RadioButton rbLower;
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +43,19 @@ public class ConfigActivity extends AppCompatActivity {
         this.rbLower = findViewById(R.id.rb_lowercase);
     }
 
+    /**
+     * When return back to activity update the settings in view
+     */
     @Override
     protected void onResume() {
         super.onResume();
         loadConfigsInView();
     }
 
+    /**
+     * Action for Close the activity
+     * @param view
+     */
     public void backToMainScreen(View view){
         finish();
     }
@@ -52,7 +66,7 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     /**
-     * Muda as configurações no AppConfig de acordo com as opções selecionadas na tela de configurações
+     * Retrieve current settings in the view and set to local variable.
      */
     private void pushChanges(){
         String rgSelectedLetterType =((RadioButton)findViewById(this.rgLetterType.getCheckedRadioButtonId())).getText().toString();
@@ -62,7 +76,7 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     /**
-     * Marca as opções dos RadioButton de acordo com as configurações do AppConfig
+     * Load the saved settings and update the current status in view
      */
     private void loadConfigsInView(){
         Log.i("Json-Config","Entrou em LoadConfigs");
@@ -96,7 +110,7 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     /**
-     * Salva as configurações atuais da tela de configurações e recarrega a tela.
+     * Save all settings and reload the screen
      * @param view
      */
     public void saveChanges(View view){

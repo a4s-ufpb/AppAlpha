@@ -25,6 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Class of Activity to import themes via API
+ */
 public class AddThemeActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "AddThemeActivity";
     private TextInputLayout tlIdTheme;
@@ -33,6 +36,10 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
     private ThemeSqlService themeSqlService;
     private ImageButton back_btn;
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +66,9 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    /**
+     * Action for open keyboard and focus on filed box
+     */
     public void abrirTeclado()
     {
         TextView editText1 = findViewById(R.id.theme_id_field);
@@ -66,6 +76,10 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    /**
+     * Get theme Id from field box
+     * @return
+     */
     public long getInputThemeID()
     {
         long ret = -1;
@@ -76,6 +90,10 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         return ret;
     }
 
+    /**
+     * Listen to detect click on any view in the activity
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -130,6 +148,9 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Action call for Back button press
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();

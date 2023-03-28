@@ -1,7 +1,6 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 
+/**
+ * Class of Adapter to build the word list with icons
+ */
 public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdapter.ViewHolder> {
     private CreateThemeActivity createTheme;
     private String  TAG = "CreatePalavraAdapter";
@@ -23,6 +25,13 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
     private boolean isDeleteMode;
     private boolean isEditMode;
 
+    /**
+     * Alloc instance and setup local variables
+     * @param createTheme
+     * @param context
+     * @param isDeleteMode
+     * @param isEditMode
+     */
     public CreatePalavraAdapter(CreateThemeActivity createTheme, Context context, boolean isDeleteMode, boolean isEditMode) {
         this.createTheme = createTheme;
         this.activityContext = context;
@@ -30,15 +39,30 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
         this.isEditMode = isEditMode;
     }
 
+    /**
+     * Allocate the view theme
+     * @param parent
+     * @param viewType
+     * @return
+     */
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_theme, parent, false);
         return new ViewHolder(v);
     }
 
+    /**
+     * Count list of items
+     * @return
+     */
     public int getItemCount(){
         return createTheme.tema.getChallenges().size();
     }
 
+    /**
+     * Populate the word icon view
+     * @param holder
+     * @param position
+     */
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (this.isDeleteMode) {
             holder.btnDel.setVisibility(View.VISIBLE);
@@ -63,6 +87,10 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
         });
     }
 
+    /**
+     * Delete action button
+     * @param position
+     */
     private void deleteSelectedTheme(int position)
     {
         Log.i(TAG, "Palavra " + createTheme.tema.getChallenges().get(position).getWord() + " Clicked to delete!");
@@ -71,12 +99,19 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
         notifyItemRangeChanged(position, createTheme.tema.getChallenges().size());
     }
 
+    /**
+     * Edit button action
+     * @param position
+     */
     private void editSelectedTheme(int position)
     {
         Log.i(TAG, "Palavra " + createTheme.tema.getChallenges().get(position).getWord() + " Clicked to edit!");
         createTheme.editPalavra(createTheme.tema.getChallenges().get(position));
     }
 
+    /**
+     * Class for word icon view
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView themeImage;
         TextView themeName;

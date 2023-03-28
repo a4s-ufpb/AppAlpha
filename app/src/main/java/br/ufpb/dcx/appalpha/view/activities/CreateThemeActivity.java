@@ -49,7 +49,9 @@ import br.ufpb.dcx.appalpha.model.bean.Theme;
 import br.ufpb.dcx.appalpha.view.activities.theme.ThemeActivity;
 import br.ufpb.dcx.appalpha.view.fragment.search.SearchFragment;
 
-
+/**
+ * Class of activity for create, edit, remove, update themes and words by the user and save locally
+ */
 public class CreateThemeActivity extends AppCompatActivity implements View.OnClickListener
 {
     private static final String TAG = "CreateThemeActivity";
@@ -82,6 +84,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     public HashMap<Object, String> imagePathToObjectMap;
     public String imageSavePath;
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -188,6 +194,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         fillRecycleView();
     }
 
+    /**
+     * Action for Show alert option of select image for theme or word
+     * @param TAG
+     */
     public void mostrarOpcaoDeSelecionarImagem(int TAG) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(CreateThemeActivity.this).create();
@@ -243,6 +253,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
+    /**
+     * Load name and open fragment for search image result
+     * @param TAG
+     */
     public void caregarBuscaParaImagem(int TAG) {
         String nomeParaBuscar = null;
 
@@ -263,6 +277,9 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Action for update current theme info into views
+     */
     public void updateTemaInfo()
     {
         if(this.tema != null) {
@@ -276,6 +293,9 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Action for update current word info into views
+     */
     public void updatePalavraInfo()
     {
         if(urlImagePalavra == null) {
@@ -285,6 +305,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Action for setup the current edited word
+     * @param challenge
+     */
     public void editPalavra(Challenge challenge)
     {
         tlIdPalavra.requestFocus();
@@ -295,6 +319,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         updateEditModePalavra(true);
     }
 
+    /**
+     * Update the current mode of edition of word between edit or create
+     * @param edit
+     */
     public void updateEditModePalavra(boolean edit)
     {
         this.editPalavraMode = edit;
@@ -321,6 +349,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         updatePalavraInfo();
     }
 
+    /**
+     * Action for remove an word
+     * @param challenge
+     */
     public void removePalavra(Challenge challenge)
     {
         this.tema.getChallenges().remove(challenge);
@@ -334,7 +366,12 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         Toast.makeText(getApplicationContext(), "Palavra \""+challenge.getWord()+"\" foi removida", Toast.LENGTH_LONG).show();
     }
 
-
+    /**
+     * Function for copy file
+     * @param src
+     * @param dst
+     * @throws IOException
+     */
     public static void copyFile(File src, File dst) throws IOException
     {
         try (InputStream in = new FileInputStream(src)) {
@@ -349,13 +386,22 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Get image of an object at runtime
+     * @param object
+     * @return
+     */
     public String getImagePathFromObject(Object object)
     {
         String path = imagePathToObjectMap.get(object);
         return path;
     }
 
-    // save temp image to cache dir
+    /**
+     * Save temp image to cache dir
+     * @param image
+     * @param object
+     */
     public void setImageToObject(File image, Object object)
     {
         if(object == null || image == null) {
@@ -377,7 +423,11 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    // save image to app files
+    /**
+     * Save image to app files
+     * @param pathTempImage
+     * @return
+     */
     public String saveImageToFiles(String pathTempImage)
     {
         String pathRet = null;
@@ -403,6 +453,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         return pathRet;
     }
 
+    /**
+     * Save button action
+     * @param v
+     */
     public void saveChanges(View v)
     {
         String temaNome = tlIdTema.getEditText().getText().toString();
@@ -431,6 +485,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         startActivity(intent);
     }
 
+    /**
+     * Save image at runtime
+     * @param object
+     */
     public void saveImageToObject(Object object)
     {
         String origImagePath = null;
@@ -466,6 +524,9 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Action for proceed to save the actual changes of theme in local database
+     */
     public void salvarTemaAtual()
     {
         this.tema.setName(tlIdTema.getEditText().getText().toString().trim());
@@ -474,17 +535,17 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
         if(this.editMode) {
 
-            // atualizar theme
+            // update theme
             saveImageToObject(this.tema);
             this.themeSqlService.update(this.tema);
 
-            // adicionar palavras
+            // create words
             for(Challenge palavraNow : this.palavras_Adicionar) {
                 saveImageToObject(palavraNow);
             }
             this.themeSqlService.insertThemeRelatedChallenges(this.tema.getId(), this.palavras_Adicionar);
 
-            //atualizar palavras
+            // update words
             for(Challenge palavraNow : this.tema.getChallenges()) {
                 saveImageToObject(palavraNow);
                 if(palavraNow.getId() == null) {
@@ -493,7 +554,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
                 this.challengeSqlService.update(palavraNow);
             }
 
-            //remover palavras
+            // remove words
             for(Long palavraIDNow : this.palavrasID_Remover) {
                 this.challengeSqlService.deleteById(palavraIDNow);
             }
@@ -511,6 +572,11 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Listen screen touches for auto close the keyboard when user touch or fade up/down the screen
+     * @param event
+     * @return
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)
     {
@@ -530,6 +596,12 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         return ret;
     }
 
+    /**
+     * Activity result callback from user selected image in album from the picker
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -554,16 +626,27 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Load image icon from the current word link
+     */
     public void updateImagemPalavra()
     {
         ImageLoadUtil.getInstance().loadImage(urlImagePalavra, imagemPalavra, getApplicationContext());
     }
 
+    /**
+     * Load image icon from the current theme link
+     */
     public void updateImagemTema()
     {
         ImageLoadUtil.getInstance().loadImage(urlImageTema, imagemTema, getApplicationContext());
     }
 
+    /**
+     * store the image at runtime
+     * @param fileImage
+     * @param requestCode
+     */
     public void sendImage(File fileImage, int requestCode)
     {
         if(requestCode == 1) {
@@ -579,12 +662,19 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+    /**
+     * Populate View with list of words
+     */
     public void fillRecycleView()
     {
         recyclerView.setLayoutManager(layManager);
         recyclerView.setAdapter(new CreatePalavraAdapter(this, getApplicationContext(), true, true));
     }
 
+    /**
+     * Listen to detect click on any view in the activity
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -594,6 +684,9 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Action call for Back button press
+     */
     @Override
     public void onBackPressed() {
 

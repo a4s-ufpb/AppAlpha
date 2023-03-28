@@ -11,6 +11,9 @@ import br.ufpb.dcx.appalpha.model.bean.Record;
 
 import java.util.ArrayList;
 
+/**
+ * Activity of record screen
+ */
 public class RecordesActivity extends AppCompatActivity {
     RecordsSqlService recorde;
 
@@ -26,7 +29,10 @@ public class RecordesActivity extends AppCompatActivity {
     TextView quartoLugar;
     TextView quintoLugar;
 
-
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +45,9 @@ public class RecordesActivity extends AppCompatActivity {
         setandoDados();
     }
 
+    /**
+     * Populate the information in the view
+     */
     public void setandoDados() {
         ArrayList<Record> records = recorde.getRecordistas();
 
@@ -75,14 +84,26 @@ public class RecordesActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Action to go back
+     * @param v
+     */
     public void voltandoParaMenu(View v) {
         finish();
     }
 
+    /**
+     * Set name to the text view
+     * @param txt
+     * @param dado
+     */
     public void gravandoDadosNoRecorde(TextView txt, String dado) {
         txt.setText(dado);
     }
 
+    /**
+     * Setup local variables from the view
+     */
     public void pegandoTxt() {
         primeiroNome = findViewById(R.id.nome_um);
         segundoNome = findViewById(R.id.nome_dois);

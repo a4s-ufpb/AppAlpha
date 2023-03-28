@@ -59,6 +59,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
                 return new ViewHolder(v);
         }
 
+        /**
+         * Count list of items
+         * @return
+         */
         public int getItemCount(){
                 return themes.size();
         }

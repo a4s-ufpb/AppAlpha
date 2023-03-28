@@ -14,12 +14,18 @@ import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.service.RecordsSqlService;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 
-
+/**
+ * Class for activity to show points at end of game
+ */
 public class FinalActivity extends AppCompatActivity {
     private static final int pontuacaoInicial = 1000;
     private RecordsSqlService recordeService;
     double pontuacaoFinal;
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +47,9 @@ public class FinalActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * On dalloc activity stop TTS
+     */
     @Override
     protected void onDestroy()
     {
@@ -49,7 +58,7 @@ public class FinalActivity extends AppCompatActivity {
     }
 
     /**
-     * Pega o nome do jogador para colocar no recorde
+     * Save the name of player and points in the local database
      */
     public void savePlayerName() {
         EditText txt_nome = findViewById(R.id.edit_nome);
@@ -60,7 +69,7 @@ public class FinalActivity extends AppCompatActivity {
 
 
     /**
-     * Através do botão no xml salva a pontuacao do jogador
+     * Action of save button
      * @param v
      */
     public void saveRecord(View v) {
@@ -70,19 +79,19 @@ public class FinalActivity extends AppCompatActivity {
     }
 
     /**
-     * Cadastra pontuação do jogador
-     * @param pontuacao pontuação do jogador
-     * @param nome nome do jogador
+     * Save the record of player in local database
+     * @param pontuacao points of player
+     * @param nome name of player
      */
     public void inserindoNoBanco(double pontuacao, String nome) {
         recordeService.cadastrarNovoRecorde(pontuacao, nome);
     }
 
     /**
-     * Diminui da pontuação inicial o tempo e os erros do usuário
-     * @param tempo tempo que ele levou para terminar os desafios
-     * @param erros erros que o usuário cometeu durante os desafios
-     * @return pontuação final do usuário
+     * Calculate the points of the player by time and attempt failed of letter
+     * @param tempo time until player has finished the game
+     * @param erros total error count the player has got
+     * @return result of points the player have
      */
     public double getPoints(double tempo, int erros) {
 
@@ -96,9 +105,9 @@ public class FinalActivity extends AppCompatActivity {
     }
 
     /**
-     * Dependendo da pontuação do usuário mostra uma imagem com as estrelas que ele ganhou
-     * @param img imageview que vai ser setada com uma das imagens das estrelas
-     * @param pontuacao pontuação do usuário
+     * Set the image of star relative of points of player
+     * @param img imageview allocated to show the stars
+     * @param pontuacao points of player
      */
     public void pontuacao(ImageView img, double pontuacao) {
 
@@ -117,6 +126,9 @@ public class FinalActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Action to Close the activity
+     */
     public void sair() {
         finish();
     }

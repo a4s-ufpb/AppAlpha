@@ -24,12 +24,22 @@ import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.view.activities.CreateThemeActivity;
 
+/**
+ * Adapter for show the list of images result from search
+ */
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
     private Context fragmentContext;
     private int TAG;
     private Fragment fragmento;
     private List<HashMap<String, Object>> resultado;
 
+    /**
+     * Allocate instance
+     * @param resultado
+     * @param context
+     * @param searchFragment
+     * @param tag
+     */
     public SearchListAdapter(List<HashMap<String, Object>> resultado, Context context, SearchFragment searchFragment, int tag) {
         this.fragmentContext = context;
         this.resultado = resultado;
@@ -37,6 +47,12 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         this.fragmento = searchFragment;
     }
 
+    /**
+     * Allocate the view icon image
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +60,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         return new ViewHolder(v);
     }
 
+    /**
+     * Populate the image icon view
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String imageUrl = null;
@@ -67,23 +88,39 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         }
     }
 
+    /**
+     * Count list of items
+     * @return
+     */
     @Override
     public int getItemCount() {
         return resultado.size();
     }
 
+    /**
+     * Class for download image and setup in the icon of word or theme
+     */
     public class GetImageExecutor extends Thread {
 
         private String imageUrl;
         private Fragment fragmento;
         private int TAG;
 
+        /**
+         * Allocate instance with image url
+         * @param imageUrl
+         * @param fragmento
+         * @param TAG
+         */
         public GetImageExecutor(String imageUrl, Fragment fragmento, int TAG) {
             this.imageUrl = imageUrl;
             this.fragmento = fragmento;
             this.TAG = TAG;
         }
 
+        /**
+         * Execute download of image
+         */
         @Override
         public void run() {
             try {
@@ -111,7 +148,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
                         fragmento.getView().findViewById(R.id.loadingframeLayout2).setVisibility(View.GONE);
 
                         CreateThemeActivity actv = (CreateThemeActivity) fragmento.getActivity();
-
+                        // update image in the word or theme
                         actv.sendImage(outputFile, TAG);
 
                         actv.onBackPressed();
@@ -124,6 +161,9 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         }
     }
 
+    /**
+     * Class of icon of image
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView img;
         public ViewHolder(@NonNull View itemView) {
@@ -132,6 +172,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         }
     }
 
+    /**
+     * Load the url of image in the image icon
+     * @param imageUrl
+     * @param themeImageLeft
+     */
     private void loadImage(String imageUrl, ImageView themeImageLeft) {
         ImageLoadUtil.getInstance().loadImage(imageUrl, themeImageLeft, fragmentContext);
     }

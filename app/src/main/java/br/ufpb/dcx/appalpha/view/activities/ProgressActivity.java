@@ -16,6 +16,9 @@ import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
+/**
+ * Activity for play sound of word and after speak each letter of word
+ */
 public class ProgressActivity extends AppCompatActivity {
     private final String TAG = "ProgressActivity";
     private TextView txt;
@@ -24,6 +27,10 @@ public class ProgressActivity extends AppCompatActivity {
     private char[] letras;
     private Thread leitor;
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +69,9 @@ public class ProgressActivity extends AppCompatActivity {
         }, AudioUtil.getInstance(getApplicationContext()).getDuration());
     }
 
+    /**
+     * Action to start speaking letter bt letter of the word
+     */
     private void readLetterByLetter() {
         leitor = new Thread() {
 
@@ -107,6 +117,9 @@ public class ProgressActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Action call for Back button press
+     */
     @Override
     public void onBackPressed()
     {
@@ -115,7 +128,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /**
-     * Quando a activity é destruida também destroi o objeto do media player
+     * Dealloc the activity
      */
     protected void onDestroy() {
         super.onDestroy();
@@ -124,9 +137,8 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /**
-     * Procura o audio da letra com base na letra passada como parâmetro e toca esse audio
-     *
-     * @param letra Letra que será tocada
+     * Play the sound of letter
+     * @param letra letter to be played
      */
     public void playLetterSong(char letra) {
         Log.i(TAG, letra + "");
@@ -248,16 +260,15 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /**
-     * Seta o textView com o underscore da palavra
+     * set o textView with underscore of word
      */
     public void setUnderscore() {
         ChallengeFacade.getInstance().setUnderlinedWord();
     }
 
     /**
-     * Atualiza o underscore atual com o novo
-     *
-     * @param letra letra que vai ser adicionada ao underscore
+     * Update the current underscore
+     * @param letra letter to be passed in the underscore
      */
     public void updateUnderscoreInTextViewAndFacade(char letra) {
         String newUnderscore = updateUnderscore(letra);
@@ -267,16 +278,14 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /**
-     * Seta o underscore no objeto tratando palavra para que
-     * na próxima vez que ele gerar o underscore novo ele tenha o mais atualizado
+     * Set the current underscore in the ChallengeFacade
      */
     public void updateUnderscore(String underscore) {
         ChallengeFacade.getInstance().setCurrentUnderlinedWord(underscore);
     }
 
     /**
-     * Quebra a palavra do desafio em um array de char,
-     * para que ele possa adicionar um a um no underscore
+     * Explode the word by the char letter, to be used in the underscore
      */
     public void setLetters() {
         letras = new char[ChallengeFacade.getInstance().getCurrentChallenge().getWord().length()];
@@ -285,6 +294,11 @@ public class ProgressActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Update the underscore showing the letter specified
+     * @param letra
+     * @return
+     */
     public String updateUnderscore(char letra) {
         char[] vetor = ChallengeFacade.getInstance().getCurrentUnderlinedWord().toCharArray();
 
@@ -306,6 +320,9 @@ public class ProgressActivity extends AppCompatActivity {
         return new String(vetor);
     }
 
+    /**
+     * Open the next Challenge activity
+     */
     public void goToTheNextChallenge() {
         hasChangedActivity = true;
         Intent it = new Intent(getApplicationContext(), ForcaActivity.class);
@@ -315,7 +332,7 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /**
-     * Redireciona para a activity da pontuação final
+     * Action for Open the final activity when the game end
      */
     public void goToTheFinalActivity() {
         hasChangedActivity = true;
@@ -325,9 +342,8 @@ public class ProgressActivity extends AppCompatActivity {
     }
 
     /**
-     * Verifica se os desafios acabaram, se sim manda para a tela de pontuação, se não manda para a tela da forca
-     *
-     * @param v View do botão
+     * Check if the challenge ended, and go to next challenge or for final activity
+     * @param v View of pressed button
      */
     public void goToTheNextActivityByCondiction(View v)
     {
@@ -346,6 +362,9 @@ public class ProgressActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Action for load the image url of Challenge
+     */
     public void setChallengeImage() {
         ImageView img_desafio = findViewById(R.id.img_desafio);
         String imgUrl = ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl();
@@ -353,6 +372,10 @@ public class ProgressActivity extends AppCompatActivity {
         ImageLoadUtil.getInstance().loadImage(imgUrl, img_desafio, getApplicationContext());
     }
 
+    /**
+     * Set the word in the Text view
+     * @param underscore
+     */
     public void setTextViewWord(String underscore) {
         txt = findViewById(R.id.txt_underscore);
         txt.setText(underscore);
