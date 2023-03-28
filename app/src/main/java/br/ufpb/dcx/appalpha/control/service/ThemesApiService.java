@@ -10,6 +10,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Class to communicate to the API with Retrofit for get Theme
+ */
 public class ThemesApiService {
     private static final String TAG = "ThemesApiService";
     private List<Theme> themes;
@@ -19,6 +22,10 @@ public class ThemesApiService {
     private ThemesApiService() {
     }
 
+    /**
+     * Initialize the shared instance
+     * @return
+     */
     public static ThemesApiService getInstance() {
         if (instance == null) {
             instance = new ThemesApiService();
@@ -26,6 +33,11 @@ public class ThemesApiService {
         return instance;
     }
 
+    /**
+     * Get an Theme from API with theme Id
+     * @param id
+     * @return
+     */
     public Theme find(int id) {
         themeResult = null;
         Call call = new RetrofitInitializer().contextService().find(id);

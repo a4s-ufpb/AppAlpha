@@ -13,11 +13,19 @@ import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.model.bean.Record;
 import br.ufpb.dcx.appalpha.model.dao.RecordesDao;
 
+/**
+ * Class to manage Scores points to local database
+ */
 public class RecordsSqlService implements RecordesDao {
     private static RecordsSqlService instance;
     private SQLiteDatabase escreve;
     private SQLiteDatabase ler;
 
+    /**
+     * Initialize the shared instance
+     * @param context
+     * @return
+     */
     public static RecordsSqlService getInstance(Context context){
         if(instance == null){
             instance = new RecordsSqlService(context);
@@ -26,12 +34,21 @@ public class RecordsSqlService implements RecordesDao {
         return instance;
     }
 
+    /**
+     * Alloc instance and setup local database variables
+     * @param context
+     */
     private RecordsSqlService(Context context) {
         DbHelper db = new DbHelper(context);
         escreve = db.getWritableDatabase();
         ler = db.getReadableDatabase();
     }
 
+    /**
+     * Save an new Record score to local database
+     * @param points
+     * @param name
+     */
     @Override
     public void cadastrarNovoRecorde(double points, String name) {
         ContentValues cv = new ContentValues();
@@ -47,6 +64,10 @@ public class RecordsSqlService implements RecordesDao {
         }
     }
 
+    /**
+     * Get list of all Record stored in local database
+     * @return
+     */
     @Override
     public ArrayList<Record> getRecordistas() {
         ArrayList<Record> records = new ArrayList<>();

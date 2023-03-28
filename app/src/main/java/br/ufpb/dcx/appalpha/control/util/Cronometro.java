@@ -14,6 +14,11 @@ public class Cronometro {
     private Chronometer cronometro;
     private Context context;
 
+    /**
+     * Alloc instance and setup local variables
+     * @param txt
+     * @param context
+     */
     public Cronometro(View txt, Context context) {
         this.cronometro = (Chronometer) txt;
         this.context = context;

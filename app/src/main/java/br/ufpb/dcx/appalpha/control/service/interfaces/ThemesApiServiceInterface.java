@@ -5,7 +5,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-
+/**
+ * Interface to specify to Retrofit the path and type for getting Theme by Id
+ */
 public interface ThemesApiServiceInterface {
 
     @GET("v1/api/contexts/{idContext}")

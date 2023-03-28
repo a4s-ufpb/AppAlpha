@@ -5,11 +5,15 @@ import android.widget.ImageView;
 import br.ufpb.dcx.appalpha.R;
 
 /**
- * Responsável por ir atualizando a forca durante o jogo
+ * Class for update image when user fail by putting wrong letter
  */
 public class ForcaController {
     private ImageView forca;
 
+    /**
+     * Alloc instance and setup local variables
+     * @param forca
+     */
     public ForcaController(ImageView forca) {
         this.forca = forca;
     }

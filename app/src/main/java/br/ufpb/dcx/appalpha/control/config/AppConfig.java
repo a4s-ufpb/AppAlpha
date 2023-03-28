@@ -53,18 +53,34 @@ public class AppConfig
         return instance;
     }
 
+    /**
+     * Get the font type
+     * @return
+     */
     public String getCurrentLetterType() {
         return currentLetterType;
     }
 
+    /**
+     * Set the font type
+     * @param currentLetterType
+     */
     public void setCurrentLetterType(String currentLetterType) {
         this.currentLetterType = currentLetterType.toLowerCase();
     }
 
+    /**
+     * Get letter case
+     * @return
+     */
     public String getCurrentLetterCase() {
         return currentLetterCase;
     }
 
+    /**
+     * Set the letter case
+     * @param currentLetterCase
+     */
     public void setCurrentLetterCase(String currentLetterCase) {
         this.currentLetterCase = currentLetterCase.toLowerCase();
     }

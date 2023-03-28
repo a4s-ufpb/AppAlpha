@@ -18,6 +18,9 @@ import br.ufpb.dcx.appalpha.control.service.interfaces.ChallengeApiService;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
+/**
+ * Classe for CRUD of Theme in the local database.
+ */
 public class ThemeSqlService {
     private final String TAG = "ThemeSqlService";
     private static ThemeSqlService instance;
@@ -26,6 +29,11 @@ public class ThemeSqlService {
     private SQLiteDatabase readableDb;
     private ChallengeSqlService challengeSqlService;
 
+    /**
+     * Initialize the shared instance
+     * @param context
+     * @return
+     */
     public static ThemeSqlService getInstance(Context context) {
         if (instance == null) {
             instance = new ThemeSqlService(context);
@@ -33,6 +41,10 @@ public class ThemeSqlService {
         return instance;
     }
 
+    /**
+     * Alloc instance and setup local database variables
+     * @param context
+     */
     private ThemeSqlService(Context context) {
         this.db = new DbHelper(context);
         this.writableDb = db.getWritableDatabase();
@@ -40,6 +52,12 @@ public class ThemeSqlService {
         this.challengeSqlService = ChallengeSqlService.getInstance(context);
     }
 
+    /**
+     * Insert/Save an new Theme Object with List of related Challenge to the local database
+     * @param theme
+     * @param relatedChallenges
+     * @return
+     */
     public Long insert(Theme theme, @Nullable List<Challenge> relatedChallenges) {
         ContentValues cv = new ContentValues();
         Long id = -1l;
@@ -66,6 +84,11 @@ public class ThemeSqlService {
         return id;
     }
 
+    /**
+     * Add an relation between Theme and an list of Challenge
+     * @param theme_id
+     * @param relatedChallenges
+     */
     public void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges) {
         ContentValues cv = new ContentValues();
 
@@ -84,6 +107,11 @@ public class ThemeSqlService {
         }
     }
 
+    /**
+     * Get an stored Theme Object by Id from the local database
+     * @param id
+     * @return
+     */
     public Theme get(Long id) {
         String name, soundUrl, videoUrl, imageUrl, apiId;
         name = soundUrl = videoUrl = imageUrl = apiId = "";
@@ -110,6 +138,10 @@ public class ThemeSqlService {
         return theme;
     }
 
+    /**
+     * Get list of stored Theme's from local database
+     * @return
+     */
     public List<Theme> getAll() {
         String name, soundUrl, videoUrl, imageUrl;
         Long id;
@@ -143,6 +175,11 @@ public class ThemeSqlService {
         return themes;
     }
 
+    /**
+     * Check if an Theme with an apiId exist
+     * @param id
+     * @return
+     */
     public boolean existsByApiId(long id) {
         String selectQuery = "SELECT exists(SELECT id FROM " + DbHelper.THEMES_TABLE + " WHERE apiId = ? LIMIT 1)";
 
@@ -157,6 +194,10 @@ public class ThemeSqlService {
         }
     }
 
+    /**
+     * Delete an stored Theme by Id in the local database
+     * @param id
+     */
     public void deleteById(Long id)
     {
         // delete saved local image file
@@ -192,6 +233,10 @@ public class ThemeSqlService {
         }
     }
 
+    /**
+     * Update the saved Theme that we got previously from local database
+     * @param theme
+     */
     public void update(Theme theme)
     {
         ContentValues cv = new ContentValues();

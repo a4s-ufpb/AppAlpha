@@ -42,6 +42,11 @@ public class ChallengeFacade {
         return instance;
     }
 
+    /**
+     * Setup an Challenge with an selected Theme
+     * @param challenges
+     * @param selectedTheme
+     */
     public void init(List<Challenge> challenges, Theme selectedTheme) {
         this.challenges = challenges;
         this.currentChallenge = challenges.get(0);
@@ -55,6 +60,10 @@ public class ChallengeFacade {
 
     }
 
+    /**
+     * Return the current Challenge on the progress
+     * @return
+     */
     public Challenge getCurrentChallenge() {
         return currentChallenge;
     }
@@ -75,6 +84,9 @@ public class ChallengeFacade {
         }
     }
 
+    /**
+     * Clean up retry letter tha user attempted
+     */
     public void limparTentativasDeLetras()
     {
         this.triedLetters.clear();

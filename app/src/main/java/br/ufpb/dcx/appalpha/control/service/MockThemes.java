@@ -8,13 +8,23 @@ import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
+/**
+ * Class for Insertion of Default Theme and Challenges
+ */
 public class MockThemes implements Runnable {
     private ThemeSqlService service;
 
+    /**
+     * Allocate instance and local variable of service
+     * @param context
+     */
     public MockThemes(Context context) {
         service = ThemeSqlService.getInstance(context);
     }
 
+    /**
+     * Insert Themes to local database
+     */
     @Override
     public void run() {
         service.insert(new Theme("comida",  Integer.toString(R.drawable.comida), Integer.toString(R.raw.comida), null), Arrays.asList(

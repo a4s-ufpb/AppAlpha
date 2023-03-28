@@ -8,6 +8,9 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+/**
+ * Class to obtain permission necessary by the App
+ */
 public class PermissionControll {
     public static final int READ_PERMISSION_REQ_CODE = 100;
     public static final int WRITE_PERMISSION_REQ_CODE = 101;

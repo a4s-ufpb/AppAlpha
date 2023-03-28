@@ -12,8 +12,10 @@ import java.util.List;
 
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
-import br.ufpb.dcx.appalpha.model.bean.Theme;
 
+/**
+ * Class for CRUD of Challenge in the local database.
+ */
 public class ChallengeSqlService {
     private final String TAG = "ChallengeApiService";
     private static ChallengeSqlService instance;
@@ -21,6 +23,11 @@ public class ChallengeSqlService {
     private SQLiteDatabase writableDb;
     private SQLiteDatabase readableDb;
 
+    /**
+     * Initialize the shared instance
+     * @param context
+     * @return
+     */
     public static ChallengeSqlService getInstance(Context context) {
         if (instance == null) {
             instance = new ChallengeSqlService(context);
@@ -28,12 +35,21 @@ public class ChallengeSqlService {
         return instance;
     }
 
+    /**
+     * Alloc instance and setup local database variables
+     * @param context
+     */
     private ChallengeSqlService(Context context) {
         this.db = new DbHelper(context);
         this.writableDb = db.getWritableDatabase();
         this.readableDb = db.getReadableDatabase();
     }
 
+    /**
+     * Insert/Save an new Challenge Object to the local database
+     * @param challenge
+     * @return
+     */
     public Long insert(Challenge challenge) {
         ContentValues cv = new ContentValues();
         Long id = -1L;
@@ -55,6 +71,11 @@ public class ChallengeSqlService {
         return id;
     }
 
+    /**
+     * Get an stored Challenge Object by Id from the local database
+     * @param id
+     * @return
+     */
     public Challenge get(Long id)
     {
         String word, soundUrl, videoUrl, imageUrl;
@@ -73,6 +94,11 @@ public class ChallengeSqlService {
         return c;
     }
 
+    /**
+     * Get list of stored related Challenge by an Theme Id from local database
+     * @param theme_id
+     * @return
+     */
     public List<Challenge> getRelatedChallenges(Long theme_id) {
         String word, soundUrl, videoUrl, imageUrl;
         Long id;
@@ -109,9 +135,13 @@ public class ChallengeSqlService {
         return challenges;
     }
 
+    /**
+     * Delete an stored Challenge by Id in the local database
+     * @param id
+     */
     public void deleteById(Long id)
     {
-        // delete saved local image file
+        // delete saved local image file of challenge
         Challenge palavra = get(id);
         if(palavra!=null && palavra.getImageUrl()!=null) {
             String imageSt = palavra.getImageUrl();
@@ -129,7 +159,7 @@ public class ChallengeSqlService {
             cursor.close();
         }
 
-        // delete chalange from relation
+        // delete challenge from relation
         deleteQuery = "DELETE FROM " + DbHelper.CHALLENGE_THEME_TABLE + " WHERE challenge_id = ?";
         cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
         if (cursor.moveToFirst()) {
@@ -139,6 +169,10 @@ public class ChallengeSqlService {
         }
     }
 
+    /**
+     * Update the saved Challenge that we got previously from local database
+     * @param challenge
+     */
     public void update(Challenge challenge)
     {
         ContentValues cv = new ContentValues();

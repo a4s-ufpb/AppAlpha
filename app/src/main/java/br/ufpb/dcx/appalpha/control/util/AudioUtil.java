@@ -47,6 +47,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         return instance;
     }
 
+    /**
+     * Alloc instance and setup local variables
+     * @param context
+     */
     private AudioUtil(Context context) {
         this.context = context;
         this.textToSpeak = new TextToSpeech(context, this, "com.google.android.tts");
