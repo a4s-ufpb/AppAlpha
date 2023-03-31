@@ -73,29 +73,29 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
          * @param position
          */
         public void onBindViewHolder(ViewHolder holder, int position) {
-                if ((themes.get(holder.getAdapterPosition()).getDeletavel() || themes.get(holder.getAdapterPosition()).getApiId() != null) && this.isDeleteMode) {
+                if ((themes.get(holder.getAbsoluteAdapterPosition()).getDeletavel() || themes.get(holder.getAbsoluteAdapterPosition()).getApiId() != null) && this.isDeleteMode) {
                         holder.btnDel.setVisibility(View.VISIBLE);
                 }
 
-                if ((editAnyTheme || themes.get(holder.getAdapterPosition()).getDeletavel()) && this.isEditMode) {
+                if ((editAnyTheme || themes.get(holder.getAbsoluteAdapterPosition()).getDeletavel()) && this.isEditMode) {
                         holder.btnEdit.setVisibility(View.VISIBLE);
                 }
 
-                holder.themeName.setText(themes.get(holder.getAdapterPosition()).getName());
-                ImageLoadUtil.getInstance().loadImage(themes.get(holder.getAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
+                holder.themeName.setText(themes.get(holder.getAbsoluteAdapterPosition()).getName());
+                ImageLoadUtil.getInstance().loadImage(themes.get(holder.getAbsoluteAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
 
                 holder.themeImage.setOnClickListener(v -> {
                         v.setClickable(false);
-                        ThemeActivity.clickInGoToSelectedTheme(themes.get(holder.getAdapterPosition()));
+                        ThemeActivity.clickInGoToSelectedTheme(themes.get(holder.getAbsoluteAdapterPosition()));
                 });
 
                 holder.btnDel.setOnClickListener(v -> {
-                        this.deleteSelectedTheme(holder.getAdapterPosition());
+                        this.deleteSelectedTheme(holder.getAbsoluteAdapterPosition());
                 });
 
                 holder.btnEdit.setOnClickListener(v -> {
                         holder.btnEdit.setEnabled(false);
-                        this.editSelectedTheme(holder.getAdapterPosition());
+                        this.editSelectedTheme(holder.getAbsoluteAdapterPosition());
                 });
         }
 
@@ -144,7 +144,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
         /**
          * Theme icon view
          */
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
                 ImageView themeImage;
                 TextView themeName;
                 ImageButton btnDel;

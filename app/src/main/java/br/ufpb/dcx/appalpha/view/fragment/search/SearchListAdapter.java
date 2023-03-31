@@ -164,7 +164,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     /**
      * Class of icon of image
      */
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView img;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -45,6 +46,7 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
      * @param viewType
      * @return
      */
+    @NonNull
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_theme, parent, false);
         return new ViewHolder(v);
@@ -71,19 +73,19 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
             holder.btnEdit.setVisibility(View.VISIBLE);
         }
 
-        holder.themeName.setText(createTheme.tema.getChallenges().get(holder.getAdapterPosition()).getWord());
-        ImageLoadUtil.getInstance().loadImage(createTheme.tema.getChallenges().get(holder.getAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
+        holder.themeName.setText(createTheme.tema.getChallenges().get(holder.getAbsoluteAdapterPosition()).getWord());
+        ImageLoadUtil.getInstance().loadImage(createTheme.tema.getChallenges().get(holder.getAbsoluteAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
 
         holder.themeImage.setOnClickListener(v -> {
             v.setClickable(false);
         });
 
         holder.btnDel.setOnClickListener(v -> {
-            this.deleteSelectedTheme(holder.getAdapterPosition());
+            this.deleteSelectedTheme(holder.getAbsoluteAdapterPosition());
         });
 
         holder.btnEdit.setOnClickListener(v -> {
-            this.editSelectedTheme(holder.getAdapterPosition());
+            this.editSelectedTheme(holder.getAbsoluteAdapterPosition());
         });
     }
 
@@ -112,7 +114,7 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
     /**
      * Class for word icon view
      */
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView themeImage;
         TextView themeName;
         ImageButton btnDel;
