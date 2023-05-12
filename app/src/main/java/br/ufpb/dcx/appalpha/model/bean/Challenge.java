@@ -16,6 +16,7 @@ public class Challenge {
 
     /**
      * Alloc instance specifying id, word, sound url, video url, image url, list os contexts
+     *
      * @param id
      * @param word
      * @param soundUrl
@@ -34,6 +35,7 @@ public class Challenge {
 
     /**
      * Alloc instance specifying id, word, sound url, video url, image url
+     *
      * @param id
      * @param word
      * @param soundUrl
@@ -50,6 +52,7 @@ public class Challenge {
 
     /**
      * Alloc instance specifying word, sound url, video url, image url
+     *
      * @param word
      * @param soundUrl
      * @param videoUrl
@@ -64,6 +67,7 @@ public class Challenge {
 
     /**
      * Get id from Challenge stored in local database
+     *
      * @return
      */
     public Long getId() {
@@ -72,6 +76,7 @@ public class Challenge {
 
     /**
      * Set id of Challenge stored in local database
+     *
      * @param id
      */
     public void setId(Long id) {
@@ -80,6 +85,7 @@ public class Challenge {
 
     /**
      * Get word of Challenge
+     *
      * @return
      */
     public String getWord() {
@@ -88,6 +94,7 @@ public class Challenge {
 
     /**
      * Set word of Challenge
+     *
      * @param word
      */
     public void setWord(String word) {
@@ -96,6 +103,7 @@ public class Challenge {
 
     /**
      * Get the sound url of challenge
+     *
      * @return
      */
     public String getSoundUrl() {
@@ -104,6 +112,7 @@ public class Challenge {
 
     /**
      * Set the sound url of challenge
+     *
      * @param soundUrl
      */
     public void setSoundUrl(String soundUrl) {
@@ -112,6 +121,7 @@ public class Challenge {
 
     /**
      * Get the video url of challenge
+     *
      * @return
      */
     public String getVideoUrl() {
@@ -120,6 +130,7 @@ public class Challenge {
 
     /**
      * Set the video url of challenge
+     *
      * @param videoUrl
      */
     public void setVideoUrl(String videoUrl) {
@@ -128,6 +139,7 @@ public class Challenge {
 
     /**
      * Get the image url of challenge
+     *
      * @return
      */
     public String getImageUrl() {
@@ -136,6 +148,7 @@ public class Challenge {
 
     /**
      * Set the image url of challenge
+     *
      * @param imageUrl
      */
     public void setImageUrl(String imageUrl) {
@@ -144,6 +157,7 @@ public class Challenge {
 
     /**
      * Get list of related context of challenges
+     *
      * @return
      */
     public List<Theme> getContexts() {
@@ -152,6 +166,7 @@ public class Challenge {
 
     /**
      * Set list of related context of challenges
+     *
      * @param contexts
      */
     public void setContexts(List<Theme> contexts) {
@@ -168,6 +183,7 @@ public class Challenge {
 
     /**
      * Show description of Challenge
+     *
      * @return
      */
     @Override

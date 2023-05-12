@@ -9,8 +9,7 @@ import android.util.Log;
 /**
  * Class to store and retrieve App Settings
  */
-public class AppConfig
-{
+public class AppConfig {
     private static AppConfig instance;
     SharedPreferences sPreferences = null;
 
@@ -25,12 +24,12 @@ public class AppConfig
 
     /**
      * Alloc instance loading saved settings to variables
+     *
      * @param appContext
      */
-    private AppConfig(Context appContext)
-    {
+    private AppConfig(Context appContext) {
         try {
-            if(sPreferences == null) {
+            if (sPreferences == null) {
                 sPreferences = appContext.getSharedPreferences("configs", MODE_PRIVATE);
             }
             this.currentLetterType = sPreferences.getString("letter_type", "casual");
@@ -42,12 +41,12 @@ public class AppConfig
 
     /**
      * Get shared instance
+     *
      * @param appContext
      * @return
      */
-    public static AppConfig getInstance(Context appContext)
-    {
-        if(instance == null) {
+    public static AppConfig getInstance(Context appContext) {
+        if (instance == null) {
             instance = new AppConfig(appContext);
         }
         return instance;
@@ -55,6 +54,7 @@ public class AppConfig
 
     /**
      * Get the font type
+     *
      * @return
      */
     public String getCurrentLetterType() {
@@ -63,6 +63,7 @@ public class AppConfig
 
     /**
      * Set the font type
+     *
      * @param currentLetterType
      */
     public void setCurrentLetterType(String currentLetterType) {
@@ -71,6 +72,7 @@ public class AppConfig
 
     /**
      * Get letter case
+     *
      * @return
      */
     public String getCurrentLetterCase() {
@@ -79,6 +81,7 @@ public class AppConfig
 
     /**
      * Set the letter case
+     *
      * @param currentLetterCase
      */
     public void setCurrentLetterCase(String currentLetterCase) {
@@ -88,8 +91,7 @@ public class AppConfig
     /**
      * Save current variables to settings
      */
-    public void saveAllChange()
-    {
+    public void saveAllChange() {
         try {
             SharedPreferences.Editor edit = sPreferences.edit();
             edit.putString("letter_type", this.currentLetterType);

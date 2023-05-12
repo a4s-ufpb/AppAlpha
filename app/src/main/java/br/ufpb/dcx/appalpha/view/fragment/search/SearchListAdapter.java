@@ -35,6 +35,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
     /**
      * Allocate instance
+     *
      * @param resultado
      * @param context
      * @param searchFragment
@@ -49,6 +50,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
     /**
      * Allocate the view icon image
+     *
      * @param parent
      * @param viewType
      * @return
@@ -62,6 +64,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
     /**
      * Populate the image icon view
+     *
      * @param holder
      * @param position
      */
@@ -71,11 +74,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
         try {
             imageUrl = resultado.get(position).get("webformatURL").toString();
-        } catch(Exception e){
-            Toast.makeText(fragmentContext,"Imagem Invalida, Tente escolher Outra",Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(fragmentContext, "Imagem Invalida, Tente escolher Outra", Toast.LENGTH_SHORT).show();
         }
 
-        if(imageUrl != null) {
+        if (imageUrl != null) {
             loadImage(imageUrl, holder.img);
 
             String finalImageUrl = imageUrl;
@@ -90,6 +93,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
     /**
      * Count list of items
+     *
      * @return
      */
     @Override
@@ -108,6 +112,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
         /**
          * Allocate instance with image url
+         *
          * @param imageUrl
          * @param fragmento
          * @param TAG
@@ -136,14 +141,14 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
                 OutputStream outStream = new FileOutputStream(outputFile);
 
-                byte [] buffer = new byte[2 * 1024];
+                byte[] buffer = new byte[2 * 1024];
                 int bytesRead;
-                while((bytesRead = input.read(buffer)) != -1) {
+                while ((bytesRead = input.read(buffer)) != -1) {
                     outStream.write(buffer, 0, bytesRead);
                 }
                 input.close();
 
-                fragmento.getActivity().runOnUiThread (new Thread(new Runnable() {
+                fragmento.getActivity().runOnUiThread(new Thread(new Runnable() {
                     public void run() {
                         fragmento.getView().findViewById(R.id.loadingframeLayout2).setVisibility(View.GONE);
 
@@ -166,6 +171,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView img;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.grid_image);
@@ -174,6 +180,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
 
     /**
      * Load the url of image in the image icon
+     *
      * @param imageUrl
      * @param themeImageLeft
      */

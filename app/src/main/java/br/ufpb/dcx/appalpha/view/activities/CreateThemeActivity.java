@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -63,23 +62,23 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     private RecyclerView recyclerView;
     private GridLayoutManager layManager;
 
-    public Theme tema;
+    public Theme theme;
 
-    private TextInputLayout tlIdTema;
-    private String urlImageTema;
-    private ImageView imagemTema;
+    private TextInputLayout tlIdTheme;
+    private String urlImageTheme;
+    private ImageView imageTheme;
 
     private boolean editMode = false;
     private Long editThemeID;
 
-    private TextInputLayout tlIdPalavra;
-    private String urlImagePalavra;
-    private ImageView imagemPalavra;
+    private TextInputLayout tlIdWord;
+    private String urlImageWord;
+    private ImageView imageWord;
 
-    public boolean editPalavraMode;
-    public Challenge editPalavra;
-    public List<Long> palavrasID_Remover;
-    public List<Challenge> palavras_Adicionar;
+    public boolean editWordMode;
+    public Challenge editWord;
+    public List<Long> wordsID_Rem;
+    public List<Challenge> words_Add;
 
     public HashMap<Object, String> imagePathToObjectMap;
     public String imageSavePath;
@@ -91,14 +90,14 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        this.palavrasID_Remover = new ArrayList<Long>();
-        this.palavras_Adicionar = new ArrayList<Challenge>();
+        this.wordsID_Rem = new ArrayList<Long>();
+        this.words_Add = new ArrayList<Challenge>();
         this.imagePathToObjectMap = new HashMap<Object, String>();
 
         this.imageSavePath = getFilesDir().getAbsolutePath() + File.separator + "images";
 
-        this.tema = new Theme(null, null, null, null);
-        this.editPalavra = new Challenge(null, null,null,null,null);
+        this.theme = new Theme(null, null, null, null);
+        this.editWord = new Challenge(null, null,null,null,null);
 
         themeSqlService = ThemeSqlService.getInstance(getApplicationContext());
         challengeSqlService = ChallengeSqlService.getInstance(getApplicationContext());
@@ -122,56 +121,56 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         back_btn = findViewById(R.id.btn_back);
         back_btn.setOnClickListener(this);
 
-        tlIdPalavra = findViewById(R.id.tlIdPalavra);
-        imagemPalavra = findViewById(R.id.imageView7);
+        tlIdWord = findViewById(R.id.tlIdPalavra);
+        imageWord = findViewById(R.id.imageView7);
 
-        tlIdTema = findViewById(R.id.tlIdTheme2);
-        imagemTema = findViewById(R.id.imageView72);
+        tlIdTheme = findViewById(R.id.tlIdTheme2);
+        imageTheme = findViewById(R.id.imageView72);
 
         recyclerView = findViewById(R.id.palavrasRows);
         layManager = new GridLayoutManager(getApplicationContext(), 2);
 
 
         findViewById(R.id.areaImagemTema).setOnClickListener(v -> {
-            mostrarOpcaoDeSelecionarImagem(1);
+            showOptionsForSelectImage(1);
         });
 
         findViewById(R.id.areaImagemPalavra).setOnClickListener(v -> {
-            mostrarOpcaoDeSelecionarImagem(2);
+            showOptionsForSelectImage(2);
         });
 
         findViewById(R.id.buttonAddPalavra).setOnClickListener(v -> {
-            String palavra = tlIdPalavra.getEditText().getText().toString();
+            String palavra = tlIdWord.getEditText().getText().toString();
 
             if(palavra == null || palavra.length() == 0) {
                 Toast.makeText(getApplicationContext(), "Insira uma Palavra", Toast.LENGTH_LONG).show();
                 return;
             }
-            if(urlImagePalavra == null || urlImagePalavra.length() == 0) {
+            if(urlImageWord == null || urlImageWord.length() == 0) {
                 Toast.makeText(getApplicationContext(), "Insira uma Imagem para a palavra", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            if(this.editPalavraMode) {
-                editPalavra.setImageUrl(urlImagePalavra);
-                editPalavra.setWord(palavra.trim());
-                updateEditModePalavra(false);
-                recyclerView.getAdapter().notifyItemChanged(tema.getChallenges().indexOf(editPalavra));
-                Toast.makeText(getApplicationContext(), "Palavra \""+editPalavra.getWord()+"\" foi atualizada.", Toast.LENGTH_LONG).show();
+            if(this.editWordMode) {
+                editWord.setImageUrl(urlImageWord);
+                editWord.setWord(palavra.trim());
+                updateEditModeWord(false);
+                recyclerView.getAdapter().notifyItemChanged(theme.getChallenges().indexOf(editWord));
+                Toast.makeText(getApplicationContext(), "Palavra \""+ editWord.getWord()+"\" foi atualizada.", Toast.LENGTH_LONG).show();
             } else {
-                Challenge palavaNova = new Challenge(palavra.trim(), null, null, urlImagePalavra);
-                tema.getChallenges().add(palavaNova);
-                this.palavras_Adicionar.add(palavaNova);
-                recyclerView.getAdapter().notifyItemInserted(tema.getChallenges().indexOf(palavaNova));
+                Challenge palavaNova = new Challenge(palavra.trim(), null, null, urlImageWord);
+                theme.getChallenges().add(palavaNova);
+                this.words_Add.add(palavaNova);
+                recyclerView.getAdapter().notifyItemInserted(theme.getChallenges().indexOf(palavaNova));
                 Toast.makeText(getApplicationContext(), "Palavra \""+palavaNova.getWord()+"\" foi adicionada.", Toast.LENGTH_LONG).show();
             }
-            tlIdPalavra.getEditText().setText(null);
-            urlImagePalavra = null;
-            updatePalavraInfo();
+            tlIdWord.getEditText().setText(null);
+            urlImageWord = null;
+            updateWordInfo();
         });
 
         findViewById(R.id.buttonAddPalavra2).setOnClickListener(v -> {
-            updateEditModePalavra(false);
+            updateEditModeWord(false);
         });
 
         if(this.editMode) {
@@ -180,16 +179,16 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             title.setText("Editar Tema");
 
             // recuperar Tema da base de dados
-            this.tema = themeSqlService.get(editThemeID);
-            List<Challenge> storedChallenges = challengeSqlService.getRelatedChallenges(this.tema.getId());
+            this.theme = themeSqlService.get(editThemeID);
+            List<Challenge> storedChallenges = challengeSqlService.getRelatedChallenges(this.theme.getId());
             if(storedChallenges != null) {
-                this.tema.setChallenges(storedChallenges);
+                this.theme.setChallenges(storedChallenges);
             }
 
-            Log.i(TAG, "Edit tema: "+ this.tema.toString());
+            Log.i(TAG, "Edit tema: "+ this.theme.toString());
         }
 
-        updateTemaInfo();
+        updateThemeInfo();
 
         fillRecycleView();
     }
@@ -198,14 +197,14 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
      * Action for Show alert option of select image for theme or word
      * @param TAG
      */
-    public void mostrarOpcaoDeSelecionarImagem(int TAG) {
+    public void showOptionsForSelectImage(int TAG) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(CreateThemeActivity.this).create();
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
 
         Window win = alertDialog.getWindow();
-        win.setContentView(R.layout.alerta_imagem_options);
+        win.setContentView(R.layout.alert_imagem_options);
 
         win.setBackgroundDrawableResource(R.drawable.fundoazul);
 
@@ -213,7 +212,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         web_btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                caregarBuscaParaImagem(TAG);
+                loadSearchForImage(TAG);
                 alertDialog.dismiss();
             }
         });
@@ -257,10 +256,10 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
      * Load name and open fragment for search image result
      * @param TAG
      */
-    public void caregarBuscaParaImagem(int TAG) {
+    public void loadSearchForImage(int TAG) {
         String nomeParaBuscar = null;
 
-        TextInputLayout textIn = TAG==1?this.tlIdTema:this.tlIdPalavra;
+        TextInputLayout textIn = TAG==1?this.tlIdTheme :this.tlIdWord;
         if(textIn.getEditText().getText() != null && textIn.getEditText().getText().toString().length() > 0) {
             nomeParaBuscar = textIn.getEditText().getText().toString();
         }
@@ -280,15 +279,15 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     /**
      * Action for update current theme info into views
      */
-    public void updateTemaInfo()
+    public void updateThemeInfo()
     {
-        if(this.tema != null) {
-            tlIdTema.getEditText().setText(this.tema.getName());
-            urlImageTema = this.tema.getImageUrl();
-            if(urlImageTema == null) {
-                imagemTema.setImageResource(android.R.drawable.ic_menu_gallery);
+        if(this.theme != null) {
+            tlIdTheme.getEditText().setText(this.theme.getName());
+            urlImageTheme = this.theme.getImageUrl();
+            if(urlImageTheme == null) {
+                imageTheme.setImageResource(android.R.drawable.ic_menu_gallery);
             } else {
-                updateImagemTema();
+                updateImageTheme();
             }
         }
     }
@@ -296,12 +295,12 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     /**
      * Action for update current word info into views
      */
-    public void updatePalavraInfo()
+    public void updateWordInfo()
     {
-        if(urlImagePalavra == null) {
-            imagemPalavra.setImageResource(android.R.drawable.ic_menu_gallery);
+        if(urlImageWord == null) {
+            imageWord.setImageResource(android.R.drawable.ic_menu_gallery);
         } else {
-            updateImagemPalavra();
+            updateImageWord();
         }
     }
 
@@ -309,25 +308,25 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
      * Action for setup the current edited word
      * @param challenge
      */
-    public void editPalavra(Challenge challenge)
+    public void editWord(Challenge challenge)
     {
-        tlIdPalavra.requestFocus();
+        tlIdWord.requestFocus();
 
-        editPalavra = challenge;
-        tlIdPalavra.getEditText().setText(challenge.getWord());
-        urlImagePalavra = challenge.getImageUrl();
-        updateEditModePalavra(true);
+        editWord = challenge;
+        tlIdWord.getEditText().setText(challenge.getWord());
+        urlImageWord = challenge.getImageUrl();
+        updateEditModeWord(true);
     }
 
     /**
      * Update the current mode of edition of word between edit or create
      * @param edit
      */
-    public void updateEditModePalavra(boolean edit)
+    public void updateEditModeWord(boolean edit)
     {
-        this.editPalavraMode = edit;
+        this.editWordMode = edit;
 
-        if(this.editPalavraMode) {
+        if(this.editWordMode) {
             Button addBt2 = findViewById(R.id.buttonAddPalavra2);
             addBt2.setVisibility(View.GONE);
             addBt2.setVisibility(View.VISIBLE);
@@ -343,25 +342,25 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             addBt.setVisibility(View.GONE);
             addBt.setVisibility(View.VISIBLE);
 
-            tlIdPalavra.getEditText().setText(null);
-            urlImagePalavra = null;
+            tlIdWord.getEditText().setText(null);
+            urlImageWord = null;
         }
-        updatePalavraInfo();
+        updateWordInfo();
     }
 
     /**
      * Action for remove an word
      * @param challenge
      */
-    public void removePalavra(Challenge challenge)
+    public void removeWord(Challenge challenge)
     {
-        this.tema.getChallenges().remove(challenge);
-        this.palavras_Adicionar.remove(challenge);
+        this.theme.getChallenges().remove(challenge);
+        this.words_Add.remove(challenge);
         if(challenge.getId() != null) {
-            palavrasID_Remover.add(challenge.getId());
+            wordsID_Rem.add(challenge.getId());
         }
-        if(this.editPalavraMode && challenge == this.editPalavra) {
-            updateEditModePalavra(false);
+        if(this.editWordMode && challenge == this.editWord) {
+            updateEditModeWord(false);
         }
         Toast.makeText(getApplicationContext(), "Palavra \""+challenge.getWord()+"\" foi removida", Toast.LENGTH_LONG).show();
     }
@@ -459,26 +458,26 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
      */
     public void saveChanges(View v)
     {
-        String temaNome = tlIdTema.getEditText().getText().toString();
+        String temaNome = tlIdTheme.getEditText().getText().toString();
 
         if(temaNome == null || temaNome.length() == 0) {
             Toast.makeText(getApplicationContext(), "Insira um nome para o Tema", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(urlImageTema == null || urlImageTema.length() == 0) {
+        if(urlImageTheme == null || urlImageTheme.length() == 0) {
             Toast.makeText(getApplicationContext(), "Insira uma Imagem para o Tema", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(tema.getChallenges().size() == 0) {
+        if(theme.getChallenges().size() == 0) {
             Toast.makeText(getApplicationContext(), "Adicione algumas palavras ao Tema", Toast.LENGTH_LONG).show();
             return;
         }
 
         v.setEnabled(false);
 
-        salvarTemaAtual();
+        saveActualTheme();
 
         Intent intent = new Intent(CreateThemeActivity.this, ThemeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -527,26 +526,26 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     /**
      * Action for proceed to save the actual changes of theme in local database
      */
-    public void salvarTemaAtual()
+    public void saveActualTheme()
     {
-        this.tema.setName(tlIdTema.getEditText().getText().toString().trim());
-        this.tema.setImageUrl(urlImageTema);
-        this.tema.setDeletavel(true);
+        this.theme.setName(tlIdTheme.getEditText().getText().toString().trim());
+        this.theme.setImageUrl(urlImageTheme);
+        this.theme.setDeletavel(true);
 
         if(this.editMode) {
 
             // update theme
-            saveImageToObject(this.tema);
-            this.themeSqlService.update(this.tema);
+            saveImageToObject(this.theme);
+            this.themeSqlService.update(this.theme);
 
             // create words
-            for(Challenge palavraNow : this.palavras_Adicionar) {
+            for(Challenge palavraNow : this.words_Add) {
                 saveImageToObject(palavraNow);
             }
-            this.themeSqlService.insertThemeRelatedChallenges(this.tema.getId(), this.palavras_Adicionar);
+            this.themeSqlService.insertThemeRelatedChallenges(this.theme.getId(), this.words_Add);
 
             // update words
-            for(Challenge palavraNow : this.tema.getChallenges()) {
+            for(Challenge palavraNow : this.theme.getChallenges()) {
                 saveImageToObject(palavraNow);
                 if(palavraNow.getId() == null) {
                     continue;
@@ -555,20 +554,20 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
             }
 
             // remove words
-            for(Long palavraIDNow : this.palavrasID_Remover) {
+            for(Long palavraIDNow : this.wordsID_Rem) {
                 this.challengeSqlService.deleteById(palavraIDNow);
             }
 
             Log.i(TAG, "Alterações do Tema Salva com sucesso!");
-            Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.theme.getName()), Toast.LENGTH_SHORT).show();
         } else {
             // save image to app files
-            saveImageToObject(this.tema);
-            for(Challenge palavraNow : this.tema.getChallenges()) {
+            saveImageToObject(this.theme);
+            for(Challenge palavraNow : this.theme.getChallenges()) {
                 saveImageToObject(palavraNow);
             }
-            this.themeSqlService.insert(this.tema, this.tema.getChallenges());
-            Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", this.tema.getName()), Toast.LENGTH_SHORT).show();
+            this.themeSqlService.insert(this.theme, this.theme.getChallenges());
+            Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", this.theme.getName()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -629,17 +628,17 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     /**
      * Load image icon from the current word link
      */
-    public void updateImagemPalavra()
+    public void updateImageWord()
     {
-        ImageLoadUtil.getInstance().loadImage(urlImagePalavra, imagemPalavra, getApplicationContext());
+        ImageLoadUtil.getInstance().loadImage(urlImageWord, imageWord, getApplicationContext());
     }
 
     /**
      * Load image icon from the current theme link
      */
-    public void updateImagemTema()
+    public void updateImageTheme()
     {
-        ImageLoadUtil.getInstance().loadImage(urlImageTema, imagemTema, getApplicationContext());
+        ImageLoadUtil.getInstance().loadImage(urlImageTheme, imageTheme, getApplicationContext());
     }
 
     /**
@@ -650,13 +649,13 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     public void sendImage(File fileImage, int requestCode)
     {
         if(requestCode == 1) {
-            setImageToObject(fileImage, tema);
-            urlImageTema = getImagePathFromObject(tema);
-            updateImagemTema();
+            setImageToObject(fileImage, theme);
+            urlImageTheme = getImagePathFromObject(theme);
+            updateImageTheme();
         } else if(requestCode == 2) {
-            setImageToObject(fileImage, editPalavra);
-            urlImagePalavra = getImagePathFromObject(editPalavra);
-            updateImagemPalavra();
+            setImageToObject(fileImage, editWord);
+            urlImageWord = getImagePathFromObject(editWord);
+            updateImageWord();
         }
 
 
@@ -668,7 +667,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     public void fillRecycleView()
     {
         recyclerView.setLayoutManager(layManager);
-        recyclerView.setAdapter(new CreatePalavraAdapter(this, getApplicationContext(), true, true));
+        recyclerView.setAdapter(new CreateWordAdapter(this, getApplicationContext(), true, true));
     }
 
     /**

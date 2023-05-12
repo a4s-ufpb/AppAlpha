@@ -10,7 +10,7 @@ import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 /**
  * Class to manage stopwatch for count points
  */
-public class Cronometro {
+public class ChronometerUtil {
     private Chronometer cronometro;
     private Context context;
 
@@ -19,7 +19,7 @@ public class Cronometro {
      * @param txt
      * @param context
      */
-    public Cronometro(View txt, Context context) {
+    public ChronometerUtil(View txt, Context context) {
         this.cronometro = (Chronometer) txt;
         this.context = context;
 
@@ -30,8 +30,8 @@ public class Cronometro {
 
                 String tempo = (String) cronometro.getText();
 
-                if(verificarHoraDaDica(tempo)) {
-                    darDicaSonora();
+                if(verifyTimeOfTips(tempo)) {
+                    playSoundTips();
                 }
             }
         });
@@ -42,7 +42,7 @@ public class Cronometro {
      * @param tempo
      * @return
      */
-    private boolean verificarHoraDaDica(String tempo) {
+    private boolean verifyTimeOfTips(String tempo) {
         boolean hora_chegou = false;
         String tempo_formatado = tempo.replace(":", ".");
 
@@ -62,9 +62,9 @@ public class Cronometro {
     }
 
     /**
-     * PLay help sound
+     * PLay help sound tips
      */
-    private void darDicaSonora() {
+    private void playSoundTips() {
         String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
         if (soundUrl != null && !soundUrl.equals("")) {
             if (soundUrl.startsWith("http")) {
@@ -91,13 +91,13 @@ public class Cronometro {
      * Stop stopwatch and return time
      * @return
      */
-    public double parandoCronometroEPegandoTempo() {
+    public double stopChronometerAndGetTime() {
         cronometro.stop();
 
-        String tempo = (String) cronometro.getText();
-        String tempo_form = tempo.replace(":", ".");
+        String timeText = (String) cronometro.getText();
+        String timeFormat = timeText.replace(":", ".");
 
-        return Double.parseDouble(tempo_form);
+        return Double.parseDouble(timeFormat);
 
     }
 }

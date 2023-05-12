@@ -27,23 +27,25 @@ public class SearchEngineClient {
 
     /**
      * Alloc class with context to load API key
+     *
      * @param context
      */
-    public SearchEngineClient(Context context){
+    public SearchEngineClient(Context context) {
         API_KEY = context.getResources().getString(R.string.pixabay_key);
     }
 
     /**
      * Callback handle response structure
      */
-    public interface SearchEngineClientBingCompletionHandler
-    {
-        public void success(List<HashMap<String, Object>> resultado);
+    public interface SearchEngineClientBingCompletionHandler {
+        public void success(List<HashMap<String, Object>> result);
+
         public void failed(String reason);
     }
 
     /**
      * Executer search of an query name of image with callback handle response
+     *
      * @param query
      * @param completionHandler
      */
@@ -89,7 +91,7 @@ public class SearchEngineClient {
                 URLConnection connection = url.openConnection();
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
-                HttpURLConnection connectionResp = ((HttpURLConnection)connection);
+                HttpURLConnection connectionResp = ((HttpURLConnection) connection);
                 String strCurrentLine = "";
                 if (connectionResp.getResponseCode() == 200) {
                     BufferedReader br = new BufferedReader(new InputStreamReader(connectionResp.getInputStream()));
@@ -99,7 +101,7 @@ public class SearchEngineClient {
                     }
                     ObjectMapper mapper = new ObjectMapper();
                     Map mapRequest = mapper.readValue(strCurrentLine, Map.class);
-                    results = (List<HashMap<String, Object>>)mapRequest.get("hits");
+                    results = (List<HashMap<String, Object>>) mapRequest.get("hits");
 
                     completionHandler.success(results);
                 }

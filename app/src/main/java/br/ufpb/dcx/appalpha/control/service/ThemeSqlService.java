@@ -9,12 +9,10 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.io.File;
-import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpb.dcx.appalpha.control.dbhelper.DbHelper;
-import br.ufpb.dcx.appalpha.control.service.interfaces.ChallengeApiService;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
@@ -186,9 +184,9 @@ public class ThemeSqlService {
         Cursor cursor = readableDb.rawQuery(selectQuery, new String[]{Long.toString(id)});
 
         if (cursor.moveToFirst()) {
-            Integer value = cursor.getInt(0);
+            int value = cursor.getInt(0);
             cursor.close();
-            return value == 1 ? true : false;
+            return value == 1;
         } else {
             return false;
         }

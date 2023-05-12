@@ -20,8 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Class to retrieve settings banked up from Github repository, to be used across App's
  */
-public class ApiConfig
-{
+public class ApiConfig {
     /**
      * Setup Github user
      */
@@ -35,12 +34,12 @@ public class ApiConfig
 
     /**
      * Get shared instance
+     *
      * @param appContext
      * @return
      */
-    public static ApiConfig getInstance(Context appContext)
-    {
-        if(instance == null){
+    public static ApiConfig getInstance(Context appContext) {
+        if (instance == null) {
             instance = new ApiConfig(appContext);
         }
         return instance;
@@ -48,12 +47,12 @@ public class ApiConfig
 
     /**
      * Alloc instance and load variables from saved settings
+     *
      * @param appContext
      */
-    private ApiConfig(Context appContext)
-    {
+    private ApiConfig(Context appContext) {
         try {
-            if(sPreferences == null) {
+            if (sPreferences == null) {
                 sPreferences = appContext.getSharedPreferences("apiConfig", MODE_PRIVATE);
             }
 
@@ -61,7 +60,7 @@ public class ApiConfig
             dominio = sPreferences.getString("dominio", "https://api.apps4society.dcx.ufpb.br/educapi/");
 
             // setup default update interval, between last retrieved settings and new request to update
-            updateInterval = sPreferences.getLong("updateInterval", 5*60); // default 5min
+            updateInterval = sPreferences.getLong("updateInterval", 5 * 60); // default 5min
 
             updateApiConfigBackground();
         } catch (Exception e) {
@@ -72,17 +71,16 @@ public class ApiConfig
     /**
      * Run request App configuration in background
      */
-    private void updateApiConfigBackground()
-    {
+    private void updateApiConfigBackground() {
 
         // check last saved settings time, to avoid spamming request to github server
         long lastTime = sPreferences.getLong("time", System.currentTimeMillis());
-        if((System.currentTimeMillis()-lastTime) > updateInterval) {
-            Log.i("ApiConfig", "Check Bypassed, Checked less than minimum interval "+updateInterval+" secs.");
+        if ((System.currentTimeMillis() - lastTime) > updateInterval) {
+            Log.i("ApiConfig", "Check Bypassed, Checked less than minimum interval " + updateInterval + " secs.");
             return;
         }
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://raw.githubusercontent.com/"+ GITHUB_USER +"/EducAPI-Config/main/").addConverterFactory(GsonConverterFactory.create()).client(getOkHttpClient()).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://raw.githubusercontent.com/" + GITHUB_USER + "/EducAPI-Config/main/").addConverterFactory(GsonConverterFactory.create()).client(getOkHttpClient()).build();
         ApiConfigRetrofit apiConfigRetrofit = retrofit.create(ApiConfigRetrofit.class);
         Call<Map> call = apiConfigRetrofit.getAPIConfig();
         call.enqueue(new Callback<Map>() {
@@ -90,22 +88,22 @@ public class ApiConfig
             public void onResponse(Call<Map> call, Response<Map> response) {
                 if (response.isSuccessful()) {
                     Map apiConfigDic = response.body();
-                    if(apiConfigDic!=null && apiConfigDic.containsKey("sucess") && new Boolean((Boolean) apiConfigDic.get("sucess")).booleanValue()==true) {
+                    if (apiConfigDic != null && apiConfigDic.containsKey("sucess") && new Boolean((Boolean) apiConfigDic.get("sucess")).booleanValue() == true) {
 
                         // use specific config by application id, if available
-                        Map configForApp = (Map)apiConfigDic.get(BuildConfig.APPLICATION_ID);
-                        if(configForApp != null) {
+                        Map configForApp = (Map) apiConfigDic.get(BuildConfig.APPLICATION_ID);
+                        if (configForApp != null) {
                             apiConfigDic = configForApp;
                         }
 
                         // update to settings
                         Object dominioVal = apiConfigDic.get("dominio");
-                        if(dominioVal!=null) {
-                            dominio = (String)dominioVal;
+                        if (dominioVal != null) {
+                            dominio = (String) dominioVal;
                         }
                         Object updateIntervalVal = apiConfigDic.get("updateInterval");
-                        if(updateIntervalVal!=null) {
-                            updateInterval = (long)updateIntervalVal;
+                        if (updateIntervalVal != null) {
+                            updateInterval = (long) updateIntervalVal;
                         }
                         saveAllChanges();
                     }
@@ -121,10 +119,10 @@ public class ApiConfig
 
     /**
      * Configure request timeout in API calls
+     *
      * @return
      */
-    private static OkHttpClient getOkHttpClient()
-    {
+    private static OkHttpClient getOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         try {
             builder.connectTimeout(30, TimeUnit.MINUTES);
@@ -138,8 +136,7 @@ public class ApiConfig
     /**
      * Save current variables to settings
      */
-    private void saveAllChanges()
-    {
+    private void saveAllChanges() {
         try {
             SharedPreferences.Editor edit = sPreferences.edit();
             edit.putString("dominio", dominio);
@@ -157,10 +154,11 @@ public class ApiConfig
 
     /**
      * Return API domain used in App
+     *
      * @return
      */
     public String getDominio() {
-        if(BuildConfig.DEBUG && !(BuildConfig.EDUC_API_URL == null || !BuildConfig.EDUC_API_URL.startsWith("http"))) {
+        if (BuildConfig.DEBUG && !(BuildConfig.EDUC_API_URL == null || !BuildConfig.EDUC_API_URL.startsWith("http"))) {
             return BuildConfig.EDUC_API_URL;
         }
         return dominio;

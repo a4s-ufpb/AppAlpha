@@ -32,6 +32,7 @@ public class ChallengeFacade {
 
     /**
      * Get shared instance
+     *
      * @return
      */
     public static ChallengeFacade getInstance() {
@@ -44,6 +45,7 @@ public class ChallengeFacade {
 
     /**
      * Setup an Challenge with an selected Theme
+     *
      * @param challenges
      * @param selectedTheme
      */
@@ -62,6 +64,7 @@ public class ChallengeFacade {
 
     /**
      * Return the current Challenge on the progress
+     *
      * @return
      */
     public Challenge getCurrentChallenge() {
@@ -77,7 +80,7 @@ public class ChallengeFacade {
             this.erroCount = 0;
             this.progressCount++;
             this.currentChallenge = challenges.get(challenges.indexOf(currentChallenge) + 1);
-            limparTentativasDeLetras();
+            resetTryLetterAttempts();
             setUnderlinedWord();
         } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
@@ -87,8 +90,7 @@ public class ChallengeFacade {
     /**
      * Clean up retry letter tha user attempted
      */
-    public void limparTentativasDeLetras()
-    {
+    public void resetTryLetterAttempts() {
         this.triedLetters.clear();
     }
 
@@ -112,10 +114,10 @@ public class ChallengeFacade {
     }
 
     /**
-     * Verifica se o chute do usuário foi certo ou errado
+     * Check if attempt was correct or wrong
      *
-     * @param letter chute do usuário
-     * @return um int indicando se houve acerto ou erro
+     * @param letter attempt by user
+     * @return an int indicate attempt status
      */
     public int checkAttempt(String letter) {
 
@@ -132,17 +134,17 @@ public class ChallengeFacade {
     }
 
     /**
-     * Verifica se o chute se encontra na palavra. Caso sim, a adiciona no underscore
+     * Check if attempt letter was found in the word, if found add to underscore
      *
-     * @param letter letra que o usuário chutou
-     * @return o underscore modificado
+     * @param letter user attempt
+     * @return an updated underscore
      */
     public String updateWordByAttempt(char letter) {
         StringBuilder newUnderscore = new StringBuilder(currentUnderlinedWord);
         String currentChallengeWord = this.currentChallenge.getWord();
 
         for (int indexInWord = 0; indexInWord < currentChallengeWord.length(); indexInWord++) {
-            if (TextUtil.getInstance().tratarCaracte(letter) == TextUtil.getInstance().tratarCaracte(currentChallengeWord.charAt(indexInWord))) {
+            if (TextUtil.getInstance().treatCharacter(letter) == TextUtil.getInstance().treatCharacter(currentChallengeWord.charAt(indexInWord))) {
                 newUnderscore.setCharAt(indexInWord, currentChallengeWord.charAt(indexInWord));
             }
         }
@@ -151,10 +153,10 @@ public class ChallengeFacade {
     }
 
     /**
-     * Verifica se a letra já foi chutada antes
+     * Check if letter was attempted before
      *
-     * @param letter letra que o usuário chutou
-     * @return boolean indicando se já foi chutada antes
+     * @param letter user attempt
+     * @return an boolean thats return result of check
      */
     public boolean checkAttemptExists(char letter) {
         for (String let : this.triedLetters) {
@@ -168,19 +170,19 @@ public class ChallengeFacade {
     }
 
     /**
-     * Verifica se o usuário acertou a palavra, se o sublinhado estiver por completo igual a palavra (sem traços) é porque a palavra foi completa.
+     * Check if user was got correct word, if the underline word are equal to real word.
      *
-     * @return um boolean indicando se acertou ou não
+     * @return an boolean thats return result of check
      */
     public boolean checkWordAccepted() {
         return this.currentChallenge.getWord().equals(currentUnderlinedWord);
     }
 
     /**
-     * Verifica se o chute do usuário foi vazio, se ele já chutou aquela letra ou se o chute foi errado
+     * Check if the letter attempt was empty, wrong or correct
      *
-     * @param letter letra chutada pelo usuário
-     * @return um inteiro indicando se o chute foi vazio, já existente ou errado
+     * @param letter of user attempt
+     * @return an status of attempt letter
      */
     public int getAttempResult(String letter) {
 
@@ -196,14 +198,15 @@ public class ChallengeFacade {
     }
 
     /**
-     * Dá um espaço entre as letras para o usuário poder ver quantas letras a palavra tem
-     * @return o underscore com as letras espaçadas
+     * Add spaces betwen letters of word
+     *
+     * @return o underscore with spaces betwen letters of word
      */
     public String getUnderlinedWordWithSpaces() {
         StringBuilder novaString = new StringBuilder();
 
-        for(int i = 0; i < getCurrentUnderlinedWord().length(); i++) {
-            novaString.append(getCurrentUnderlinedWord().charAt(i)) ;
+        for (int i = 0; i < getCurrentUnderlinedWord().length(); i++) {
+            novaString.append(getCurrentUnderlinedWord().charAt(i));
             novaString.append(" ");
         }
 
@@ -244,5 +247,5 @@ public class ChallengeFacade {
 
     public List<Challenge> getChallenges() {
         return challenges;
-    } 
+    }
 }

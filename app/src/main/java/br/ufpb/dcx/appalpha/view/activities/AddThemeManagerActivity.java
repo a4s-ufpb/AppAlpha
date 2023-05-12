@@ -31,7 +31,7 @@ public class AddThemeManagerActivity extends AppCompatActivity implements View.O
         back_btn = findViewById(R.id.back_btn);
         back_btn.setOnClickListener(this);
 
-        findViewById(R.id.criar_tema_menu).setOnClickListener(v -> {
+        findViewById(R.id.create_theme_menu).setOnClickListener(v -> {
             Intent intent = new Intent(this, CreateThemeActivity.class);
             this.startActivity(intent);
         });

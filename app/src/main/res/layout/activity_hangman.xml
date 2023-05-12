@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fundogeral"
-    tools:context="br.ufpb.dcx.appalpha.view.activities.ForcaActivity"
+    tools:context="br.ufpb.dcx.appalpha.view.activities.HangmanActivity"
     tools:layout_editor_absoluteY="25dp">
 
     <br.ufpb.dcx.appalpha.control.config.AlphaTextView
@@ -106,7 +106,7 @@
 
         <include
             android:id="@+id/teclado_alfabetico_pt"
-            layout="@layout/teclado_qwerty_brasileiro"
+            layout="@layout/keyboard_qwerty_br"
             tools:layout_editor_absoluteX="0dp" />
     </LinearLayout>
 

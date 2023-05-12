@@ -26,7 +26,7 @@
             android:name=".view.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.ForcaActivity"
+            android:name=".view.activities.HangmanActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.theme.ThemeActivity"
@@ -50,10 +50,10 @@
             android:name=".view.activities.FinalActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.SobreActivity"
+            android:name=".view.activities.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.RecordesActivity"
+            android:name=".view.activities.RecordsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.ProgressActivity"

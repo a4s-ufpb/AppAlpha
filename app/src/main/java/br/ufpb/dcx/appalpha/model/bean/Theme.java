@@ -12,12 +12,13 @@ public class Theme {
     private String imageUrl;
     private String soundUrl;
     private String videoUrl;
-    private List<Challenge>  challenges = new ArrayList<>();
+    private List<Challenge> challenges = new ArrayList<>();
     private Long apiId;
     private Boolean deletavel;
 
     /**
      * Alloc instance specifying id, name, image url, sound url, video url, list of challenges, api Id
+     *
      * @param id
      * @param name
      * @param imageUrl
@@ -26,7 +27,7 @@ public class Theme {
      * @param challenges
      * @param apiId
      */
-    public Theme(Long id, String name, String imageUrl, String soundUrl, String videoUrl, List<Challenge>  challenges, Long apiId) {
+    public Theme(Long id, String name, String imageUrl, String soundUrl, String videoUrl, List<Challenge> challenges, Long apiId) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -38,6 +39,7 @@ public class Theme {
 
     /**
      * Alloc instance specifying name, image url, sound url, video url
+     *
      * @param name
      * @param imageUrl
      * @param soundUrl
@@ -52,6 +54,7 @@ public class Theme {
 
     /**
      * Get id from Theme stored in local database
+     *
      * @return
      */
     public Long getId() {
@@ -60,6 +63,7 @@ public class Theme {
 
     /**
      * Set id of Theme stored in local database
+     *
      * @param id
      */
     public void setId(Long id) {
@@ -68,6 +72,7 @@ public class Theme {
 
     /**
      * Get name of Theme
+     *
      * @return
      */
     public String getName() {
@@ -76,6 +81,7 @@ public class Theme {
 
     /**
      * Set name of Theme
+     *
      * @param name
      */
     public void setName(String name) {
@@ -84,6 +90,7 @@ public class Theme {
 
     /**
      * Get image url of Theme
+     *
      * @return
      */
     public String getImageUrl() {
@@ -92,6 +99,7 @@ public class Theme {
 
     /**
      * Set image url of Theme
+     *
      * @param imageUrl
      */
     public void setImageUrl(String imageUrl) {
@@ -100,6 +108,7 @@ public class Theme {
 
     /**
      * Get sound url of Theme
+     *
      * @return
      */
     public String getSoundUrl() {
@@ -108,6 +117,7 @@ public class Theme {
 
     /**
      * Set sound url of Theme
+     *
      * @param soundUrl
      */
     public void setSoundUrl(String soundUrl) {
@@ -116,6 +126,7 @@ public class Theme {
 
     /**
      * Get video url of Theme
+     *
      * @return
      */
     public String getVideoUrl() {
@@ -124,6 +135,7 @@ public class Theme {
 
     /**
      * Set video url of Theme
+     *
      * @param videoUrl
      */
     public void setVideoUrl(String videoUrl) {
@@ -132,6 +144,7 @@ public class Theme {
 
     /**
      * Get list of related Challenge of Theme
+     *
      * @return
      */
     public List<Challenge> getChallenges() {
@@ -140,6 +153,7 @@ public class Theme {
 
     /**
      * Set list of related Challenge of Theme
+     *
      * @param challenges
      */
     public void setChallenges(List<Challenge> challenges) {
@@ -148,6 +162,7 @@ public class Theme {
 
     /**
      * Get Id of Theme in the API
+     *
      * @return
      */
     public Long getApiId() {
@@ -156,6 +171,7 @@ public class Theme {
 
     /**
      * Set Id of Theme in the API
+     *
      * @param apiId
      */
     public void setApiId(Long apiId) {
@@ -164,6 +180,7 @@ public class Theme {
 
     /**
      * Check if Theme is deletable
+     *
      * @return
      */
     public Boolean getDeletavel() {
@@ -172,6 +189,7 @@ public class Theme {
 
     /**
      * Set if Theme is deletable
+     *
      * @param deletavel
      */
     public void setDeletavel(Boolean deletavel) {
@@ -180,6 +198,7 @@ public class Theme {
 
     /**
      * Check if is equal between Theme object
+     *
      * @param o
      * @return
      */
@@ -193,6 +212,7 @@ public class Theme {
 
     /**
      * Show description of Theme
+     *
      * @return
      */
     @Override

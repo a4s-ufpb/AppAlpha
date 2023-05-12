@@ -1,6 +1,7 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
 import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
@@ -15,56 +16,57 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
-import br.ufpb.dcx.appalpha.control.ForcaController;
+import br.ufpb.dcx.appalpha.control.HangmanController;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 import br.ufpb.dcx.appalpha.control.util.AudioUtil;
-import br.ufpb.dcx.appalpha.control.util.Cronometro;
+import br.ufpb.dcx.appalpha.control.util.ChronometerUtil;
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
 /**
  * Class of activity in the game for show the image of hanged man, word and keyboard
  */
-public class ForcaActivity extends AppCompatActivity {
-    private static final String TAG = "ForcaActivity";
-    final int QTD_MAX_ERROS = 6;
-    ForcaController forcaController;
-    Cronometro cronometro;
-    private ImageView imgPalavra;
+public class HangmanActivity extends AppCompatActivity {
+    private static final String TAG = "HangmanActivity";
+    final int MAX_ERR = 6;
+    HangmanController hangmanController;
+    ChronometerUtil chronometerUtil;
+    private ImageView imgWord;
 
     /**
      * Dalloc local variables
      */
     public void memoryFree() {
-        forcaController = null;
-        cronometro = null;
-        imgPalavra.setImageDrawable(null);
+        hangmanController = null;
+        chronometerUtil = null;
+        imgWord.setImageDrawable(null);
     }
 
     /**
      * On create activity, setup local variables
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forca);
+        setContentView(R.layout.activity_hangman);
 
         // set underscore in the TextView of screen
         TextView txtUnderscore = findViewById(R.id.txt_underscore);
         txtUnderscore.setText(ChallengeFacade.getInstance().getUnderlinedWordWithSpaces());
 
-        // set ImageView da forca in ForcaController to access and update the image
+        // set ImageView da forca in HangmanController to access and update the image
         ImageView img_forca = findViewById(R.id.img_forca);
-        forcaController = new ForcaController(img_forca);
+        hangmanController = new HangmanController(img_forca);
 
         // set image of word
-        imgPalavra = findViewById(R.id.img_palavra);
-        ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), imgPalavra, getApplicationContext());
+        imgWord = findViewById(R.id.img_palavra);
+        ImageLoadUtil.getInstance().loadImage(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl(), imgWord, getApplicationContext());
 
         // setup chronometer
-        cronometro = new Cronometro(findViewById(R.id.cronometro), getApplicationContext());
-        cronometro.comecarCronometro();
+        chronometerUtil = new ChronometerUtil(findViewById(R.id.cronometro), getApplicationContext());
+        chronometerUtil.comecarCronometro();
 
     }
 
@@ -72,8 +74,7 @@ public class ForcaActivity extends AppCompatActivity {
      * Action call for Back button press
      */
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
         AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
     }
@@ -86,7 +87,7 @@ public class ForcaActivity extends AppCompatActivity {
         super.onDestroy();
         //AudioUtil.getInstance().stopSound();
         memoryFree();
-        ChallengeFacade.getInstance().limparTentativasDeLetras();
+        ChallengeFacade.getInstance().resetTryLetterAttempts();
     }
 
     @Override
@@ -107,11 +108,11 @@ public class ForcaActivity extends AppCompatActivity {
 
     /**
      * Action for check the attempted letter an change background color of button pressed based in wrong or correct
+     *
      * @param letraClicada letter of player attempted
-     * @param btnClicado button of pressed letter
+     * @param btnClicado   button of pressed letter
      */
-    public void feedbackColorButtonLetter(String letraClicada, Button btnClicado)
-    {
+    public void feedbackColorButtonLetter(String letraClicada, Button btnClicado) {
         feedbackTatil();
 
         int resultado = ChallengeFacade.getInstance().getAttempResult(letraClicada);
@@ -127,8 +128,9 @@ public class ForcaActivity extends AppCompatActivity {
 
     /**
      * Update the information in the screen
+     *
      * @param letraClicada letter of player attempted
-     * @param btnClicado button of pressed letter
+     * @param btnClicado   button of pressed letter
      */
     public void updateData(String letraClicada, Button btnClicado) {
 
@@ -136,7 +138,7 @@ public class ForcaActivity extends AppCompatActivity {
         feedbackColorButtonLetter(letraClicada, btnClicado);
 
         // update image of hanged man according to attempt count
-        initForca();
+        initHangman();
 
         // set the text view with the new underscore
         setUnderscoreInTextview(ChallengeFacade.getInstance().getCurrentUnderlinedWord());
@@ -148,8 +150,8 @@ public class ForcaActivity extends AppCompatActivity {
     /**
      * Update the image of hanged man
      */
-    private void initForca() {
-        forcaController.mudaForca(ChallengeFacade.getInstance().getErroCount());
+    private void initHangman() {
+        hangmanController.mudaForca(ChallengeFacade.getInstance().getErroCount());
     }
 
     /**
@@ -158,8 +160,8 @@ public class ForcaActivity extends AppCompatActivity {
     private void verifyChallengeItsOver() {
         Intent it = new Intent(this, ProgressActivity.class);
 
-        if (ChallengeFacade.getInstance().getErroCount() == QTD_MAX_ERROS || ChallengeFacade.getInstance().checkWordAccepted()) {
-            ChallengeFacade.getInstance().increaseTime(cronometro.parandoCronometroEPegandoTempo());
+        if (ChallengeFacade.getInstance().getErroCount() == MAX_ERR || ChallengeFacade.getInstance().checkWordAccepted()) {
+            ChallengeFacade.getInstance().increaseTime(chronometerUtil.stopChronometerAndGetTime());
             startActivity(it);
             finish();
         }
@@ -178,6 +180,7 @@ public class ForcaActivity extends AppCompatActivity {
 
     /**
      * Play the word sound
+     *
      * @param v view
      */
     public void playWordSound(View v) {

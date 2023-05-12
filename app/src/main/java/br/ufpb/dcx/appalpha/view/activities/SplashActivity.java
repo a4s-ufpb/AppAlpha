@@ -2,8 +2,11 @@ package br.ufpb.dcx.appalpha.view.activities;
 
 import android.content.Intent;
 import android.os.Handler;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import br.ufpb.dcx.appalpha.R;
 
 /**
@@ -13,6 +16,7 @@ public class SplashActivity extends AppCompatActivity {
 
     /**
      * On create activity, setup local variables
+     *
      * @param savedInstanceState
      */
     @Override
@@ -25,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mostrarMainActivity();
+                showMainActivity();
             }
         }, 2000);
     }
@@ -33,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * Action to start show the principal menu of App
      */
-    private void mostrarMainActivity() {
+    private void showMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();

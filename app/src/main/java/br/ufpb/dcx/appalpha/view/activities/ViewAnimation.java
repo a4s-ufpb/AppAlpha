@@ -10,7 +10,8 @@ import android.view.View;
 public class ViewAnimation {
 
     /**
-     * Rotate an view
+     * Rotate an view with the specified gree
+     *
      * @param v
      * @param rotate
      * @return
@@ -23,12 +24,13 @@ public class ViewAnimation {
                         super.onAnimationEnd(animation);
                     }
                 })
-                .rotation(rotate ? 135f : 0f);
+                .rotation(rotate ? 90f : 0f);
         return rotate;
     }
 
     /**
      * Show view with animation
+     *
      * @param v
      */
     public static void showIn(final View v) {
@@ -50,6 +52,7 @@ public class ViewAnimation {
 
     /**
      * Hide view with animation
+     *
      * @param v
      */
     public static void showOut(final View v) {
@@ -71,6 +74,7 @@ public class ViewAnimation {
 
     /**
      * Init with view
+     *
      * @param v
      */
     public static void init(final View v) {

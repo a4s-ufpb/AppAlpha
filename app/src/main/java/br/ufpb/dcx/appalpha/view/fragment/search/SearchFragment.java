@@ -66,11 +66,11 @@ public class SearchFragment extends Fragment {
 
                     searchEngine.search(query, new SearchEngineClient.SearchEngineClientBingCompletionHandler() {
                         @Override
-                        public void success(List<HashMap<String, Object>> resultado) {
+                        public void success(List<HashMap<String, Object>> result) {
                             getActivity().runOnUiThread (new Thread(new Runnable() {
                                 public void run() {
                                     getActivity().findViewById(R.id.loadingframeLayout).setVisibility(View.GONE);
-                                    fillRecycleView(resultado);
+                                    fillRecycleView(result);
                                 }
                             }));
                         }

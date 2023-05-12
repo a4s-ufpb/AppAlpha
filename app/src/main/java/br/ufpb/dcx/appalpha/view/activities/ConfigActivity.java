@@ -15,7 +15,7 @@ import br.ufpb.dcx.appalpha.control.config.AppConfig;
  * Class for activity of settings manager options of App
  */
 public class ConfigActivity extends AppCompatActivity {
-    private AppConfig configurator;
+    private AppConfig appConfig;
     private RadioGroup rgLetterType;
     private RadioButton rbCasual;
     private RadioButton rbCursiva;
@@ -26,13 +26,14 @@ public class ConfigActivity extends AppCompatActivity {
 
     /**
      * On create activity, setup local variables
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-        this.configurator = AppConfig.getInstance(getApplicationContext());
+        this.appConfig = AppConfig.getInstance(getApplicationContext());
 
         this.rgLetterType = findViewById(R.id.rgLetterType);
         this.rgLetterCase = findViewById(R.id.rgLetterCase);
@@ -71,18 +72,15 @@ public class ConfigActivity extends AppCompatActivity {
     private void pushChanges(){
         String rgSelectedLetterType =((RadioButton)findViewById(this.rgLetterType.getCheckedRadioButtonId())).getText().toString();
         String rgSelectedLetterCase =((RadioButton)findViewById(this.rgLetterCase.getCheckedRadioButtonId())).getText().toString();
-        this.configurator.setCurrentLetterType(rgSelectedLetterType);
-        this.configurator.setCurrentLetterCase(rgSelectedLetterCase);
+        this.appConfig.setCurrentLetterType(rgSelectedLetterType);
+        this.appConfig.setCurrentLetterCase(rgSelectedLetterCase);
     }
 
     /**
      * Load the saved settings and update the current status in view
      */
     private void loadConfigsInView(){
-        Log.i("Json-Config","Entrou em LoadConfigs");
-        Log.i("Json-Config","CurrentLetterType: " + this.configurator.getCurrentLetterType());
-        Log.i("Json-Config","CurrentLetterCase: " + this.configurator.getCurrentLetterCase());
-        switch(this.configurator.getCurrentLetterType()){
+        switch(this.appConfig.getCurrentLetterType()){
             case(AppConfig.CASUAL):
                 rgLetterType.check(rbCasual.getId());
             break;
@@ -97,7 +95,7 @@ public class ConfigActivity extends AppCompatActivity {
 
         }
 
-        switch(this.configurator.getCurrentLetterCase()){
+        switch(this.appConfig.getCurrentLetterCase()){
             case(AppConfig.UPPER):
                 rgLetterCase.check(rbUpper.getId());
             break;
@@ -115,7 +113,7 @@ public class ConfigActivity extends AppCompatActivity {
      */
     public void saveChanges(View view){
         pushChanges();
-        this.configurator.saveAllChange();
+        this.appConfig.saveAllChange();
         this.recreate();
         Toast.makeText(this, "Configurações salvas com sucesso!", Toast.LENGTH_SHORT).show();
     }

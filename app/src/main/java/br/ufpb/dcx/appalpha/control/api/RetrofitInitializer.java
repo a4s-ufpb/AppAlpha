@@ -26,6 +26,7 @@ public class RetrofitInitializer {
 
     /**
      * Configure request timeout in API calls
+     *
      * @return
      */
     private static OkHttpClient getOkHttpClient() {
@@ -43,17 +44,19 @@ public class RetrofitInitializer {
 
     /**
      * Service base for Context for retrofit calls
+     *
      * @return
      */
-    public ThemesApiServiceInterface contextService(){
+    public ThemesApiServiceInterface contextService() {
         return retrofit.create(ThemesApiServiceInterface.class);
     }
 
     /**
      * Service base for Challenge for retrofit calls
+     *
      * @return
      */
-    public ChallengeApiService challengeService(){
+    public ChallengeApiService challengeService() {
         return retrofit.create(ChallengeApiService.class);
     }
 

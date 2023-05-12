@@ -21,24 +21,23 @@ import java.util.Collections;
 
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
-import br.ufpb.dcx.appalpha.locator.ServiceLocator;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ForcaActivityTest {
+public class HangmanActivityTest {
 
     @Rule
-    public ActivityTestRule<ForcaActivity> forcaActivityActivityTestRule = new ActivityTestRule<>(ForcaActivity.class);
-    private ForcaActivity launchedForcaActivity;
+    public ActivityTestRule<HangmanActivity> forcaActivityActivityTestRule = new ActivityTestRule<>(HangmanActivity.class);
+    private HangmanActivity launchedHangmanActivity;
 
     @Before
     public void setUp() throws Exception {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        launchedForcaActivity = forcaActivityActivityTestRule.launchActivity(intent);
+        launchedHangmanActivity = forcaActivityActivityTestRule.launchActivity(intent);
 
         Theme mockedTheme = new Theme("cozinha",  Integer.toString(R.drawable.cozinha), Integer.toString(R.raw.cozinha), null);
         Challenge mockedChallenge = new Challenge(1l,"colher", Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher));

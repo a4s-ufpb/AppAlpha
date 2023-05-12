@@ -19,7 +19,7 @@
             android:layout_width="75dp"
             android:layout_height="match_parent"
             android:background="@null"
-            android:onClick="voltandoAoMenu"
+            android:onClick="backToMenu"
             android:padding="4dp"
             android:scaleType="fitXY"
             app:srcCompat="@android:drawable/ic_menu_revert" />
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="br.ufpb.dcx.appalpha.view.activities.SobreActivity">
+            tools:context="br.ufpb.dcx.appalpha.view.activities.AboutActivity">
 
             <br.ufpb.dcx.appalpha.control.config.AlphaTextView
                 android:id="@+id/textView3"
@@ -264,7 +264,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="65dp"
                             android:gravity="center"
-                            android:onClick="redirecionarASite"
+                            android:onClick="redirectToUrl"
                             android:text="pt.freeimages.com"
                             android:textAllCaps="true"
                             android:textColor="@android:color/black"

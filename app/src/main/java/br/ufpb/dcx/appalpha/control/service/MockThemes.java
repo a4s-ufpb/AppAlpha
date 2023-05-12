@@ -16,6 +16,7 @@ public class MockThemes implements Runnable {
 
     /**
      * Allocate instance and local variable of service
+     *
      * @param context
      */
     public MockThemes(Context context) {
@@ -27,7 +28,7 @@ public class MockThemes implements Runnable {
      */
     @Override
     public void run() {
-        service.insert(new Theme("comida",  Integer.toString(R.drawable.comida), Integer.toString(R.raw.comida), null), Arrays.asList(
+        service.insert(new Theme("comida", Integer.toString(R.drawable.comida), Integer.toString(R.raw.comida), null), Arrays.asList(
                 new Challenge("arroz", Integer.toString(R.raw.arroz), null, Integer.toString(R.drawable.arroz)),
                 new Challenge("peixe", Integer.toString(R.raw.peixe), null, Integer.toString(R.drawable.peixe)),
                 new Challenge("batata", Integer.toString(R.raw.batata), null, Integer.toString(R.drawable.batata)),
@@ -38,7 +39,7 @@ public class MockThemes implements Runnable {
                 new Challenge("ovo", Integer.toString(R.raw.ovo), null, Integer.toString(R.drawable.ovo))
         ));
 
-        service.insert(new Theme("cidade",  Integer.toString(R.drawable.cidade), Integer.toString(R.raw.cidade), null), Arrays.asList(
+        service.insert(new Theme("cidade", Integer.toString(R.drawable.cidade), Integer.toString(R.raw.cidade), null), Arrays.asList(
                 new Challenge("aeroporto", Integer.toString(R.raw.aeroporto), null, Integer.toString(R.drawable.aeroporto)),
                 new Challenge("hospital", Integer.toString(R.raw.hospital), null, Integer.toString(R.drawable.hospital)),
                 new Challenge("igreja", Integer.toString(R.raw.igreja), null, Integer.toString(R.drawable.igreja)),
@@ -46,15 +47,15 @@ public class MockThemes implements Runnable {
                 new Challenge("shopping", Integer.toString(R.raw.shopping), null, Integer.toString(R.drawable.shopping))
         ));
 
-        service.insert(new Theme("cores",  Integer.toString(R.drawable.cores), Integer.toString(R.raw.cores), null), Arrays.asList(
-                new Challenge("preto",  Integer.toString(R.raw.preto), null, Integer.toString(R.drawable.preto)),
+        service.insert(new Theme("cores", Integer.toString(R.drawable.cores), Integer.toString(R.raw.cores), null), Arrays.asList(
+                new Challenge("preto", Integer.toString(R.raw.preto), null, Integer.toString(R.drawable.preto)),
                 new Challenge("rosa", Integer.toString(R.raw.rosa), null, Integer.toString(R.drawable.rosa)),
                 new Challenge("vermelho", Integer.toString(R.raw.vermelho), null, Integer.toString(R.drawable.vermelho)),
                 new Challenge("verde", Integer.toString(R.raw.verde), null, Integer.toString(R.drawable.verde)),
                 new Challenge("marrom", Integer.toString(R.raw.marrom), null, Integer.toString(R.drawable.marrom))
         ));
 
-        service.insert(new Theme("cozinha",  Integer.toString(R.drawable.cozinha), Integer.toString(R.raw.cozinha), null), Arrays.asList(
+        service.insert(new Theme("cozinha", Integer.toString(R.drawable.cozinha), Integer.toString(R.raw.cozinha), null), Arrays.asList(
                 new Challenge("faca", Integer.toString(R.raw.faca), null, Integer.toString(R.drawable.faca)),
                 new Challenge("colher", Integer.toString(R.raw.colher), null, Integer.toString(R.drawable.colher)),
                 new Challenge("garfo", Integer.toString(R.raw.garfo), null, Integer.toString(R.drawable.garfo)),
@@ -62,7 +63,7 @@ public class MockThemes implements Runnable {
                 new Challenge("mesa", Integer.toString(R.raw.mesa), null, Integer.toString(R.drawable.mesa))
         ));
 
-        service.insert(new Theme("natureza",  Integer.toString(R.drawable.natureza), Integer.toString(R.raw.natureza), null), Arrays.asList(
+        service.insert(new Theme("natureza", Integer.toString(R.drawable.natureza), Integer.toString(R.raw.natureza), null), Arrays.asList(
                 new Challenge("vaca", Integer.toString(R.raw.vaca), null, Integer.toString(R.drawable.vaca)),
                 new Challenge("galo", Integer.toString(R.raw.galo), null, Integer.toString(R.drawable.galo)),
                 new Challenge("bode", Integer.toString(R.raw.bode), null, Integer.toString(R.drawable.bode)),
@@ -70,7 +71,7 @@ public class MockThemes implements Runnable {
                 new Challenge("flor", Integer.toString(R.raw.flor), null, Integer.toString(R.drawable.flor))
         ));
 
-        service.insert(new Theme("frutas",  Integer.toString(R.drawable.frutas), Integer.toString(R.raw.frutas), null), Arrays.asList(
+        service.insert(new Theme("frutas", Integer.toString(R.drawable.frutas), Integer.toString(R.raw.frutas), null), Arrays.asList(
                 new Challenge("banana", Integer.toString(R.raw.banana), null, Integer.toString(R.drawable.banana)),
                 new Challenge("abacate", Integer.toString(R.raw.abacate), null, Integer.toString(R.drawable.abacate)),
                 new Challenge("abacaxi", Integer.toString(R.raw.abacaxi), null, Integer.toString(R.drawable.abacaxi)),

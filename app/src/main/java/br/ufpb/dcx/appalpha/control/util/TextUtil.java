@@ -10,14 +10,16 @@ import java.util.regex.Pattern;
 public class TextUtil {
     private static TextUtil instance;
 
-    private TextUtil(){}
+    private TextUtil() {
+    }
 
     /**
      * Get shared instance
+     *
      * @return
      */
-    public static TextUtil getInstance(){
-        if(instance == null){
+    public static TextUtil getInstance() {
+        if (instance == null) {
             instance = new TextUtil();
         }
 
@@ -26,6 +28,7 @@ public class TextUtil {
 
     /**
      * Generate underline format from an word
+     *
      * @param word
      * @return
      */
@@ -35,8 +38,8 @@ public class TextUtil {
 
         for (int i = 0; i < s.length(); i++) {
 
-            if(caractererIndisponivel(word.charAt(i))) {
-                // letra indisponivel no teclado, passar na palavra
+            if (isCharacterAvailable(word.charAt(i))) {
+                // letter available in the keyboard, we can use underline
                 newS.append(String.valueOf(word.charAt(i)));
                 continue;
             }
@@ -48,19 +51,20 @@ public class TextUtil {
     }
 
     /**
-     * Caractereres indisponivel no teclado para o jogador
-     * @param letra
-     * @return Boolean, letra disponivel
+     * Character available in the Keyboard of player
+     *
+     * @param character
+     * @return Boolean, character disponivel
      */
-    private Boolean caractererIndisponivel(char letra)
-    {
+    private Boolean isCharacterAvailable(char character) {
         Pattern p = Pattern.compile("[^a-z]", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(String.valueOf(tratarCaracte(letra)));
+        Matcher m = p.matcher(String.valueOf(treatCharacter(character)));
         return m.find();
     }
 
     /**
      * Check if an word is only number
+     *
      * @param text
      * @return
      */
@@ -68,24 +72,25 @@ public class TextUtil {
         try {
             Integer.parseInt(text);
             return true;
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }
 
     /**
      * Treat letter, removes ascents and lowercase
-     * @param caractere
+     *
+     * @param character
      * @return char, letter to treat
      */
-    public char tratarCaracte(char caractere)
-    {
-        // minuscula, sem acentos
-        return Normalizer.normalize(Character.toString(caractere).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").charAt(0);
+    public char treatCharacter(char character) {
+        // lowercase without accents
+        return Normalizer.normalize(Character.toString(character).toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").charAt(0);
     }
 
     /**
      * Return an word without ascents
+     *
      * @param text
      * @return
      */

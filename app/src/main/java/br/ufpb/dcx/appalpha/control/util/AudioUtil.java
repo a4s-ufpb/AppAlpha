@@ -11,7 +11,7 @@ import android.util.Log;
 import java.util.Locale;
 
 /**
- *  Class to manage sound player and TTS
+ * Class to manage sound player and TTS
  */
 public class AudioUtil implements TextToSpeech.OnInitListener {
     private static AudioUtil instance;
@@ -23,6 +23,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Get shared instance and alloc if not exist
+     *
      * @param context
      * @return
      */
@@ -36,6 +37,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Get current shared instance without allocate if not exist
+     *
      * @return
      */
     public static AudioUtil getInstance() {
@@ -49,6 +51,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Alloc instance and setup local variables
+     *
      * @param context
      */
     private AudioUtil(Context context) {
@@ -59,10 +62,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Play local music file locally
+     *
      * @param songId
      */
-    public synchronized void playSound(int songId)
-    {
+    public synchronized void playSound(int songId) {
         this.mediaPlayer = MediaPlayer.create(this.context, songId);
         this.duration = mediaPlayer.getDuration();
 
@@ -72,6 +75,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Play remote music from url
+     *
      * @param url
      */
     public synchronized void playSoundURL(String url) {
@@ -86,7 +90,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
         }
 
         this.duration = mediaPlayerUrl.getDuration();
-        Log.i("Audio URL", "Duracao do audio e: "+ this.duration);
+        Log.i("Audio URL", "Duracao do audio e: " + this.duration);
 
         this.mediaPlayerUrl.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -113,16 +117,17 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Start TTS speak from supplied word
+     *
      * @param world
      */
-    public synchronized void speakWord(String world)
-    {
+    public synchronized void speakWord(String world) {
         this.textToSpeak.speak(world, TextToSpeech.QUEUE_FLUSH, null);
         this.duration = 0;
     }
 
     /**
      * Duration of current playing audio
+     *
      * @return
      */
     public int getDuration() {
@@ -131,10 +136,10 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Stop and Release specific player
+     *
      * @param player
      */
-    public void stopSoundPlayer(MediaPlayer player)
-    {
+    public void stopSoundPlayer(MediaPlayer player) {
         if (player != null) {
             try {
                 player.stop();
@@ -149,8 +154,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
     /**
      * Stop and Release all players
      */
-    public void stopSound()
-    {
+    public void stopSound() {
         stopSoundPlayer(mediaPlayer);
         stopSoundPlayer(mediaPlayerUrl);
     }
@@ -168,8 +172,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
     /**
      * Stop speaking TTS
      */
-    public void stopTextToSpeak()
-    {
+    public void stopTextToSpeak() {
         if (this.textToSpeak != null) {
             this.textToSpeak.stop();
         }
@@ -177,16 +180,16 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
 
     /**
      * Check if TTS is currently playing
+     *
      * @return
      */
-    public boolean isTSS_Playing()
-    {
+    public boolean isTSS_Playing() {
         boolean ret = false;
         try {
             if (this.textToSpeak != null) {
                 ret = this.textToSpeak.isSpeaking();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ret;
@@ -195,9 +198,8 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
     /**
      * Wait in current thread until TTS finish
      */
-    public void esperarTssParar()
-    {
-        while (AudioUtil.getInstance()!=null && AudioUtil.getInstance().isTSS_Playing()) {
+    public void esperarTssParar() {
+        while (AudioUtil.getInstance() != null && AudioUtil.getInstance().isTSS_Playing()) {
             try {
                 sleep(200);
             } catch (Exception e) {
@@ -209,8 +211,7 @@ public class AudioUtil implements TextToSpeech.OnInitListener {
     /**
      * Stop TTS and All Playes
      */
-    public void pararTSSePlayer()
-    {
+    public void pararTSSePlayer() {
         stopSound();
         stopTextToSpeak();
     }

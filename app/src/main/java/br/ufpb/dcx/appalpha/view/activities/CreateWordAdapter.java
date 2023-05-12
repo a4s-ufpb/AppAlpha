@@ -19,21 +19,22 @@ import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
 /**
  * Class of Adapter to build the word list with icons
  */
-public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdapter.ViewHolder> {
+public class CreateWordAdapter extends RecyclerView.Adapter<CreateWordAdapter.ViewHolder> {
     private CreateThemeActivity createTheme;
-    private String  TAG = "CreatePalavraAdapter";
+    private String TAG = "CreateWordAdapter";
     private Context activityContext;
     private boolean isDeleteMode;
     private boolean isEditMode;
 
     /**
      * Alloc instance and setup local variables
+     *
      * @param createTheme
      * @param context
      * @param isDeleteMode
      * @param isEditMode
      */
-    public CreatePalavraAdapter(CreateThemeActivity createTheme, Context context, boolean isDeleteMode, boolean isEditMode) {
+    public CreateWordAdapter(CreateThemeActivity createTheme, Context context, boolean isDeleteMode, boolean isEditMode) {
         this.createTheme = createTheme;
         this.activityContext = context;
         this.isDeleteMode = isDeleteMode;
@@ -42,6 +43,7 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
 
     /**
      * Allocate the view theme
+     *
      * @param parent
      * @param viewType
      * @return
@@ -54,14 +56,16 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
 
     /**
      * Count list of items
+     *
      * @return
      */
-    public int getItemCount(){
-        return createTheme.tema.getChallenges().size();
+    public int getItemCount() {
+        return createTheme.theme.getChallenges().size();
     }
 
     /**
      * Populate the word icon view
+     *
      * @param holder
      * @param position
      */
@@ -69,12 +73,12 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
         if (this.isDeleteMode) {
             holder.btnDel.setVisibility(View.VISIBLE);
         }
-        if(this.isEditMode) {
+        if (this.isEditMode) {
             holder.btnEdit.setVisibility(View.VISIBLE);
         }
 
-        holder.themeName.setText(createTheme.tema.getChallenges().get(holder.getAbsoluteAdapterPosition()).getWord());
-        ImageLoadUtil.getInstance().loadImage(createTheme.tema.getChallenges().get(holder.getAbsoluteAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
+        holder.themeName.setText(createTheme.theme.getChallenges().get(holder.getAbsoluteAdapterPosition()).getWord());
+        ImageLoadUtil.getInstance().loadImage(createTheme.theme.getChallenges().get(holder.getAbsoluteAdapterPosition()).getImageUrl(), holder.themeImage, activityContext);
 
         holder.themeImage.setOnClickListener(v -> {
             v.setClickable(false);
@@ -91,24 +95,24 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
 
     /**
      * Delete action button
+     *
      * @param position
      */
-    private void deleteSelectedTheme(int position)
-    {
-        Log.i(TAG, "Palavra " + createTheme.tema.getChallenges().get(position).getWord() + " Clicked to delete!");
-        createTheme.removePalavra(createTheme.tema.getChallenges().get(position));
+    private void deleteSelectedTheme(int position) {
+        Log.i(TAG, "Palavra " + createTheme.theme.getChallenges().get(position).getWord() + " Clicked to delete!");
+        createTheme.removeWord(createTheme.theme.getChallenges().get(position));
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, createTheme.tema.getChallenges().size());
+        notifyItemRangeChanged(position, createTheme.theme.getChallenges().size());
     }
 
     /**
      * Edit button action
+     *
      * @param position
      */
-    private void editSelectedTheme(int position)
-    {
-        Log.i(TAG, "Palavra " + createTheme.tema.getChallenges().get(position).getWord() + " Clicked to edit!");
-        createTheme.editPalavra(createTheme.tema.getChallenges().get(position));
+    private void editSelectedTheme(int position) {
+        Log.i(TAG, "Palavra " + createTheme.theme.getChallenges().get(position).getWord() + " Clicked to edit!");
+        createTheme.editWord(createTheme.theme.getChallenges().get(position));
     }
 
     /**
@@ -119,6 +123,7 @@ public class CreatePalavraAdapter extends RecyclerView.Adapter<CreatePalavraAdap
         TextView themeName;
         ImageButton btnDel;
         ImageButton btnEdit;
+
         private ViewHolder(View itemView) {
             super(itemView);
             themeImage = itemView.findViewById(R.id.img_left);

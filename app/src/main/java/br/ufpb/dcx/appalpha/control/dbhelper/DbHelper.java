@@ -29,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     /**
      * On create database execute sql query
+     *
      * @param db
      */
     @Override
@@ -41,11 +42,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
         List<String> sqls = new ArrayList<>(Arrays.asList(activateForeignKey, recordsSql, themesSql, challengesSql, challenge_themeSql));
 
-        for(String s: sqls){
+        for (String s : sqls) {
             try {
                 db.execSQL(s);
                 Log.i(TAG, s);
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 Log.i(TAG, e.getMessage());
             }
         }

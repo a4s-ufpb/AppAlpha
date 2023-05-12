@@ -9,14 +9,16 @@ import android.view.WindowManager;
 public class ScreenUtil {
     private static ScreenUtil instance;
 
-    private ScreenUtil(){    }
+    private ScreenUtil() {
+    }
 
     /**
      * Get shared instance
+     *
      * @return
      */
-    public static synchronized ScreenUtil getInstance(){
-        if(instance == null){
+    public static synchronized ScreenUtil getInstance() {
+        if (instance == null) {
             instance = new ScreenUtil();
         }
         return instance;
@@ -24,9 +26,10 @@ public class ScreenUtil {
 
     /**
      * Lock touch in the activity
+     *
      * @param activity
      */
-    public void lockScreenTouch(Activity activity){
+    public void lockScreenTouch(Activity activity) {
         activity.getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -34,9 +37,10 @@ public class ScreenUtil {
 
     /**
      * Unlock touch in the activity
+     *
      * @param activity
      */
-    public void unlockScreenTouch(Activity activity){
+    public void unlockScreenTouch(Activity activity) {
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 }

@@ -22,14 +22,16 @@ public class ImageLoadUtil {
     private final String TAG = "ImageLoadUtil";
     private static ImageLoadUtil instance;
 
-    private ImageLoadUtil(){}
+    private ImageLoadUtil() {
+    }
 
     /**
      * Get shared instance
+     *
      * @return
      */
-    public static ImageLoadUtil getInstance(){
-        if(instance == null){
+    public static ImageLoadUtil getInstance() {
+        if (instance == null) {
             instance = new ImageLoadUtil();
         }
 
@@ -38,11 +40,12 @@ public class ImageLoadUtil {
 
     /**
      * Load image in an ImageView
+     *
      * @param imageUrl
      * @param themeImageLeft
      * @param context
      */
-    public void loadImage(String imageUrl, ImageView themeImageLeft, Context context){
+    public void loadImage(String imageUrl, ImageView themeImageLeft, Context context) {
         DiskCacheStrategy diskCacheStrategy = new DiskCacheStrategy() {
             @Override
             public boolean isDataCacheable(DataSource dataSource) {
@@ -66,9 +69,9 @@ public class ImageLoadUtil {
         };
 
         int erroImg = -1;
-        try{
+        try {
             erroImg = Integer.parseInt(imageUrl);
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             erroImg = R.drawable.no_image;
         }
 

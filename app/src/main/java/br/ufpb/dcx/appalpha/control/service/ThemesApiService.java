@@ -24,6 +24,7 @@ public class ThemesApiService {
 
     /**
      * Initialize the shared instance
+     *
      * @return
      */
     public static ThemesApiService getInstance() {
@@ -35,6 +36,7 @@ public class ThemesApiService {
 
     /**
      * Get an Theme from API with theme Id
+     *
      * @param id
      * @return
      */

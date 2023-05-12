@@ -8,8 +8,7 @@ import retrofit2.http.GET;
 /**
  * Interface to specify path location and type in retrofit calls
  */
-public interface ApiConfigRetrofit
-{
+public interface ApiConfigRetrofit {
     @GET("config.json")
     Call<Map> getAPIConfig();
 }

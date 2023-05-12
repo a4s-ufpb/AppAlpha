@@ -7,8 +7,9 @@ import java.util.ArrayList;
 /**
  * Interface with default methods of Record
  */
-public interface RecordesDao {
+public interface RecordsDao {
 
-    void cadastrarNovoRecorde(double pontuacao, String nome);
-    ArrayList<Record> getRecordistas();
+    void createNewRecord(double pontuacao, String nome);
+
+    ArrayList<Record> getAllRecords();
 }

@@ -17,7 +17,7 @@
         android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/criar_tema_menu">
+        app:layout_constraintTop_toBottomOf="@id/create_theme_menu">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/criar_tema_menu"
+        android:id="@+id/create_theme_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"

@@ -38,6 +38,7 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
 
     /**
      * On create activity, setup local variables
+     *
      * @param savedInstanceState
      */
     @Override
@@ -53,12 +54,12 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
 
         btnImport.setOnClickListener(this);
 
-        abrirTeclado();
+        openKeyboard();
 
         findViewById(R.id.theme_id_field).setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     onClick(findViewById(R.id.btnImport));
                 }
                 return false;
@@ -69,8 +70,7 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
     /**
      * Action for open keyboard and focus on filed box
      */
-    public void abrirTeclado()
-    {
+    public void openKeyboard() {
         TextView editText1 = findViewById(R.id.theme_id_field);
         editText1.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -78,29 +78,29 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
 
     /**
      * Get theme Id from field box
+     *
      * @return
      */
-    public long getInputThemeID()
-    {
+    public long getInputThemeID() {
         long ret = -1;
         try {
             ret = Integer.parseInt(tlIdTheme.getEditText().getText().toString());
-        }catch (Exception e) {
+        } catch (Exception e) {
         }
         return ret;
     }
 
     /**
      * Listen to detect click on any view in the activity
+     *
      * @param v
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case(R.id.btnImport):
+        switch (v.getId()) {
+            case (R.id.btnImport):
                 long themeId = getInputThemeID();
-                if (themeId==-1)
-                {
+                if (themeId == -1) {
                     Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -109,9 +109,8 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                     call.enqueue(new Callback<Theme>() {
                         @Override
                         public void onResponse(Call<Theme> call, Response<Theme> response) {
-                            if(response.body() != null){
+                            if (response.body() != null) {
                                 Theme theme = response.body();
-                                Log.i(TAG, "Theme challenges:" + theme.getChallenges().size());
 
                                 // theme Id is ur apiId
                                 theme.setApiId(theme.getId());
@@ -119,30 +118,27 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
 
                                 themeSqlService.insert(theme, theme.getChallenges());
                                 Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
-                                Log.i(TAG, "Theme recuperado com sucesso!");
 
                                 Intent intent = new Intent(AddThemeActivity.this, ThemeActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
-                            }else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();
-                                Log.i(TAG, "Erro ao recuperar theme com id " + themeId);
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Theme> call, Throwable t) {
-                            Log.e(TAG, "Erro ao recuperar tema: "+t.getMessage());
+                            Toast.makeText(getApplicationContext(), "Ocorreu um erro ao recuperar o Tema de ID: " + themeId, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
                     Toast.makeText(getApplicationContext(), "Tema de ID " + themeId + " já está importado. Tente outro tema.", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, "Tema de id " + themeId + " já existe!");
                 }
 
                 break;
 
-            case(R.id.back_btn):
+            case (R.id.back_btn):
                 finish();
                 break;
         }

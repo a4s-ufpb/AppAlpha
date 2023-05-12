@@ -22,9 +22,9 @@ public class PermissionControll {
     }
 
     /**
-     * Verifica se a permissão para gravar no armazenamento externo está ativa, caso não, pede permissão ao usuário.
+     * Check permission of write to external data
      */
-    public void getWriteExternalStoragePermission(){
+    public void getWriteExternalStoragePermission() {
         Log.i(TAG, "Verificando permissão de escrita");
         if (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Permissão de escrita não existe");
@@ -38,13 +38,13 @@ public class PermissionControll {
                 Log.i(TAG, "Pedindo permissão WB");
             }
         }
-        Log.i(TAG, "Permissão " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " agora está " + (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED?"ativa":"desativa"));
+        Log.i(TAG, "Permissão " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " agora está " + (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ? "ativa" : "desativa"));
     }
 
     /**
-     * Verifica se a permissão para ler do armazenamento externo está ativa, caso não, pede permissão ao usuário.
+     * Check permission of read to external data
      */
-    public void getReadExternalStoragePermission(){
+    public void getReadExternalStoragePermission() {
         Log.i(TAG, "Verificando permissão de leitura");
         if (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Permissão de leitura não existe");
@@ -59,7 +59,7 @@ public class PermissionControll {
             }
         }
 
-        Log.i(TAG, "Permissão " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " agora está " + (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED?"ativa":"desativa"));
+        Log.i(TAG, "Permissão " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " agora está " + (ContextCompat.checkSelfPermission(this.activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ? "ativa" : "desativa"));
     }
 
 

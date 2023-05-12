@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * On create activity, setup local variables
+     *
      * @param savedInstanceState
      */
     @Override
@@ -43,25 +44,24 @@ public class MainActivity extends AppCompatActivity {
         pc.getWriteExternalStoragePermission();
 
         verifyFirstRunAndInjectDb();
-        
+
         // init API Configurations
         ApiConfig.getInstance(getApplicationContext());
     }
 
     /**
      * Return the main Context
+     *
      * @return
      */
-    public static Context getMainContext()
-    {
+    public static Context getMainContext() {
         return mainContext;
     }
 
     /**
      * Action for populate the database first time
      */
-    public void verifyFirstRunAndInjectDb()
-    {
+    public void verifyFirstRunAndInjectDb() {
         boolean sholdCreateDatabase = false;
 
         sPreferences = getSharedPreferences("firstRun", MODE_PRIVATE);
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             sholdCreateDatabase = true;
         }
 
-        if(sholdCreateDatabase) {
+        if (sholdCreateDatabase) {
             Log.i(TAG, "Criando Default Database.");
             MockThemes mt = new MockThemes(getApplicationContext());
             mt.run();
@@ -87,15 +87,17 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Action for open the record list screen
+     *
      * @param v
      */
     public void goToRecords(View v) {
-        Intent it = new Intent(getApplicationContext(), RecordesActivity.class);
+        Intent it = new Intent(getApplicationContext(), RecordsActivity.class);
         startActivity(it);
     }
 
     /**
      * Action for open the Theme list menu screen
+     *
      * @param v
      */
     public void goToThemes(View v) {
@@ -109,31 +111,34 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Action to open the about screen
+     *
      * @param v
      */
     public void goToAbout(View v) {
-        Intent it = new Intent(getApplicationContext(), SobreActivity.class);
+        Intent it = new Intent(getApplicationContext(), AboutActivity.class);
         startActivity(it);
     }
 
     /**
      * Action to open the app settings screen
+     *
      * @param view
      */
-    public void goToConfigScreen(View view){
+    public void goToConfigScreen(View view) {
         Intent it = new Intent(getApplicationContext(), ConfigActivity.class);
         startActivity(it);
     }
 
     /**
      * Result of permission alert by the user
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
+        switch (requestCode) {
             case PermissionControll.READ_PERMISSION_REQ_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 

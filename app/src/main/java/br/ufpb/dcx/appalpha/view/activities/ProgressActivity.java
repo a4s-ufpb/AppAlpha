@@ -24,17 +24,18 @@ public class ProgressActivity extends AppCompatActivity {
     private TextView txt;
     private boolean hasChangedActivity;
     private int millis = 2500;
-    private char[] letras;
-    private Thread leitor;
+    private char[] letters;
+    private Thread readLetterThread;
 
     /**
      * On create activity, setup local variables
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela_progresso_);
+        setContentView(R.layout.activity_window_progress);
 
         setUnderscore();
 
@@ -73,7 +74,7 @@ public class ProgressActivity extends AppCompatActivity {
      * Action to start speaking letter bt letter of the word
      */
     private void readLetterByLetter() {
-        leitor = new Thread() {
+        readLetterThread = new Thread() {
 
             @Override
             public void run() {
@@ -82,7 +83,7 @@ public class ProgressActivity extends AppCompatActivity {
 
                 try {
                     while (!isInterrupted()) {
-                        for (final char letra : TextUtil.normalize(new String(letras)).toCharArray()) {
+                        for (final char letra : TextUtil.normalize(new String(letters)).toCharArray()) {
 
                             try {
                                 Thread.sleep(millis);
@@ -113,7 +114,7 @@ public class ProgressActivity extends AppCompatActivity {
             }
         };
 
-        leitor.start();
+        readLetterThread.start();
 
     }
 
@@ -138,124 +139,123 @@ public class ProgressActivity extends AppCompatActivity {
 
     /**
      * Play the sound of letter
-     * @param letra letter to be played
+     * @param letter letter to be played
      */
-    public void playLetterSong(char letra) {
-        Log.i(TAG, letra + "");
-        int idSom = 0;
+    public void playLetterSong(char letter) {
+        int idSound = 0;
 
-        switch (Character.toUpperCase(letra)) {
+        switch (Character.toUpperCase(letter)) {
 
             case 'A':
-                idSom = R.raw.letraa;
+                idSound = R.raw.letraa;
                 break;
 
             case 'B':
-                idSom = R.raw.letrab;
+                idSound = R.raw.letrab;
                 break;
 
             case 'C':
-                idSom = R.raw.letrac;
+                idSound = R.raw.letrac;
                 break;
 
             case 'D':
-                idSom = R.raw.letrad;
+                idSound = R.raw.letrad;
                 break;
 
             case 'E':
-                idSom = R.raw.letrae;
+                idSound = R.raw.letrae;
                 break;
 
             case 'F':
-                idSom = R.raw.letraf;
+                idSound = R.raw.letraf;
                 break;
 
             case 'G':
-                idSom = R.raw.letrag;
+                idSound = R.raw.letrag;
                 break;
 
             case 'H':
-                idSom = R.raw.letrah;
+                idSound = R.raw.letrah;
                 break;
 
             case 'I':
-                idSom = R.raw.letrai;
+                idSound = R.raw.letrai;
                 break;
 
             case 'J':
-                idSom = R.raw.letraj;
+                idSound = R.raw.letraj;
                 break;
 
             case 'K':
-                idSom = R.raw.letrak;
+                idSound = R.raw.letrak;
                 break;
 
             case 'L':
-                idSom = R.raw.letral;
+                idSound = R.raw.letral;
                 break;
 
             case 'M':
-                idSom = R.raw.letram;
+                idSound = R.raw.letram;
                 break;
 
             case 'N':
-                idSom = R.raw.letran;
+                idSound = R.raw.letran;
                 break;
 
             case 'O':
-                idSom = R.raw.letrao;
+                idSound = R.raw.letrao;
                 break;
 
             case 'P':
-                idSom = R.raw.letrap;
+                idSound = R.raw.letrap;
                 break;
 
             case 'Q':
-                idSom = R.raw.letraq;
+                idSound = R.raw.letraq;
                 break;
 
             case 'R':
-                idSom = R.raw.letrar;
+                idSound = R.raw.letrar;
                 break;
 
             case 'S':
-                idSom = R.raw.letras;
+                idSound = R.raw.letras;
                 break;
 
             case 'T':
-                idSom = R.raw.letrat;
+                idSound = R.raw.letrat;
                 break;
 
             case 'U':
-                idSom = R.raw.letrau;
+                idSound = R.raw.letrau;
                 break;
 
             case 'V':
-                idSom = R.raw.letrav;
+                idSound = R.raw.letrav;
                 break;
 
             case 'W':
-                idSom = R.raw.letraw;
+                idSound = R.raw.letraw;
                 break;
 
             case 'X':
-                idSom = R.raw.letrax;
+                idSound = R.raw.letrax;
                 break;
 
             case 'Y':
-                idSom = R.raw.letray;
+                idSound = R.raw.letray;
                 break;
 
             case 'Z':
-                idSom = R.raw.letraz;
+                idSound = R.raw.letraz;
                 break;
 
         }
 
-        if(idSom != 0) {
-            AudioUtil.getInstance(getApplicationContext()).playSound(idSom);
+        if(idSound != 0) {
+            AudioUtil.getInstance(getApplicationContext()).playSound(idSound);
         } else {
-            AudioUtil.getInstance(getApplicationContext()).speakWord(String.valueOf(letra));
+            AudioUtil.getInstance(getApplicationContext()).speakWord(String.valueOf(letter));
         }
     }
 
@@ -288,9 +288,9 @@ public class ProgressActivity extends AppCompatActivity {
      * Explode the word by the char letter, to be used in the underscore
      */
     public void setLetters() {
-        letras = new char[ChallengeFacade.getInstance().getCurrentChallenge().getWord().length()];
+        letters = new char[ChallengeFacade.getInstance().getCurrentChallenge().getWord().length()];
         for (int i = 0; i < ChallengeFacade.getInstance().getCurrentChallenge().getWord().length(); i++) {
-            letras[i] = ChallengeFacade.getInstance().getCurrentChallenge().getWord().charAt(i);
+            letters[i] = ChallengeFacade.getInstance().getCurrentChallenge().getWord().charAt(i);
         }
     }
 
@@ -325,7 +325,7 @@ public class ProgressActivity extends AppCompatActivity {
      */
     public void goToTheNextChallenge() {
         hasChangedActivity = true;
-        Intent it = new Intent(getApplicationContext(), ForcaActivity.class);
+        Intent it = new Intent(getApplicationContext(), HangmanActivity.class);
         ChallengeFacade.getInstance().nextChallenge();
         startActivity(it);
         finish();
