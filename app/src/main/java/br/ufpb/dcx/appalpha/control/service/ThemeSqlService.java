@@ -56,28 +56,22 @@ public class ThemeSqlService {
      * @param relatedChallenges
      * @return
      */
-    public Long insert(Theme theme, @Nullable List<Challenge> relatedChallenges) {
-        ContentValues cv = new ContentValues();
+    public Long insert(Theme theme, @Nullable List<Challenge> relatedChallenges) throws Exception {
         Long id = -1l;
-        try {
-            cv.put("name", theme.getName());
-            cv.put("soundUrl", theme.getSoundUrl());
-            cv.put("videoUrl", theme.getVideoUrl());
-            cv.put("imageUrl", theme.getImageUrl());
-            cv.put("apiId", theme.getApiId());
-            cv.put("deletavel", theme.getDeletavel());
 
-            id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
-            Log.i(TAG, theme.getName() + " added in db!");
+        ContentValues cv = new ContentValues();
+        cv.put("name", theme.getName());
+        cv.put("soundUrl", theme.getSoundUrl());
+        cv.put("videoUrl", theme.getVideoUrl());
+        cv.put("imageUrl", theme.getImageUrl());
+        cv.put("apiId", theme.getApiId());
+        cv.put("deletavel", theme.getDeletavel());
 
-            if (relatedChallenges != null && !relatedChallenges.isEmpty()) {
-                insertThemeRelatedChallenges(id, relatedChallenges);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        } finally {
-            cv.clear();
+        id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
+        if (relatedChallenges != null && !relatedChallenges.isEmpty()) {
+            insertThemeRelatedChallenges(id, relatedChallenges);
         }
+        cv.clear();
 
         return id;
     }
@@ -87,20 +81,12 @@ public class ThemeSqlService {
      * @param theme_id
      * @param relatedChallenges
      */
-    public void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges) {
+    public void insertThemeRelatedChallenges(Long theme_id, List<Challenge> relatedChallenges) throws Exception {
         ContentValues cv = new ContentValues();
-
         for (Challenge c : relatedChallenges) {
-            try {
-                cv.put("challenge_id", challengeSqlService.insert(c));
-                cv.put("theme_id", theme_id);
-                this.writableDb.insert(DbHelper.CHALLENGE_THEME_TABLE, null, cv);
-
-                Log.i(TAG, c.getWord() + " added relationship by theme id " + theme_id + ".");
-
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
+            cv.put("challenge_id", challengeSqlService.insert(c));
+            cv.put("theme_id", theme_id);
+            this.writableDb.insert(DbHelper.CHALLENGE_THEME_TABLE, null, cv);
             cv.clear();
         }
     }
@@ -235,24 +221,15 @@ public class ThemeSqlService {
      * Update the saved Theme that we got previously from local database
      * @param theme
      */
-    public void update(Theme theme)
-    {
+    public void update(Theme theme) throws Exception {
         ContentValues cv = new ContentValues();
-        try {
-            cv.put("name", theme.getName());
-            cv.put("soundUrl", theme.getSoundUrl());
-            cv.put("videoUrl", theme.getVideoUrl());
-            cv.put("imageUrl", theme.getImageUrl());
-            cv.put("apiId", theme.getApiId());
-            cv.put("deletavel", theme.getDeletavel());
-
-            this.writableDb.update(DbHelper.THEMES_TABLE, cv, "id="+theme.getId(), null);
-            Log.i(TAG, theme.getName() + " updated in db!");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        } finally {
-            cv.clear();
-        }
+        cv.put("name", theme.getName());
+        cv.put("soundUrl", theme.getSoundUrl());
+        cv.put("videoUrl", theme.getVideoUrl());
+        cv.put("imageUrl", theme.getImageUrl());
+        cv.put("apiId", theme.getApiId());
+        cv.put("deletavel", theme.getDeletavel());
+        this.writableDb.update(DbHelper.THEMES_TABLE, cv, "id="+theme.getId(), null);
+        cv.clear();
     }
 }

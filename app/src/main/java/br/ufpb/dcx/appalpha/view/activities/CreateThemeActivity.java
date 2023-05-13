@@ -533,41 +533,53 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         this.theme.setDeletavel(true);
 
         if(this.editMode) {
+            try {
 
-            // update theme
-            saveImageToObject(this.theme);
-            this.themeSqlService.update(this.theme);
+                // update theme
+                saveImageToObject(this.theme);
+                this.themeSqlService.update(this.theme);
 
-            // create words
-            for(Challenge palavraNow : this.words_Add) {
-                saveImageToObject(palavraNow);
-            }
-            this.themeSqlService.insertThemeRelatedChallenges(this.theme.getId(), this.words_Add);
-
-            // update words
-            for(Challenge palavraNow : this.theme.getChallenges()) {
-                saveImageToObject(palavraNow);
-                if(palavraNow.getId() == null) {
-                    continue;
+                // create words
+                for(Challenge palavraNow : this.words_Add) {
+                    saveImageToObject(palavraNow);
                 }
-                this.challengeSqlService.update(palavraNow);
-            }
+                this.themeSqlService.insertThemeRelatedChallenges(this.theme.getId(), this.words_Add);
 
-            // remove words
-            for(Long palavraIDNow : this.wordsID_Rem) {
-                this.challengeSqlService.deleteById(palavraIDNow);
-            }
+                // update words
+                for(Challenge palavraNow : this.theme.getChallenges()) {
+                    saveImageToObject(palavraNow);
+                    if(palavraNow.getId() == null) {
+                        continue;
+                    }
+                    this.challengeSqlService.update(palavraNow);
+                }
 
-            Log.i(TAG, "Alterações do Tema Salva com sucesso!");
-            Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.theme.getName()), Toast.LENGTH_SHORT).show();
+                // remove words
+                for(Long palavraIDNow : this.wordsID_Rem) {
+                    this.challengeSqlService.deleteById(palavraIDNow);
+                }
+
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Erro ao atualizar Tema: "+theme.getName(), Toast.LENGTH_LONG).show();
+            } finally {
+                Toast.makeText(CreateThemeActivity.this, String.format("Alterações do Tema '%s' Salva com Sucesso!", this.theme.getName()), Toast.LENGTH_SHORT).show();
+            }
         } else {
-            // save image to app files
-            saveImageToObject(this.theme);
-            for(Challenge palavraNow : this.theme.getChallenges()) {
-                saveImageToObject(palavraNow);
+            try {
+
+                // save image to app files
+                saveImageToObject(this.theme);
+                for(Challenge palavraNow : this.theme.getChallenges()) {
+                    saveImageToObject(palavraNow);
+                }
+
+                this.themeSqlService.insert(this.theme, this.theme.getChallenges());
+
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Erro ao salvar Tema: "+theme.getName(), Toast.LENGTH_LONG).show();
+            } finally {
+                Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", this.theme.getName()), Toast.LENGTH_SHORT).show();
             }
-            this.themeSqlService.insert(this.theme, this.theme.getChallenges());
-            Toast.makeText(CreateThemeActivity.this, String.format("Tema '%s' Salvo com Sucesso!", this.theme.getName()), Toast.LENGTH_SHORT).show();
         }
     }
 
