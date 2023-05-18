@@ -46,8 +46,6 @@ public class AlphaTextView extends AppCompatTextView {
     private void init() {
         this.fontFamily = AppConfig.getInstance(this.context).getCurrentLetterType();
         this.fontCase = AppConfig.getInstance(this.context).getCurrentLetterCase();
-        Log.i("AlphaTextView", "fontFamily charged: " + this.fontFamily);
-        Log.i("AlphaTextView", "fontCase charged: " + this.fontCase);
 
         switch (this.fontFamily) {
             case AppConfig.CASUAL: {

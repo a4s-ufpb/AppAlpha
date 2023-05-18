@@ -97,7 +97,6 @@ public class AppConfig {
             edit.putString("letter_type", this.currentLetterType);
             edit.putString("letter_case", this.currentLetterCase);
             edit.apply();
-            Log.i("AppConfig", "All changes have been saved");
         } catch (Exception e) {
             e.printStackTrace();
         }

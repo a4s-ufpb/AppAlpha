@@ -204,7 +204,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
         alertDialog.show();
 
         Window win = alertDialog.getWindow();
-        win.setContentView(R.layout.alert_imagem_options);
+        win.setContentView(R.layout.alert_image_options);
 
         win.setBackgroundDrawableResource(R.drawable.fundoazul);
 
@@ -530,7 +530,7 @@ public class CreateThemeActivity extends AppCompatActivity implements View.OnCli
     {
         this.theme.setName(tlIdTheme.getEditText().getText().toString().trim());
         this.theme.setImageUrl(urlImageTheme);
-        this.theme.setDeletavel(true);
+        this.theme.setRemovable(true);
 
         if(this.editMode) {
             try {

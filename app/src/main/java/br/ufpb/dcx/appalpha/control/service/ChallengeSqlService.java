@@ -50,23 +50,16 @@ public class ChallengeSqlService {
      * @param challenge
      * @return
      */
-    public Long insert(Challenge challenge) {
+    public Long insert(Challenge challenge) throws Exception {
         ContentValues cv = new ContentValues();
         Long id = -1L;
-        try {
-            cv.put("word", challenge.getWord());
-            cv.put("soundUrl", challenge.getSoundUrl());
-            cv.put("videoUrl", challenge.getVideoUrl());
-            cv.put("imageUrl", challenge.getImageUrl());
 
-            id = this.writableDb.insert(DbHelper.CHALLENGES_TABLE, null, cv);
-            Log.i(TAG, challenge.getWord() + " added in db!");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        } finally {
-            cv.clear();
-        }
+        cv.put("word", challenge.getWord());
+        cv.put("soundUrl", challenge.getSoundUrl());
+        cv.put("videoUrl", challenge.getVideoUrl());
+        cv.put("imageUrl", challenge.getImageUrl());
+        id = this.writableDb.insert(DbHelper.CHALLENGES_TABLE, null, cv);
+        cv.clear();
 
         return id;
     }
@@ -76,8 +69,7 @@ public class ChallengeSqlService {
      * @param id
      * @return
      */
-    public Challenge get(Long id)
-    {
+    public Challenge get(Long id) {
         String word, soundUrl, videoUrl, imageUrl;
         word = soundUrl = videoUrl = imageUrl = "";
 
@@ -104,8 +96,6 @@ public class ChallengeSqlService {
         Long id;
         word = soundUrl = videoUrl = imageUrl = "";
 
-        Log.i(TAG, "" + theme_id);
-
         List<Challenge> challenges = new ArrayList<>();
 
         String selectQuery = "SELECT " + DbHelper.CHALLENGES_TABLE + ".id, " + DbHelper.CHALLENGES_TABLE + ".word, " + DbHelper.CHALLENGES_TABLE + ".soundUrl, " + DbHelper.CHALLENGES_TABLE + ".videoUrl, " + DbHelper.CHALLENGES_TABLE + ".imageUrl FROM "
@@ -131,7 +121,6 @@ public class ChallengeSqlService {
         }
 
         cursor.close();
-        Log.i(TAG, "TAMANHO " + challenges.size());
         return challenges;
     }
 
@@ -139,8 +128,7 @@ public class ChallengeSqlService {
      * Delete an stored Challenge by Id in the local database
      * @param id
      */
-    public void deleteById(Long id)
-    {
+    public void deleteById(Long id) {
         // delete saved local image file of challenge
         Challenge palavra = get(id);
         if(palavra!=null && palavra.getImageUrl()!=null) {
@@ -155,7 +143,6 @@ public class ChallengeSqlService {
         Cursor cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
         if (cursor.moveToFirst()) {
             Integer value = cursor.getInt(0);
-            Log.i(TAG, value + "");
             cursor.close();
         }
 
@@ -164,7 +151,6 @@ public class ChallengeSqlService {
         cursor = writableDb.rawQuery(deleteQuery, new String[]{Long.toString(id)});
         if (cursor.moveToFirst()) {
             Integer value = cursor.getInt(0);
-            Log.i(TAG, value + "");
             cursor.close();
         }
     }
@@ -173,22 +159,13 @@ public class ChallengeSqlService {
      * Update the saved Challenge that we got previously from local database
      * @param challenge
      */
-    public void update(Challenge challenge)
-    {
+    public void update(Challenge challenge) throws Exception {
         ContentValues cv = new ContentValues();
-        try {
-            cv.put("word", challenge.getWord());
-            cv.put("soundUrl", challenge.getSoundUrl());
-            cv.put("videoUrl", challenge.getVideoUrl());
-            cv.put("imageUrl", challenge.getImageUrl());
-
-            this.writableDb.update(DbHelper.CHALLENGES_TABLE, cv, "id="+challenge.getId(), null);
-            Log.i(TAG, challenge.getWord() + " updated in db!");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        } finally {
-            cv.clear();
-        }
+        cv.put("word", challenge.getWord());
+        cv.put("soundUrl", challenge.getSoundUrl());
+        cv.put("videoUrl", challenge.getVideoUrl());
+        cv.put("imageUrl", challenge.getImageUrl());
+        this.writableDb.update(DbHelper.CHALLENGES_TABLE, cv, "id="+challenge.getId(), null);
+        cv.clear();
     }
 }

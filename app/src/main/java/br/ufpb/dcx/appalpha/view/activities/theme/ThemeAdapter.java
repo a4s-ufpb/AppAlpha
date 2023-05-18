@@ -76,11 +76,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder> 
      * @param position
      */
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if ((themes.get(holder.getAbsoluteAdapterPosition()).getDeletavel() || themes.get(holder.getAbsoluteAdapterPosition()).getApiId() != null) && this.isDeleteMode) {
+        if ((themes.get(holder.getAbsoluteAdapterPosition()).getRemovable() || themes.get(holder.getAbsoluteAdapterPosition()).getApiId() != null) && this.isDeleteMode) {
             holder.btnDel.setVisibility(View.VISIBLE);
         }
 
-        if ((editAnyTheme || themes.get(holder.getAbsoluteAdapterPosition()).getDeletavel()) && this.isEditMode) {
+        if ((editAnyTheme || themes.get(holder.getAbsoluteAdapterPosition()).getRemovable()) && this.isEditMode) {
             holder.btnEdit.setVisibility(View.VISIBLE);
         }
 

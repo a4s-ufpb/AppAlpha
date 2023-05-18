@@ -99,7 +99,6 @@ public class CreateWordAdapter extends RecyclerView.Adapter<CreateWordAdapter.Vi
      * @param position
      */
     private void deleteSelectedTheme(int position) {
-        Log.i(TAG, "Palavra " + createTheme.theme.getChallenges().get(position).getWord() + " Clicked to delete!");
         createTheme.removeWord(createTheme.theme.getChallenges().get(position));
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, createTheme.theme.getChallenges().size());
@@ -111,7 +110,6 @@ public class CreateWordAdapter extends RecyclerView.Adapter<CreateWordAdapter.Vi
      * @param position
      */
     private void editSelectedTheme(int position) {
-        Log.i(TAG, "Palavra " + createTheme.theme.getChallenges().get(position).getWord() + " Clicked to edit!");
         createTheme.editWord(createTheme.theme.getChallenges().get(position));
     }
 

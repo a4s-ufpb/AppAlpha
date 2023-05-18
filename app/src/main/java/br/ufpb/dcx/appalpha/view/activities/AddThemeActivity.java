@@ -122,11 +122,11 @@ public class AddThemeActivity extends AppCompatActivity implements View.OnClickL
                                     Toast.makeText(getApplicationContext(), "Erro ao salvar Tema: "+theme.getName(), Toast.LENGTH_LONG).show();
                                 } finally {
                                     Toast.makeText(getApplicationContext(), "Tema " + theme.getName() + " importado com sucesso!", Toast.LENGTH_SHORT).show();
-                                }
 
-                                Intent intent = new Intent(AddThemeActivity.this, ThemeActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
+                                    Intent intent = new Intent(AddThemeActivity.this, ThemeActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                }
 
                             } else {
                                 Toast.makeText(getApplicationContext(), "Erro ao recuperar tema, verifique se o id inserido é válido.", Toast.LENGTH_LONG).show();

@@ -65,7 +65,7 @@ public class ThemeSqlService {
         cv.put("videoUrl", theme.getVideoUrl());
         cv.put("imageUrl", theme.getImageUrl());
         cv.put("apiId", theme.getApiId());
-        cv.put("deletavel", theme.getDeletavel());
+        cv.put("deletavel", theme.getRemovable());
 
         id = this.writableDb.insert(DbHelper.THEMES_TABLE, null, cv);
         if (relatedChallenges != null && !relatedChallenges.isEmpty()) {
@@ -117,7 +117,7 @@ public class ThemeSqlService {
         Theme theme = new Theme(name, imageUrl, soundUrl, videoUrl);
         theme.setId(id);
         theme.setApiId(apiId != null ? Long.parseLong(apiId) : null);
-        theme.setDeletavel(deletavel==1);
+        theme.setRemovable(deletavel==1);
 
         return theme;
     }
@@ -149,7 +149,7 @@ public class ThemeSqlService {
                 List<Challenge> relatedChallenges = challengeSqlService.getRelatedChallenges(id);
                 Theme t = new Theme(id, name, imageUrl, soundUrl, videoUrl, relatedChallenges,
                         apiId != null ? Long.parseLong(apiId) : null);
-                t.setDeletavel(deletavel==1);
+                t.setRemovable(deletavel==1);
                 themes.add(t);
             } while (cursor.moveToNext());
         }
@@ -228,7 +228,7 @@ public class ThemeSqlService {
         cv.put("videoUrl", theme.getVideoUrl());
         cv.put("imageUrl", theme.getImageUrl());
         cv.put("apiId", theme.getApiId());
-        cv.put("deletavel", theme.getDeletavel());
+        cv.put("deletavel", theme.getRemovable());
         this.writableDb.update(DbHelper.THEMES_TABLE, cv, "id="+theme.getId(), null);
         cv.clear();
     }

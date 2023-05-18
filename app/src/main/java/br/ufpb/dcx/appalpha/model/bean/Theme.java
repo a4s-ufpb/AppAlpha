@@ -14,7 +14,7 @@ public class Theme {
     private String videoUrl;
     private List<Challenge> challenges = new ArrayList<>();
     private Long apiId;
-    private Boolean deletavel;
+    private Boolean removable;
 
     /**
      * Alloc instance specifying id, name, image url, sound url, video url, list of challenges, api Id
@@ -183,17 +183,17 @@ public class Theme {
      *
      * @return
      */
-    public Boolean getDeletavel() {
-        return deletavel;
+    public Boolean getRemovable() {
+        return removable;
     }
 
     /**
      * Set if Theme is deletable
      *
-     * @param deletavel
+     * @param removable
      */
-    public void setDeletavel(Boolean deletavel) {
-        this.deletavel = deletavel;
+    public void setRemovable(Boolean removable) {
+        this.removable = removable;
     }
 
     /**
@@ -223,7 +223,7 @@ public class Theme {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", soundUrl='" + soundUrl + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
-                ", deletavel='" + deletavel + '\'' +
+                ", removable='" + removable + '\'' +
                 ", apiId='" + apiId + '\'' +
                 '}';
     }

@@ -88,7 +88,7 @@ public class ApiConfig {
             public void onResponse(Call<Map> call, Response<Map> response) {
                 if (response.isSuccessful()) {
                     Map apiConfigDic = response.body();
-                    if (apiConfigDic != null && apiConfigDic.containsKey("sucess") && new Boolean((Boolean) apiConfigDic.get("sucess")).booleanValue() == true) {
+                    if (apiConfigDic != null && apiConfigDic.containsKey("sucess")) {
 
                         // use specific config by application id, if available
                         Map configForApp = (Map) apiConfigDic.get(BuildConfig.APPLICATION_ID);
@@ -99,11 +99,11 @@ public class ApiConfig {
                         // update to settings
                         Object dominioVal = apiConfigDic.get("dominio");
                         if (dominioVal != null) {
-                            dominio = (String) dominioVal;
+                            dominio = String.valueOf(dominioVal);
                         }
                         Object updateIntervalVal = apiConfigDic.get("updateInterval");
                         if (updateIntervalVal != null) {
-                            updateInterval = (long) updateIntervalVal;
+                            updateInterval = Long.getLong(String.valueOf(updateIntervalVal));
                         }
                         saveAllChanges();
                     }
