@@ -4,12 +4,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import br.ufpb.dcx.appalpha.BuildConfig;
+import br.ufpb.dcx.appalpha.R;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +29,7 @@ public class ApiConfig {
     private static ApiConfig instance;
     public SharedPreferences sPreferences = null;
 
-    private String dominio;
+    private String domain;
     private long updateInterval;
 
     /**
@@ -57,7 +57,7 @@ public class ApiConfig {
             }
 
             // alloc saved API domain with default
-            dominio = sPreferences.getString("dominio", "https://api.apps4society.dcx.ufpb.br/educapi/");
+            domain = sPreferences.getString("domain", appContext.getResources().getString(R.string.domain));
 
             // setup default update interval, between last retrieved settings and new request to update
             updateInterval = sPreferences.getLong("updateInterval", 5 * 60); // default 5min
@@ -76,7 +76,7 @@ public class ApiConfig {
         // check last saved settings time, to avoid spamming request to github server
         long lastTime = sPreferences.getLong("time", System.currentTimeMillis());
         if ((System.currentTimeMillis() - lastTime) > updateInterval) {
-            Log.i("ApiConfig", "Check Bypassed, Checked less than minimum interval " + updateInterval + " secs.");
+            //Log.i("ApiConfig", "Check Bypassed, Checked less than minimum interval " + updateInterval + " secs.");
             return;
         }
 
@@ -97,9 +97,9 @@ public class ApiConfig {
                         }
 
                         // update to settings
-                        Object dominioVal = apiConfigDic.get("dominio");
-                        if (dominioVal != null) {
-                            dominio = String.valueOf(dominioVal);
+                        Object domainVal = apiConfigDic.get("domain");
+                        if (domainVal != null) {
+                            domain = String.valueOf(domainVal);
                         }
                         Object updateIntervalVal = apiConfigDic.get("updateInterval");
                         if (updateIntervalVal != null) {
@@ -139,14 +139,14 @@ public class ApiConfig {
     private void saveAllChanges() {
         try {
             SharedPreferences.Editor edit = sPreferences.edit();
-            edit.putString("dominio", dominio);
+            edit.putString("domain", domain);
             edit.putLong("updateInterval", updateInterval);
 
             // store the current time of saved settings
             edit.putLong("time", System.currentTimeMillis());
 
             edit.apply();
-            Log.i("ApiConfig", "All changes have been saved");
+            //Log.i("ApiConfig", "All changes have been saved");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,10 +157,10 @@ public class ApiConfig {
      *
      * @return
      */
-    public String getDominio() {
+    public String getDomain() {
         if (BuildConfig.DEBUG && !(BuildConfig.EDUC_API_URL == null || !BuildConfig.EDUC_API_URL.startsWith("http"))) {
             return BuildConfig.EDUC_API_URL;
         }
-        return dominio;
+        return domain;
     }
 }

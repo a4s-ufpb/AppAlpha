@@ -17,7 +17,7 @@ public class RetrofitInitializer {
     /**
      * Set up base domain API
      */
-    public static String BASE_URL = ApiConfig.getInstance(MainActivity.getMainContext()).getDominio();
+    public static String BASE_URL = ApiConfig.getInstance(MainActivity.getMainContext()).getDomain();
 
     /**
      * Alloc retrofit
