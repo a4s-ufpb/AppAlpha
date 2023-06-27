@@ -2,10 +2,15 @@ package br.ufpb.dcx.appalpha.control.config;
 
 import android.content.Context;
 import android.graphics.Typeface;
+
 import androidx.appcompat.widget.AppCompatTextView;
+
 import android.util.AttributeSet;
 import android.util.Log;
 
+/**
+ * Class TextView to display Custom Font
+ */
 public class AlphaTextView extends AppCompatTextView {
     private Context context;
     private String fontFamily;
@@ -34,11 +39,13 @@ public class AlphaTextView extends AppCompatTextView {
     }
 
     //@RequiresApi(api = Build.VERSION_CODES.M)
+
+    /**
+     * Load text font.
+     */
     private void init() {
         this.fontFamily = AppConfig.getInstance(this.context).getCurrentLetterType();
         this.fontCase = AppConfig.getInstance(this.context).getCurrentLetterCase();
-        Log.i("AlphaTextView","fontFamily charged: "+this.fontFamily);
-        Log.i("AlphaTextView","fontCase charged: "+this.fontCase);
 
         switch (this.fontFamily) {
             case AppConfig.CASUAL: {
@@ -64,13 +71,13 @@ public class AlphaTextView extends AppCompatTextView {
 
         }
 
-        switch (this.fontCase){
-            case AppConfig.UPPER:{
+        switch (this.fontCase) {
+            case AppConfig.UPPER: {
                 this.setAllCaps(true);
                 break;
             }
 
-            case AppConfig.LOWER:{
+            case AppConfig.LOWER: {
                 this.setAllCaps(false);
             }
         }

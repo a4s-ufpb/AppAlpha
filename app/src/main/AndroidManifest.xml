@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="br.ufpb.dcx.appalpha">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:usesCleartextTraffic="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
@@ -24,10 +26,16 @@
             android:name=".view.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.ForcaActivity"
+            android:name=".view.activities.HangmanActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.theme.ThemeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activities.AddThemeManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activities.CreateThemeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.SplashActivity"
@@ -42,10 +50,10 @@
             android:name=".view.activities.FinalActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.SobreActivity"
+            android:name=".view.activities.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activities.RecordesActivity"
+            android:name=".view.activities.RecordsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activities.ProgressActivity"

@@ -1,18 +1,20 @@
 package br.ufpb.dcx.appalpha.control;
 
-import android.util.Log;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Challenge;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
 
+/**
+ * Shared class to manage current Challenge information
+ */
 public class ChallengeFacade {
-    private final String TAG = "ChallengeFacade";
     public static final int ATTEMPT_ACEPTED = 0;
-    public static int ATTEMPT_REJECTED = 1;
-    public static int ATTEMPT_EXISTS = 2;
+    public static final int ATTEMPT_REJECTED = 1;
+    public static final int ATTEMPT_EXISTS = 2;
     private static ChallengeFacade instance;
     private List<Challenge> challenges;
     private Challenge currentChallenge;
@@ -21,23 +23,32 @@ public class ChallengeFacade {
     private int progressCount;
     private double time;
     private int sumError;
-    private String underscore;
+    private String currentUnderlinedWord;
+    private Set<String> triedLetters = new HashSet<>();
 
 
-    private ChallengeFacade(){}
+    private ChallengeFacade() {
+    }
 
-    public static ChallengeFacade getInstance(){
-        if(instance == null){
+    /**
+     * Get shared instance
+     *
+     * @return
+     */
+    public static ChallengeFacade getInstance() {
+        if (instance == null) {
             instance = new ChallengeFacade();
         }
 
         return instance;
     }
 
-    public List<Challenge> getChallenges() {
-        return challenges;
-    }
-
+    /**
+     * Setup an Challenge with an selected Theme
+     *
+     * @param challenges
+     * @param selectedTheme
+     */
     public void init(List<Challenge> challenges, Theme selectedTheme) {
         this.challenges = challenges;
         this.currentChallenge = challenges.get(0);
@@ -46,139 +57,164 @@ public class ChallengeFacade {
         this.progressCount = 0;
         this.time = 0.0;
         this.sumError = 0;
-        this.underscore = "";
-        setUnderscore();
+        this.currentUnderlinedWord = "";
+        setUnderlinedWord();
 
     }
 
-    public Theme getSelectedTheme() {
-        return selectedTheme;
-    }
-
+    /**
+     * Return the current Challenge on the progress
+     *
+     * @return
+     */
     public Challenge getCurrentChallenge() {
         return currentChallenge;
     }
 
-    public void nextChallenge(){
-        try{
-            Log.i(TAG, "TRY");
-            Log.i(TAG, this.getCurrentChallenge().getWord());
+    /**
+     * Go to next challenge in the list
+     */
+    public void nextChallenge() {
+        try {
             this.sumError += this.erroCount;
             this.erroCount = 0;
             this.progressCount++;
             this.currentChallenge = challenges.get(challenges.indexOf(currentChallenge) + 1);
-            setUnderscore();
-        }catch (IndexOutOfBoundsException e){
+            resetTryLetterAttempts();
+            setUnderlinedWord();
+        } catch (IndexOutOfBoundsException e) {
             this.currentChallenge = null;
-            Log.i(TAG, "CATCH");
         }
+    }
+
+    /**
+     * Clean up retry letter tha user attempted
+     */
+    public void resetTryLetterAttempts() {
+        this.triedLetters.clear();
     }
 
     public void setCurrentChallenge(Challenge currentChallenge) {
         this.currentChallenge = currentChallenge;
     }
 
-    public void increaseErro(){
+    public void increaseError() {
         this.erroCount++;
     }
 
     /**
-     * Deixa a palavra em underscore
+     * Set word in underline
      */
-    public void setUnderscore() {
-        this.underscore = TextUtil.getInstance().getUnderscoreOfThis(this.currentChallenge.getWord());
+    public void setUnderlinedWord() {
+        this.currentUnderlinedWord = TextUtil.getInstance().getUnderlineOfThis(this.currentChallenge.getWord());
     }
 
-    public void setUnderscore(String underscore) {
-        this.underscore = underscore;
+    public void setCurrentUnderlinedWord(String currentUnderlinedWord) {
+        this.currentUnderlinedWord = currentUnderlinedWord;
     }
 
     /**
-     * Verifica se o chute do usuário foi certo ou errado
-     * @param letter chute do usuário
-     * @return um int indicando se houve acerto ou erro
+     * Check if attempt was correct or wrong
+     *
+     * @param letter attempt by user
+     * @return an int indicate attempt status
      */
     public int checkAttempt(String letter) {
-        int resultado;
 
-        String under = updateWordByAttemp(letter.charAt(0));
+        String newUnderscoreAfterAttempt = updateWordByAttempt(letter.charAt(0));
 
-        // Se o underscore atual for diferente do novo, significa que o usuário acertou
-        if (!underscore.equals(under)) {
-            underscore = under;
-            resultado = ATTEMPT_ACEPTED;
+        if (currentUnderlinedWord.equals(newUnderscoreAfterAttempt)) {
+            return ATTEMPT_REJECTED;
 
         } else {
-            resultado = ATTEMPT_REJECTED;
-        }
-
-        return resultado;
-    }
-
-    /**
-     * Verifica se o chute se encontra na palavra. Caso sim, a adiciona no underscore
-     * @param letter letra que o usuário chutou
-     * @return o underscore modificado
-     */
-    public String updateWordByAttemp(char letter) {
-        char[] vetor = underscore.toCharArray();
-
-        Log.i(TAG, ""+letter);
-        Log.i(TAG, ""+this.underscore.length());
-        Log.i(TAG, ""+ new String(vetor));
-
-        for (int i = 0; i < this.currentChallenge.getWord().length(); i++) {
-            if (letter == this.currentChallenge.getWord().charAt(i)) {
-                vetor[i] = this.currentChallenge.getWord().charAt(i);
-            }
-        }
-
-        return new String(vetor);
-    }
-
-    /**
-     * Verifica se a letra já foi chutada antes
-     * @param letter letra que o usuário chutou
-     * @return boolean indicando se já foi chutada antes
-     */
-    private boolean checkAttempExists(char letter) {
-        for (int i = 0; i < underscore.length(); i++) {
-            if (letter == underscore.charAt(i)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Verifica se o usuário acertou a palavra, se o sublinhado estiver por completo igual a palavra (sem traços) é porque a palavra foi completa.
-     * @return um boolean indicando se acertou ou não
-     */
-    public boolean checkWordAccepted() {
-        return this.currentChallenge.getWord().equals(underscore);
-    }
-
-    /**
-     * Verifica se o chute do usuário foi vazio, se ele já chutou aquela letra ou se o chute foi errado
-     * @param letter letra chutada pelo usuário
-     * @return um inteiro indicando se o chute foi vazio, já existente ou errado
-     */
-    public int getAttempResult(String letter) {
-
-        if(checkAttempExists(letter.charAt(0))) {
-            return ATTEMPT_EXISTS;
-        } else if (checkAttempt(letter) == ATTEMPT_REJECTED){
-            increaseErro();
-            return ATTEMPT_REJECTED;
-        }else{
+            currentUnderlinedWord = newUnderscoreAfterAttempt;
             return ATTEMPT_ACEPTED;
         }
 
     }
 
-    public String getUnderscore() {
-        return underscore;
+    /**
+     * Check if attempt letter was found in the word, if found add to underscore
+     *
+     * @param letter user attempt
+     * @return an updated underscore
+     */
+    public String updateWordByAttempt(char letter) {
+        StringBuilder newUnderscore = new StringBuilder(currentUnderlinedWord);
+        String currentChallengeWord = this.currentChallenge.getWord();
+
+        for (int indexInWord = 0; indexInWord < currentChallengeWord.length(); indexInWord++) {
+            if (TextUtil.getInstance().treatCharacter(letter) == TextUtil.getInstance().treatCharacter(currentChallengeWord.charAt(indexInWord))) {
+                newUnderscore.setCharAt(indexInWord, currentChallengeWord.charAt(indexInWord));
+            }
+        }
+
+        return newUnderscore.toString();
+    }
+
+    /**
+     * Check if letter was attempted before
+     *
+     * @param letter user attempt
+     * @return an boolean thats return result of check
+     */
+    public boolean checkAttemptExists(char letter) {
+        for (String let : this.triedLetters) {
+            if (let.equals(String.valueOf(letter))) {
+                this.triedLetters.add(String.valueOf(letter));
+                return true;
+            }
+        }
+        this.triedLetters.add(String.valueOf(letter));
+        return false;
+    }
+
+    /**
+     * Check if user was got correct word, if the underline word are equal to real word.
+     *
+     * @return an boolean thats return result of check
+     */
+    public boolean checkWordAccepted() {
+        return this.currentChallenge.getWord().equals(currentUnderlinedWord);
+    }
+
+    /**
+     * Check if the letter attempt was empty, wrong or correct
+     *
+     * @param letter of user attempt
+     * @return an status of attempt letter
+     */
+    public int getAttempResult(String letter) {
+
+        if (checkAttemptExists(letter.charAt(0))) {
+            return ATTEMPT_EXISTS;
+        } else if (checkAttempt(letter) == ATTEMPT_REJECTED) {
+            increaseError();
+            return ATTEMPT_REJECTED;
+        } else {
+            return ATTEMPT_ACEPTED;
+        }
+
+    }
+
+    /**
+     * Add spaces betwen letters of word
+     *
+     * @return o underscore with spaces betwen letters of word
+     */
+    public String getUnderlinedWordWithSpaces() {
+        StringBuilder novaString = new StringBuilder();
+
+        for (int i = 0; i < getCurrentUnderlinedWord().length(); i++) {
+            novaString.append(getCurrentUnderlinedWord().charAt(i));
+            novaString.append(" ");
+        }
+
+        return novaString.toString();
+    }
+
+    public String getCurrentUnderlinedWord() {
+        return currentUnderlinedWord;
     }
 
     public int getProgressCount() {
@@ -197,7 +233,7 @@ public class ChallengeFacade {
         this.time = time;
     }
 
-    public void increaseTime(double time){
+    public void increaseTime(double time) {
         this.time += time;
     }
 
@@ -207,5 +243,9 @@ public class ChallengeFacade {
 
     public int getSumError() {
         return sumError;
+    }
+
+    public List<Challenge> getChallenges() {
+        return challenges;
     }
 }

@@ -12,48 +12,64 @@ import androidx.appcompat.app.AppCompatActivity;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.service.RecordsSqlService;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 
-
+/**
+ * Class for activity to show points at end of game
+ */
 public class FinalActivity extends AppCompatActivity {
-    private static final int pontuacaoInicial = 1000;
-    private RecordsSqlService recordeService;
-    double pontuacaoFinal;
+    private static final int initialPoints = 1000;
+    private RecordsSqlService recordService;
+    double finalPoints;
 
+    /**
+     * On create activity, setup local variables
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_final);
 
-        SomUtil.getInstance().playSound(getApplicationContext(), R.raw.applause);
+        AudioUtil.getInstance(getApplicationContext()).playSound(R.raw.applause);
 
-        recordeService = RecordsSqlService.getInstance(getApplicationContext());
+        recordService = RecordsSqlService.getInstance(getApplicationContext());
 
         TextView txtPoints = findViewById(R.id.textView);
         ImageView img = findViewById(R.id.imageView9);
 
-        // Pegando informações da activity anterior
-        pontuacaoFinal = getPoints(ChallengeFacade.getInstance().getTime(), ChallengeFacade.getInstance().getSumError());
+        // Get info of previous activity
+        finalPoints = getPoints(ChallengeFacade.getInstance().getTime(), ChallengeFacade.getInstance().getSumError());
 
-        pontuacao(img, pontuacaoFinal);
+        updateImageWithPoints(img, finalPoints);
 
-        txtPoints.setText(String.format("Sua pontuação final foi: %s", pontuacaoFinal));
+        txtPoints.setText(String.format("Sua pontuação final foi: %s", finalPoints));
 
     }
 
     /**
-     * Pega o nome do jogador para colocar no recorde
+     * On dalloc activity stop TTS
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
+    }
+
+    /**
+     * Save the name of player and points in the local database
      */
     public void savePlayerName() {
-        EditText txt_nome = findViewById(R.id.edit_nome);
-        String nome = txt_nome.getText().toString();
+        EditText txt_name = findViewById(R.id.edit_nome);
+        String name = txt_name.getText().toString();
 
-        inserindoNoBanco(pontuacaoFinal, nome);
+        inserindoNoBanco(finalPoints, name);
     }
 
 
     /**
-     * Através do botão no xml salva a pontuacao do jogador
+     * Action of save button
      * @param v
      */
     public void saveRecord(View v) {
@@ -63,53 +79,56 @@ public class FinalActivity extends AppCompatActivity {
     }
 
     /**
-     * Cadastra pontuação do jogador
-     * @param pontuacao pontuação do jogador
-     * @param nome nome do jogador
+     * Save the record of player in local database
+     * @param pontuacao points of player
+     * @param nome name of player
      */
     public void inserindoNoBanco(double pontuacao, String nome) {
-        recordeService.cadastrarNovoRecorde(pontuacao, nome);
+        recordService.createNewRecord(pontuacao, nome);
     }
 
     /**
-     * Diminui da pontuação inicial o tempo e os erros do usuário
-     * @param tempo tempo que ele levou para terminar os desafios
-     * @param erros erros que o usuário cometeu durante os desafios
-     * @return pontuação final do usuário
+     * Calculate the points of the player by time and attempt failed of letter
+     * @param time time until player has finished the game
+     * @param erros total error count the player has got
+     * @return result of points the player have
      */
-    public double getPoints(double tempo, int erros) {
+    public double getPoints(double time, int erros) {
 
-        double pontuacao = pontuacaoInicial - ( (erros * 10) + (tempo * 100) );
+        double points = initialPoints - ( (erros * 10) + (time * 100) );
 
-        if(pontuacao < 0) {
+        if(points < 0) {
             return 10;
         } else {
-            return pontuacao;
+            return points;
         }
     }
 
     /**
-     * Dependendo da pontuação do usuário mostra uma imagem com as estrelas que ele ganhou
-     * @param img imageview que vai ser setada com uma das imagens das estrelas
-     * @param pontuacao pontuação do usuário
+     * Set the image of star relative of points of player
+     * @param img imageview allocated to show the stars
+     * @param points points of player
      */
-    public void pontuacao(ImageView img, double pontuacao) {
+    public void updateImageWithPoints(ImageView img, double points) {
 
-        if(pontuacao < 0) {
+        if(points < 0) {
             img.setImageResource(R.drawable.zero);
-        } else if(pontuacao <= 200.0) {
+        } else if(points <= 200.0) {
             img.setImageResource(R.drawable.um);
-        } else if(pontuacao <= 400.0) {
+        } else if(points <= 400.0) {
             img.setImageResource(R.drawable.dois);
-        } else if(pontuacao <= 600.0) {
+        } else if(points <= 600.0) {
             img.setImageResource(R.drawable.tres);
-        } else if(pontuacao < 900.0) {
+        } else if(points < 900.0) {
             img.setImageResource(R.drawable.quatro);
         } else {
             img.setImageResource(R.drawable.cinco);
         }
     }
 
+    /**
+     * Action to Close the activity
+     */
     public void sair() {
         finish();
     }

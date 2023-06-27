@@ -1,3 +1,0 @@
-JOGO DA FORCA
-
-agora o jogo roda em apenas uma chamada da activity, as telas estão mais organizadas porém ele não atualiza a imagem da forca depois de um erro.

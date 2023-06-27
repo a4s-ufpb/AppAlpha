@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,132 +19,193 @@ import java.util.List;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
 import br.ufpb.dcx.appalpha.control.service.ThemeSqlService;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
 import br.ufpb.dcx.appalpha.control.util.ScreenUtil;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
-import br.ufpb.dcx.appalpha.control.api.RetrofitInitializer;
+import br.ufpb.dcx.appalpha.control.util.TextUtil;
 import br.ufpb.dcx.appalpha.model.bean.Theme;
-import br.ufpb.dcx.appalpha.view.activities.AddThemeActivity;
-import br.ufpb.dcx.appalpha.view.activities.ForcaActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import br.ufpb.dcx.appalpha.view.activities.AddThemeManagerActivity;
+import br.ufpb.dcx.appalpha.view.activities.HangmanActivity;
+import br.ufpb.dcx.appalpha.view.activities.ViewAnimation;
 
-
-public class ThemeActivity extends AppCompatActivity implements View.OnClickListener {
+/**
+ * Class to Activity of Principal Theme Panel List
+ */
+public class ThemeActivity extends AppCompatActivity {
     private static final String TAG = "ThemeActivity";
     private GridLayoutManager layManager;
     private RecyclerView recyclerView;
     private List<Theme> themes = new ArrayList<>();
     protected static Activity activity;
     private ThemeSqlService themeSqlService;
-    private FloatingActionButton fabAddTheme;
+    private FloatingActionButton fabMore;
+    private FloatingActionButton fabDel;
+    private FloatingActionButton fabAdd;
+    private FloatingActionButton fabEdit;
+    boolean isRotate = false;
+    private boolean isDeleteMode = false;
+    private boolean isEditMode = false;
 
+    /**
+     * On create activity, setup local variables
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tema);
-        getLayoutInflater().inflate(R.layout.activity_tema, null);
+        setContentView(R.layout.activity_thema);
+        getLayoutInflater().inflate(R.layout.activity_thema, null);
 
         recyclerView = findViewById(R.id.rcThemes);
         layManager = new GridLayoutManager(getApplicationContext(), 2);
         this.themeSqlService = ThemeSqlService.getInstance(getApplicationContext());
-        fabAddTheme = findViewById(R.id.fabAddTheme);
-        fabAddTheme.setOnClickListener(this);
+        fabMore = findViewById(R.id.fabMore);
+        fabDel = findViewById(R.id.fabDel);
+        fabAdd = findViewById(R.id.fabAdd);
+        fabEdit = findViewById(R.id.fabEdit);
+        AudioUtil.getInstance(getApplicationContext());
+
+        ViewAnimation.init(fabDel);
+        ViewAnimation.init(fabAdd);
+        ViewAnimation.init(fabEdit);
+
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddThemeManagerActivity.class);
+            this.startActivity(intent);
+            toggleMoreAction(false);
+        });
+
+        fabDel.setOnClickListener(v -> {
+            this.isDeleteMode = !this.isDeleteMode;
+            this.fillRecycleView(this.themes);
+            toggleMoreAction(false);
+        });
+
+        fabEdit.setOnClickListener(v -> {
+            this.isEditMode = !this.isEditMode;
+            this.fillRecycleView(this.themes);
+            toggleMoreAction(false);
+        });
+
+        this.fabMore.setOnClickListener(view -> {
+            toggleMoreAction(!this.isRotate);
+        });
     }
 
-    public void fillRecycleView(List<Theme> themes){
+    /**
+     * Action of button more, in the bottom right
+     *
+     * @param show
+     */
+    public void toggleMoreAction(boolean show) {
+        this.isRotate = ViewAnimation.rotateFab(fabMore, show);
+        if (isRotate) {
+            ViewAnimation.showIn(fabAdd);
+            ViewAnimation.showIn(fabEdit);
+            ViewAnimation.showIn(fabDel);
+        } else {
+            ViewAnimation.showOut(fabAdd);
+            ViewAnimation.showOut(fabEdit);
+            ViewAnimation.showOut(fabDel);
+        }
+    }
+
+    /**
+     * Update view list of Themes
+     */
+    public void updateRecycleView() {
+        getAllThemes();
+        fillRecycleView(themes);
+    }
+
+    /**
+     * Populate View with list of Themes
+     *
+     * @param themes
+     */
+    public void fillRecycleView(List<Theme> themes) {
         recyclerView.setLayoutManager(layManager);
-        recyclerView.setAdapter(new ThemeAdapter(themes, getApplicationContext()));
+        recyclerView.setAdapter(new ThemeAdapter(themes, getApplicationContext(), this.isDeleteMode, this.isEditMode));
     }
 
+    /**
+     * when return to activity update content of activity
+     */
     @Override
     protected void onResume() {
         super.onResume();
-        addDefaultThemes();
-        fillRecycleView(themes);
-        //getAllChallengesFromService();
+        this.updateRecycleView();
         ScreenUtil.getInstance().unlockScreenTouch(this);
         activity = this;
     }
 
-    public void addDefaultThemes(){
+    /**
+     * Get all stored list themes
+     */
+    public void getAllThemes() {
         this.themes = this.themeSqlService.getAll();
     }
 
-    public void getAllChallengesFromService(){
-        Call call = new RetrofitInitializer().contextService().findAll();
-        call.enqueue(new Callback<List<Theme>>() {
-            @Override
-            public void onResponse(Call<List<Theme>> call, Response<List<Theme>> response) {
-                List<Theme> reponseBody = response.body();
-                Log.i(TAG, ""+reponseBody.size());
-                for(Theme t : reponseBody){
-                    themes.add(t);
-                    fillRecycleView(themes);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Theme>> call, Throwable t) {
-                Log.e(TAG, "Erro ao recuperar temas: "+t.getMessage());
-            }
-        });
-    }
-
-    public static void OnClickListener(OnClickListener hook){
-        Theme selectedTheme = hook.onItemClicked();
+    /**
+     * Action of pressed Theme button
+     *
+     * @param selectedTheme
+     */
+    public static void clickInGoToSelectedTheme(Theme selectedTheme) {
         Log.i(TAG, "Theme " + selectedTheme.getName() + " Clicked!");
-        if(selectedTheme.getChallenges() != null && selectedTheme.getChallenges().size() > 0) {
+        if (selectedTheme.getChallenges() != null && selectedTheme.getChallenges().size() > 0) {
             ThemeActivity.goToSelectedChallenge(selectedTheme);
             ScreenUtil.getInstance().lockScreenTouch(ThemeActivity.activity);
-        }else{
+        } else {
             Toast.makeText(ThemeActivity.activity, "O tema selecionado não possui desafios, tente outro tema.", Toast.LENGTH_LONG).show();
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case (R.id.fabAddTheme):
-                Intent intent = new Intent(this, AddThemeActivity.class);
-                this.startActivity(intent);
-                break;
-        }
-    }
-
-    interface OnClickListener{
-        Theme onItemClicked();
-    }
-
-    private static void setChallengesInFacade(Theme selectedTheme){
+    /**
+     * Set the selected Theme and Challenges in the Facade
+     *
+     * @param selectedTheme
+     */
+    private static void setChallengesInFacade(Theme selectedTheme) {
         ChallengeFacade.getInstance().init(selectedTheme.getChallenges(), selectedTheme);
     }
 
-    private static void goToSelectedChallenge(Theme selectedTheme){
+    /**
+     * Setup and Open the activity with selected Theme
+     *
+     * @param selectedTheme
+     */
+    private static void goToSelectedChallenge(Theme selectedTheme) {
         setChallengesInFacade(selectedTheme);
         playThemeSong(selectedTheme);
 
-        Intent intent = new Intent(ThemeActivity.activity, ForcaActivity.class);
+        Intent intent = new Intent(ThemeActivity.activity, HangmanActivity.class);
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() { //Wait the song end to start new activity
-            @Override
-            public void run() {
-                ThemeActivity.activity.startActivity(intent);
+        //Wait the song end to start new activity
+        handler.postDelayed(() -> ThemeActivity.activity.startActivity(intent), AudioUtil.getInstance().getDuration());
+    }
 
+    /**
+     * Play sound of Theme selected
+     *
+     * @param selectedTheme
+     */
+    private static void playThemeSong(Theme selectedTheme) {
+        Log.i(TAG, selectedTheme.toString());
+        String soundUrl = selectedTheme.getSoundUrl();
+        if (soundUrl != null && !soundUrl.equals("")) {
+            if (soundUrl.startsWith("http")) {
+                AudioUtil.getInstance().playSoundURL(soundUrl);
+            } else if (TextUtil.isAllInteger(soundUrl)) {
+                AudioUtil.getInstance().playSound(Integer.parseInt(soundUrl));
+            } else {
+                AudioUtil.getInstance().speakWord(selectedTheme.getName());
+                AudioUtil.getInstance().esperarTssParar();
             }
-        }, SomUtil.getInstance().getDuracao());
-
-    }
-
-    private static void playThemeSong(Theme selectedTheme){
-        SomUtil.getInstance().playSound(ThemeActivity.activity, Integer.parseInt(selectedTheme.getSoundUrl()));
-    }
-
-    public void botaoEscolha(ImageView img_button) {
-
-
-
-
+        } else {
+            AudioUtil.getInstance().speakWord(selectedTheme.getName());
+            AudioUtil.getInstance().esperarTssParar();
+        }
     }
 
 }

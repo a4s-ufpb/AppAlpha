@@ -1,8 +1,6 @@
 package br.ufpb.dcx.appalpha.view.activities;
 
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,23 +8,34 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.ChallengeFacade;
-import br.ufpb.dcx.appalpha.control.config.ButtonDelay;
-import br.ufpb.dcx.appalpha.control.util.SomUtil;
+import br.ufpb.dcx.appalpha.control.util.AudioUtil;
+import br.ufpb.dcx.appalpha.control.util.ImageLoadUtil;
+import br.ufpb.dcx.appalpha.control.util.TextUtil;
 
+/**
+ * Activity for play sound of word and after speak each letter of word
+ */
 public class ProgressActivity extends AppCompatActivity {
     private final String TAG = "ProgressActivity";
     private TextView txt;
-    private boolean mudouActivity;
+    private boolean hasChangedActivity;
     private int millis = 2500;
-    private char[] letras;
-    private Thread leitor;
+    private char[] letters;
+    private Thread readLetterThread;
 
+    /**
+     * On create activity, setup local variables
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela_progresso_);
+        setContentView(R.layout.activity_window_progress);
 
         setUnderscore();
 
@@ -34,9 +43,23 @@ public class ProgressActivity extends AppCompatActivity {
 
         setChallengeImage();
 
-        mudouActivity = false;
+        hasChangedActivity = false;
 
-        SomUtil.getInstance().playSound(getApplicationContext(), Integer.parseInt(ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl()));
+        String soundUrl = ChallengeFacade.getInstance().getCurrentChallenge().getSoundUrl();
+
+        if (soundUrl != null && !soundUrl.equals("")) {
+            if (soundUrl.startsWith("http")) {
+                AudioUtil.getInstance().playSoundURL(soundUrl);
+            } else if (TextUtil.isAllInteger(soundUrl)) { // Para desafios internos do appalpha
+                AudioUtil.getInstance(getApplicationContext()).playSound(Integer.parseInt(soundUrl));
+            } else {
+                AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
+            }
+        } else {
+            AudioUtil.getInstance().speakWord(ChallengeFacade.getInstance().getCurrentChallenge().getWord());
+        }
+
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -44,17 +67,24 @@ public class ProgressActivity extends AppCompatActivity {
             public void run() {
                 readLetterByLetter();
             }
-        }, SomUtil.getInstance().getDuracao());
+        }, AudioUtil.getInstance(getApplicationContext()).getDuration());
     }
 
+    /**
+     * Action to start speaking letter bt letter of the word
+     */
     private void readLetterByLetter() {
-        leitor = new Thread() {
+        readLetterThread = new Thread() {
 
             @Override
             public void run() {
+
+                AudioUtil.getInstance().esperarTssParar();
+
                 try {
                     while (!isInterrupted()) {
-                        for (final char letra : letras) {
+                        for (final char letra : TextUtil.normalize(new String(letters)).toCharArray()) {
+
                             try {
                                 Thread.sleep(millis);
                             } catch (InterruptedException e) {
@@ -70,7 +100,7 @@ public class ProgressActivity extends AppCompatActivity {
                                 }
                             };
 
-                            if (mudouActivity) {
+                            if (hasChangedActivity) {
                                 Thread.currentThread().interrupt();
                             } else {
                                 runOnUiThread(update);
@@ -84,184 +114,202 @@ public class ProgressActivity extends AppCompatActivity {
             }
         };
 
-        leitor.start();
+        readLetterThread.start();
 
     }
 
     /**
-     * Quando a activity é destruida também destroi o objeto do media player
+     * Action call for Back button press
+     */
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
+    }
+
+    /**
+     * Dealloc the activity
      */
     protected void onDestroy() {
         super.onDestroy();
         //leitor.interrupt();
-        SomUtil.getInstance().stopSound();
-
+        hasChangedActivity = true;
     }
 
     /**
-     * Procura o audio da letra com base na letra passada como parâmetro e toca esse audio
-     *
-     * @param letra Letra que será tocada
+     * Play the sound of letter
+     * @param letter letter to be played
      */
-    public void playLetterSong(char letra) {
+    public void playLetterSong(char letter) {
+        int idSound = 0;
 
-        int idSom = 0;
+        switch (Character.toUpperCase(letter)) {
 
-        switch (letra) {
-
-            case 'a':
-                idSom = R.raw.letraa;
+            case 'A':
+                idSound = R.raw.letraa;
                 break;
 
-            case 'b':
-                idSom = R.raw.letrab;
+            case 'B':
+                idSound = R.raw.letrab;
                 break;
 
-            case 'c':
-                idSom = R.raw.letrac;
+            case 'C':
+                idSound = R.raw.letrac;
                 break;
 
-            case 'd':
-                idSom = R.raw.letrad;
+            case 'D':
+                idSound = R.raw.letrad;
                 break;
 
-            case 'e':
-                idSom = R.raw.letrae;
+            case 'E':
+                idSound = R.raw.letrae;
                 break;
 
-            case 'f':
-                idSom = R.raw.letraf;
+            case 'F':
+                idSound = R.raw.letraf;
                 break;
 
-            case 'g':
-                idSom = R.raw.letrag;
+            case 'G':
+                idSound = R.raw.letrag;
                 break;
 
-            case 'h':
-                idSom = R.raw.letrah;
+            case 'H':
+                idSound = R.raw.letrah;
                 break;
 
-            case 'i':
-                idSom = R.raw.letrai;
+            case 'I':
+                idSound = R.raw.letrai;
                 break;
 
-            case 'j':
-                idSom = R.raw.letraj;
+            case 'J':
+                idSound = R.raw.letraj;
                 break;
 
-            case 'k':
-                idSom = R.raw.letrak;
+            case 'K':
+                idSound = R.raw.letrak;
                 break;
 
-            case 'l':
-                idSom = R.raw.letral;
+            case 'L':
+                idSound = R.raw.letral;
                 break;
 
-            case 'm':
-                idSom = R.raw.letram;
+            case 'M':
+                idSound = R.raw.letram;
                 break;
 
-            case 'n':
-                idSom = R.raw.letran;
+            case 'N':
+                idSound = R.raw.letran;
                 break;
 
-            case 'o':
-                idSom = R.raw.letrao;
+            case 'O':
+                idSound = R.raw.letrao;
                 break;
 
-            case 'p':
-                idSom = R.raw.letrap;
+            case 'P':
+                idSound = R.raw.letrap;
                 break;
 
-            case 'q':
-                idSom = R.raw.letraq;
+            case 'Q':
+                idSound = R.raw.letraq;
                 break;
 
-            case 'r':
-                idSom = R.raw.letrar;
+            case 'R':
+                idSound = R.raw.letrar;
                 break;
 
-            case 's':
-                idSom = R.raw.letras;
+            case 'S':
+                idSound = R.raw.letras;
                 break;
 
-            case 't':
-                idSom = R.raw.letrat;
+            case 'T':
+                idSound = R.raw.letrat;
                 break;
 
-            case 'u':
-                idSom = R.raw.letrau;
+            case 'U':
+                idSound = R.raw.letrau;
                 break;
 
-            case 'v':
-                idSom = R.raw.letrav;
+            case 'V':
+                idSound = R.raw.letrav;
                 break;
 
-            case 'w':
-                idSom = R.raw.letraw;
+            case 'W':
+                idSound = R.raw.letraw;
                 break;
 
-            case 'x':
-                idSom = R.raw.letrax;
+            case 'X':
+                idSound = R.raw.letrax;
                 break;
 
-            case 'y':
-                idSom = R.raw.letray;
+            case 'Y':
+                idSound = R.raw.letray;
                 break;
 
-            case 'z':
-                idSom = R.raw.letraz;
+            case 'Z':
+                idSound = R.raw.letraz;
                 break;
 
         }
 
-        SomUtil.getInstance().playSound(getApplicationContext(), idSom);
+        if(idSound != 0) {
+            AudioUtil.getInstance(getApplicationContext()).playSound(idSound);
+        } else {
+            AudioUtil.getInstance(getApplicationContext()).speakWord(String.valueOf(letter));
+        }
     }
 
     /**
-     * Seta o textView com o underscore da palavra
+     * set o textView with underscore of word
      */
     public void setUnderscore() {
-        ChallengeFacade.getInstance().setUnderscore();
+        ChallengeFacade.getInstance().setUnderlinedWord();
     }
 
     /**
-     * Atualiza o underscore atual com o novo
-     *
-     * @param letra letra que vai ser adicionada ao underscore
+     * Update the current underscore
+     * @param letra letter to be passed in the underscore
      */
     public void updateUnderscoreInTextViewAndFacade(char letra) {
         String newUnderscore = updateUnderscore(letra);
+        Log.i(TAG, "new underscore = "+newUnderscore);
         setTextViewWord(newUnderscore);
-        atualizandoUnderscore(newUnderscore);
+        updateUnderscore(newUnderscore);
     }
 
     /**
-     * Seta o underscore no objeto tratando palavra para que
-     * na próxima vez que ele gerar o underscore novo ele tenha o mais atualizado
+     * Set the current underscore in the ChallengeFacade
      */
-    public void atualizandoUnderscore(String underscore) {
-        ChallengeFacade.getInstance().setUnderscore(underscore);
+    public void updateUnderscore(String underscore) {
+        ChallengeFacade.getInstance().setCurrentUnderlinedWord(underscore);
     }
 
     /**
-     * Quebra a palavra do desafio em um array de char,
-     * para que ele possa adicionar um a um no underscore
+     * Explode the word by the char letter, to be used in the underscore
      */
     public void setLetters() {
-        letras = new char[ChallengeFacade.getInstance().getCurrentChallenge().getWord().length()];
+        letters = new char[ChallengeFacade.getInstance().getCurrentChallenge().getWord().length()];
         for (int i = 0; i < ChallengeFacade.getInstance().getCurrentChallenge().getWord().length(); i++) {
-            letras[i] = ChallengeFacade.getInstance().getCurrentChallenge().getWord().charAt(i);
+            letters[i] = ChallengeFacade.getInstance().getCurrentChallenge().getWord().charAt(i);
         }
     }
 
+    /**
+     * Update the underscore showing the letter specified
+     * @param letra
+     * @return
+     */
     public String updateUnderscore(char letra) {
-        char[] vetor = ChallengeFacade.getInstance().getUnderscore().toCharArray();
+        char[] vetor = ChallengeFacade.getInstance().getCurrentUnderlinedWord().toCharArray();
 
         for (int i = 0; i < ChallengeFacade.getInstance().getCurrentChallenge().getWord().length(); i++) {
-            if (ChallengeFacade.getInstance().getCurrentChallenge().getWord().charAt(i) == letra) {
+            if (Character.toUpperCase(
+                    TextUtil.normalize(ChallengeFacade.getInstance().getCurrentChallenge().getWord())
+                            .charAt(i)) == Character.toUpperCase(letra)) {
 
-                if (ChallengeFacade.getInstance().getUnderscore().charAt(i) == letra) {
+                if (Character.toUpperCase(
+                        TextUtil.normalize(ChallengeFacade.getInstance().getCurrentUnderlinedWord())
+                                .charAt(i)) == Character.toUpperCase(letra)) {
                     continue;
                 }
                 vetor[i] = ChallengeFacade.getInstance().getCurrentChallenge().getWord().charAt(i);
@@ -272,48 +320,62 @@ public class ProgressActivity extends AppCompatActivity {
         return new String(vetor);
     }
 
+    /**
+     * Open the next Challenge activity
+     */
     public void goToTheNextChallenge() {
-        mudouActivity = true;
-        Intent it = new Intent(getApplicationContext(), ForcaActivity.class);
+        hasChangedActivity = true;
+        Intent it = new Intent(getApplicationContext(), HangmanActivity.class);
         ChallengeFacade.getInstance().nextChallenge();
         startActivity(it);
         finish();
     }
 
     /**
-     * Redireciona para a activity da pontuação final
+     * Action for Open the final activity when the game end
      */
     public void goToTheFinalActivity() {
-        mudouActivity = true;
+        hasChangedActivity = true;
         Intent it = new Intent(getApplicationContext(), FinalActivity.class);
         startActivity(it);
 
     }
 
     /**
-     * Verifica se os desafios acabaram, se sim manda para a tela de pontuação, se não manda para a tela da forca
-     *
-     * @param v View do botão
+     * Check if the challenge ended, and go to next challenge or for final activity
+     * @param v View of pressed button
      */
-    public void goToTheNextActivityByCondiction(View v) {
-        // Testa se o botão foi clicado mais de uma vez em um intervalo de 1 segundo
-        if(ButtonDelay.delay(1000)) {
-            Log.i(TAG,"pg"+ChallengeFacade.getInstance().getProgressCount());
-            Log.i(TAG,"size"+ChallengeFacade.getInstance().getChallenges().size());
-            if (ChallengeFacade.getInstance().getProgressCount() == ChallengeFacade.getInstance().getChallenges().size()-1) {
-                goToTheFinalActivity();
-            } else {
-                goToTheNextChallenge();
-            }
+    public void goToTheNextActivityByCondiction(View v)
+    {
+        // Desativar o botão depois do click
+        v.setEnabled(false);
+
+        AudioUtil.getInstance(getApplicationContext()).pararTSSePlayer();
+
+        Log.i(TAG, "pg" + ChallengeFacade.getInstance().getProgressCount());
+        Log.i(TAG, "size" + ChallengeFacade.getInstance().getChallenges().size());
+        if (ChallengeFacade.getInstance().getProgressCount() == ChallengeFacade.getInstance().getChallenges().size() - 1) {
+            goToTheFinalActivity();
+        } else {
+            goToTheNextChallenge();
         }
         finish();
     }
 
+    /**
+     * Action for load the image url of Challenge
+     */
     public void setChallengeImage() {
         ImageView img_desafio = findViewById(R.id.img_desafio);
-        img_desafio.setImageResource(Integer.parseInt(ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl()));
+        String imgUrl = ChallengeFacade.getInstance().getCurrentChallenge().getImageUrl();
+
+        ImageLoadUtil.getInstance().loadImage(imgUrl, img_desafio, getApplicationContext());
     }
 
+    /**
+     * Set the word in the Text view
+     * @param underscore
+     */
     public void setTextViewWord(String underscore) {
         txt = findViewById(R.id.txt_underscore);
         txt.setText(underscore);

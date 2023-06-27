@@ -1,30 +1,54 @@
 package br.ufpb.dcx.appalpha.model.bean;
 
+/**
+ * Entity Record
+ */
+public class Record implements Comparable<Record> {
+    private String name;
+    private double points;
 
-public class Record implements Comparable<Record>{
-    private String nome;
-    private double pontuacao;
-
+    /**
+     * Alloc instance with name and points
+     *
+     * @param nome
+     * @param pontuacao
+     */
     public Record(String nome, double pontuacao) {
-        this.nome = nome;
-        this.pontuacao = pontuacao;
+        this.name = nome;
+        this.points = pontuacao;
     }
 
-    public String getNome() {
-        return nome;
+    /**
+     * Get name of Record
+     *
+     * @return
+     */
+    public String getName() {
+        return name;
     }
 
-    public double getPontuacao() {
-        return pontuacao;
+    /**
+     * Get points of Record
+     *
+     * @return
+     */
+    public double getPoints() {
+        return points;
     }
 
+    /**
+     * Compare between object Record
+     *
+     * @param outroRecord
+     * @return
+     */
     @Override
     public int compareTo(Record outroRecord) {
-        if(this.pontuacao > outroRecord.getPontuacao()) {
+        if (this.points > outroRecord.getPoints()) {
             return -1;
         }
 
-        if(this.pontuacao < outroRecord.getPontuacao()) {
+        if (this.points < outroRecord.getPoints()) {
             return 1;
         }
 

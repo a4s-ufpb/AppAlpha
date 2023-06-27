@@ -11,8 +11,11 @@ import android.widget.Toast;
 import br.ufpb.dcx.appalpha.R;
 import br.ufpb.dcx.appalpha.control.config.AppConfig;
 
+/**
+ * Class for activity of settings manager options of App
+ */
 public class ConfigActivity extends AppCompatActivity {
-    private AppConfig configurator;
+    private AppConfig appConfig;
     private RadioGroup rgLetterType;
     private RadioButton rbCasual;
     private RadioButton rbCursiva;
@@ -21,11 +24,16 @@ public class ConfigActivity extends AppCompatActivity {
     private RadioButton rbUpper;
     private RadioButton rbLower;
 
+    /**
+     * On create activity, setup local variables
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-        this.configurator = AppConfig.getInstance(getApplicationContext());
+        this.appConfig = AppConfig.getInstance(getApplicationContext());
 
         this.rgLetterType = findViewById(R.id.rgLetterType);
         this.rgLetterCase = findViewById(R.id.rgLetterCase);
@@ -36,12 +44,19 @@ public class ConfigActivity extends AppCompatActivity {
         this.rbLower = findViewById(R.id.rb_lowercase);
     }
 
+    /**
+     * When return back to activity update the settings in view
+     */
     @Override
     protected void onResume() {
         super.onResume();
         loadConfigsInView();
     }
 
+    /**
+     * Action for Close the activity
+     * @param view
+     */
     public void backToMainScreen(View view){
         finish();
     }
@@ -52,23 +67,20 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     /**
-     * Muda as configurações no AppConfig de acordo com as opções selecionadas na tela de configurações
+     * Retrieve current settings in the view and set to local variable.
      */
     private void pushChanges(){
         String rgSelectedLetterType =((RadioButton)findViewById(this.rgLetterType.getCheckedRadioButtonId())).getText().toString();
         String rgSelectedLetterCase =((RadioButton)findViewById(this.rgLetterCase.getCheckedRadioButtonId())).getText().toString();
-        this.configurator.setCurrentLetterType(rgSelectedLetterType);
-        this.configurator.setCurrentLetterCase(rgSelectedLetterCase);
+        this.appConfig.setCurrentLetterType(rgSelectedLetterType);
+        this.appConfig.setCurrentLetterCase(rgSelectedLetterCase);
     }
 
     /**
-     * Marca as opções dos RadioButton de acordo com as configurações do AppConfig
+     * Load the saved settings and update the current status in view
      */
     private void loadConfigsInView(){
-        Log.i("Json-Config","Entrou em LoadConfigs");
-        Log.i("Json-Config","CurrentLetterType: " + this.configurator.getCurrentLetterType());
-        Log.i("Json-Config","CurrentLetterCase: " + this.configurator.getCurrentLetterCase());
-        switch(this.configurator.getCurrentLetterType()){
+        switch(this.appConfig.getCurrentLetterType()){
             case(AppConfig.CASUAL):
                 rgLetterType.check(rbCasual.getId());
             break;
@@ -83,7 +95,7 @@ public class ConfigActivity extends AppCompatActivity {
 
         }
 
-        switch(this.configurator.getCurrentLetterCase()){
+        switch(this.appConfig.getCurrentLetterCase()){
             case(AppConfig.UPPER):
                 rgLetterCase.check(rbUpper.getId());
             break;
@@ -96,12 +108,12 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     /**
-     * Salva as configurações atuais da tela de configurações e recarrega a tela.
+     * Save all settings and reload the screen
      * @param view
      */
     public void saveChanges(View view){
         pushChanges();
-        this.configurator.saveAllChange(getApplicationContext());
+        this.appConfig.saveAllChange();
         this.recreate();
         Toast.makeText(this, "Configurações salvas com sucesso!", Toast.LENGTH_SHORT).show();
     }
